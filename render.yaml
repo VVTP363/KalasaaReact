@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: kalasääapp
+    env: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
+    autoDeploy: true
