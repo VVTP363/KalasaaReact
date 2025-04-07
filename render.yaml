@@ -3,7 +3,7 @@ services:
     name: kalasääapp
     env: node
     rootDir: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: npm run build
+    startCommand: npm run start
     plan: free
     autoDeploy: true
