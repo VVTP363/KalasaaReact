@@ -1,0 +1,26 @@
+flowchart TD
+  Start["📍 Sijainti + aika"] --> WeatherData["🌦 Säädata"]
+  WeatherData --> Pressure["Ilmanpaine"]
+  WeatherData --> Wind["Tuulen suunta & nopeus"]
+  WeatherData --> Moon["Kuun vaihe"]
+
+  Pressure --> ComputeOH["🧮 computeOH / fishingOH.js"]
+  Wind --> ComputeOH
+  Moon --> ComputeOH
+
+  ComputeOH --> ForecastOH["🎯 Ennuste-OH (1–8)"]
+
+  ForecastOH --> CatchInput["🎣 Käyttäjän saalisilmoitus"]
+
+  CatchInput --> Effort["⏱ Pyyntiaika + pyydysyksiköt"]
+  CatchInput --> CatchWeight["⚖️ Saaliin paino"]
+
+  Effort --> Realized["🧪 useRealizedOHActive"]
+  CatchWeight --> Realized
+  ForecastOH --> Realized
+
+  Realized --> RealizedOH["✅ Toteutunut OH"]
+  Realized --> MatchFactor["📐 Toteuma / Ennuste"]
+
+  RealizedOH --> Storage["💾 Tallennus"]
+  MatchFactor --> Storage

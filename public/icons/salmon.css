@@ -1,0 +1,38 @@
+
+.salmon-icon {
+  transition: transform 0.3s ease-in-out;
+  display: inline-block;
+  height: 28px;
+  width: auto;
+  margin-right: 4px;
+}
+
+.salmon-icon.jump-high {
+  animation: jumpHigh 0.8s infinite alternate;
+}
+
+.salmon-icon.jump-low {
+  animation: jumpLow 1.2s infinite alternate;
+}
+
+.salmon-icon.idle {
+  opacity: 0.7;
+}
+
+@keyframes jumpHigh {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-15px) rotate(-10deg);
+  }
+}
+
+@keyframes jumpLow {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-8px) rotate(-5deg);
+  }
+}

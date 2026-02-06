@@ -1,0 +1,29 @@
+flowchart TD
+  User["🧑‍🎣 Käyttäjä"] --> UI["🖥️ React UI"]
+
+  UI --> Weather["🌦 Weather.jsx"]
+  UI --> RiverView["🌊 VirtavesiView.jsx"]
+  UI --> LakeView["🌅 Järvi/Meri-näkymä"]
+
+  Weather --> ForecastAPI["🌐 Sää-API (Open-Meteo / OpenWeather)"]
+  Weather --> Moon["🌙 Kuun vaihe"]
+  Weather --> Wind["💨 Tuuli"]
+  Weather --> Pressure["📈 Ilmanpaine"]
+
+  Weather --> OHForecast["🎯 Ennuste-OH"]
+
+  OHForecast --> RiverView
+  OHForecast --> LakeView
+
+  RiverView --> CatchFormRiver["🎣 VirtavesiIlmoitus.jsx"]
+  LakeView --> CatchFormLake["🎣 LakeSeaCatchForm.jsx"]
+
+  CatchFormRiver --> RealizedOH["🧪 Toteutunut OH (useRealizedOHActive)"]
+  CatchFormLake --> RealizedOH
+
+  RealizedOH --> Storage["💾 localStorage"]
+
+  Storage --> History["📋 SaalisHistoria.jsx"]
+  Storage --> Stats["📊 StatsChart.jsx"]
+
+  Stats --> Insights["🧠 Paine–OH–Saalis -analyysi"]

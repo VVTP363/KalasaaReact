@@ -1,0 +1,61 @@
+
+.salmon-icon {
+  transition: transform 0.3s ease-in-out;
+  display: inline-block;
+  height: 28px;
+  width: auto;
+  margin-right: 4px;
+}
+
+.salmon-icon.jump-high {
+  animation: jumpHigh 0.8s infinite alternate;
+}
+
+.salmon-icon.jump-medium {
+  animation: jumpMedium 1s infinite alternate;
+}
+
+.salmon-icon.jump-low {
+  animation: jumpLow 1.2s infinite alternate;
+}
+
+.salmon-icon.idle {
+  opacity: 0.7;
+}
+
+@keyframes jumpHigh {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) translateX(5px) rotate(-10deg);
+  }
+  100% {
+    transform: translateY(0) translateX(10px) rotate(10deg);
+  }
+}
+
+@keyframes jumpMedium {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) translateX(4px) rotate(-7deg);
+  }
+  100% {
+    transform: translateY(0) translateX(8px) rotate(7deg);
+  }
+}
+
+@keyframes jumpLow {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) translateX(3px) rotate(-5deg);
+  }
+  100% {
+    transform: translateY(0) translateX(6px) rotate(5deg);
+  }
+}
+
