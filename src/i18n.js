@@ -6,32 +6,38 @@ import en from "./locales/en/translation.json";
 import sv from "./locales/sv/translation.json";
 import no from "./locales/no/translation.json";
 
-const savedLng = localStorage.getItem("app_lang");
+const savedLng = localStorage.getItem("app_lang") || "fi";
 
-i18n.use(initReactI18next).init({
-  resources: {
-    fi: { translation: fi },
-    en: { translation: en },
-    sv: { translation: sv },
-    no: { translation: no },
-  },
+if (!i18n.isInitialized) {
+  i18n.use(initReactI18next).init({
+    resources: {
+      fi: { translation: fi },
+      en: { translation: en },
+      sv: { translation: sv },
+      no: { translation: no },
+    },
 
-  supportedLngs: ["fi", "en", "sv", "no"],
-  nonExplicitSupportedLngs: true,
-  load: "languageOnly",
+    supportedLngs: ["fi", "en", "sv", "no"],
+    nonExplicitSupportedLngs: true,
+    load: "languageOnly",
 
-  lng: savedLng || "fi",
-  fallbackLng: "en",
+    lng: savedLng,
+    fallbackLng: "fi",
 
-  debug: true,
+    debug: false,
 
-  // ⭐ TÄRKEÄT LISÄYKSET
-  saveMissing: true,
-  missingKeyHandler: (lng, ns, key) => {
-    console.warn("❌ Missing i18n key:", key);
-  },
+    react: {
+      useSuspense: false, // ✅ tärkeä: estää hook-polkujen vaihtumisen
+    },
 
-  interpolation: { escapeValue: false },
-});
+    // (voit pitää nämä, mutta saveMissing voi spämmiä konsolia)
+    saveMissing: true,
+    missingKeyHandler: (lng, ns, key) => {
+      console.warn("❌ Missing i18n key:", key);
+    },
+
+    interpolation: { escapeValue: false },
+  });
+}
 
 export default i18n;

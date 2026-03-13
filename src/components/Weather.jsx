@@ -16,6 +16,7 @@ import LakeSeaPressureStatsCard from "./LakeSeaPressureStatsCard";
 import { useFishingSession } from "../hooks/useFishingSession";
 import StartFishingButton from "./StartFishingButton";
 import SessionMenu from "./SessionMenu";
+import { useEntitlement } from "./EntitlementContext";
 
 // Valitse mille tunnille "päiväennusteen" OH lasketaan
 // dayObj = fcData[selDate]
@@ -324,6 +325,9 @@ useEffect(() => {
       );
   }
 }, [locationCoords, locationName, setLocationName]);
+
+  const { isPro } = useEntitlement();
+  const [showProInfo, setShowProInfo] = useState(false);
 
   const [showHourly, setShowHourly] = useState(false);
   const [search, setSearch] = useState("");
@@ -941,24 +945,48 @@ const hourlyWindow = useMemo(
 
       {/* Napit loppuun */}
       <div style={{ display: "flex", gap: "0.5em", marginTop: "1em" }}>
-        <button onClick={() => nav("/virtavedet")}>
-          ↪ {t("switchToVirtavesi")}
-        </button>
+  {/* Virtavesi-nappi (PRO-gated) */}
+  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+    <button
+      type="button"
+      onClick={() => {
+        if (!isPro) {
+          setShowProInfo(true);
+          return;
+        }
+        setShowProInfo(false);
+        nav("/virtavedet");
+      }}
+      title={!isPro ? t("proUnlock.proInfo") : undefined}
+      style={{
+        opacity: !isPro ? 0.6 : 1,
+        cursor: !isPro ? "not-allowed" : "pointer",
+      }}
+    >
+      ↪ {t("switchToVirtavesi")} {!isPro ? "🔒" : ""}
+    </button>
 
-        {/* Omakala + tooltip */}
-        <div
-	  ref={omakalaWrapRef}
-	  style={{ position: "relative", display: "inline-flex", maxWidth: "100%" }}
-	  onMouseEnter={() => {
-	    if (!isCoarsePointer) {
-	      clearCloseTimer();
-	      setShowOmakalaTip(true);
-	    }
-	  }}
-	  onMouseLeave={() => {
-	    if (!isCoarsePointer) delayedClose();
-	  }}
-	>
+    {showProInfo && !isPro ? (
+      <div style={{ fontSize: 12, opacity: 0.75 }}>
+        {t("proUnlock.proInfo")}
+      </div>
+    ) : null}
+  </div>
+
+  {/* Omakala + tooltip (sun nykyinen blokkisi tähän ihan sellaisenaan) */}
+  <div
+    ref={omakalaWrapRef}
+    style={{ position: "relative", display: "inline-flex", maxWidth: "100%" }}
+    onMouseEnter={() => {
+      if (!isCoarsePointer) {
+        clearCloseTimer();
+        setShowOmakalaTip(true);
+      }
+    }}
+    onMouseLeave={() => {
+      if (!isCoarsePointer) delayedClose();
+    }}
+  >
 
 
           <button

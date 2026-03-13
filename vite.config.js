@@ -30,4 +30,19 @@ export default defineConfig({
       },
     }),
   ],
+
+  build: {
+    chunkSizeWarningLimit: 1000, // nostaa varoitusrajaa vähän
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          i18n: ["i18next", "react-i18next"],
+          firebase: ["firebase/app", "firebase/auth"],
+          charts: ["recharts"],
+          maps: ["leaflet", "react-leaflet"],
+        },
+      },
+    },
+  },
 });

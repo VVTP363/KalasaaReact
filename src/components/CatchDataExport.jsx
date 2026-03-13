@@ -120,6 +120,36 @@ export default function CatchDataExport({ saaliit }) {
         const n = Number(s.replace(",", "."));
         return Number.isFinite(n) ? n : null;
       };
+     
+      const pickSpeciesKeyForCsv = (s) => {
+	  const kind = String(s?.kind || "").toLowerCase();
+	  const isSessionRow = s?.isSession === true || kind === "session";
+
+	  const isNoTargetRow =
+	    s?.isTargetNone === true ||
+	    String(s?.targetOutcome || "").toLowerCase() === "none" ||
+	    String(s?.speciesKey || "").trim() === "__none__" ||
+	    String(s?.speciesKey || "").trim() === "none" ||
+	    String(s?.species || "").trim() === "__none__" ||
+	    String(s?.species || "").trim() === "none";
+
+	  // session/noTarget → targetSpecies
+	  if (isSessionRow || isNoTargetRow) {
+	    const ts = String(s?.targetSpecies || "").trim();
+	    if (ts) return ts;
+	  }
+
+	  // muuten: speciesKey → species → laji
+	  const candidates = [s?.speciesKey, s?.species, s?.laji];
+	  for (const c of candidates) {
+	    const k = String(c || "").trim();
+	    if (!k) continue;
+	    if (k === "__none__" || k === "none" || k === "-") continue;
+	    return k;
+	  }
+
+	  return "";
+	};
 
       const rows = saaliit.map((s) => {
         const dateIsoRaw = (s.date || s.aika || "").toString().slice(0, 10);
@@ -139,11 +169,11 @@ export default function CatchDataExport({ saaliit }) {
 	  s.laji ||        // fallback (vanha data)
 	  "";
 
-	const cleanKey = String(rawKey || "").trim();
-	const species =
-	  cleanKey && cleanKey !== "__none__" && cleanKey !== "none" && cleanKey !== "-"
-	    ? t(`fish.${cleanKey}`, { lng: i18n.language, defaultValue: cleanKey })
-	    : "-";
+	const key = pickSpeciesKeyForCsv(s);
+
+	const species = key
+	  ? t(`fish.${key}`, { lng: i18n.language, defaultValue: key })
+	  : "-";
 
         const lengthClass = s.lengthClass || s.pituus || s.length || "";
 
@@ -189,7 +219,6 @@ export default function CatchDataExport({ saaliit }) {
         const match = num(matchSource);
         const sourceKey = (s.origin || s.source || "").toString().trim() || "unknown";
         const sourceLabel = t(`source.${sourceKey}`, { defaultValue: sourceKey });
-
 
         return {
           dateIso,

@@ -19,7 +19,7 @@ export default function SummaryPanel({
   infoDefault = "Yhteenveto laskee saalislomakkeelta talletetut tiedot lajeittain yhteen (kpl, C&R ja paino).",
   showClear = true,
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation("translation");
 
   // pieni "tick", jolla pakotetaan reload kun localStorage muuttuu
   const [tick, setTick] = useState(0);
@@ -44,21 +44,68 @@ export default function SummaryPanel({
     return buildSpeciesSummary(catches).sort((a, b) => b.totalCount - a.totalCount);
   }, [catches]);
 
+    const csvNum = (v, decimals = 2) => {
+    const n = Number(String(v ?? "").replace(",", "."));
+    if (!Number.isFinite(n)) return "0";
+    return n.toFixed(decimals).replace(".", ","); // FI-Excel desimaalipilkku
+  };
+
   const handleExportCSV = () => {
     if (!summaryArr.length) return;
+  console.log("[SummaryPanel] lang:", i18n.language);
+  console.log("[SummaryPanel] exists csvSummary.species:", i18n.exists("csvSummary.species"));
+  console.log("[SummaryPanel] t(csvSummary.species):", t("csvSummary.species", { defaultValue: "Laji" }));
+  console.log("[SummaryPanel] t(csvSummary.count):", t("csvSummary.count", { defaultValue: "kpl" }));
 
-    const header = ["Laji", "Kpl", "C&R", "Paino_kg"];
-    const rows = summaryArr.map((row) => [
-      row.speciesKey,
-      row.totalCount,
-      row.totalCr,
-      Number.isFinite(row.totalWeight) ? row.totalWeight.toFixed(2) : "0.00",
-    ]);
+    // ✅ Otsikot käännöksillä
+    const header = [
+      t("csvSummary.species", { defaultValue: "Laji" }),
+      t("csvSummary.count", { defaultValue: "kpl" }),
+      t("csvSummary.weightKg", { defaultValue: "kg" }),
+      t("csvSummary.hours", { defaultValue: "h" }),
+      t("csvSummary.kgPerHour", { defaultValue: "kg/h" }),
+      t("csvSummary.hourPerKg", { defaultValue: "h/kg" }),
+    ];
 
-    const csvLines = [header, ...rows].map((r) => r.join(","));
-    const csv = csvLines.join("\n");
+    const rows = summaryArr.map((row) => {
+      const count = Number(row.totalCount ?? 0);
+      const kg = Number(row.totalWeight ?? 0);
 
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      // tunnit: tue useita kenttiä (riippuu mitä buildSpeciesSummary antaa)
+      const hours = Number(
+        row.totalHours ??
+          row.totalEffortHours ??
+          row.totalFishingHours ??
+          row.totalTimeHours ??
+          0
+      );
+
+      const kgph = hours > 0 ? kg / hours : 0;
+      const hpkg = kg > 0 ? hours / kg : 0;
+
+      return [
+        t(`fish.${row.speciesKey}`, { defaultValue: row.speciesKey }),
+        String(count),
+        csvNum(kg, 1),
+        csvNum(hours, 1),
+        csvNum(kgph, 2),
+        csvNum(hpkg, 2),
+      ];
+    });
+
+    const all = [header, ...rows];
+
+    // ✅ ; erotin + lainaus + BOM
+    const csv = all
+      .map((r) =>
+        r
+          .map((v) => (v == null ? "" : String(v)))
+          .map((v) => `"${v.replace(/"/g, '""')}"`)
+          .join(";")
+      )
+      .join("\n");
+
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
@@ -66,9 +113,10 @@ export default function SummaryPanel({
     a.download = exportFileName;
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
     URL.revokeObjectURL(url);
   };
+
 
   const handleClear = () => {
     if (!storageKey) return;

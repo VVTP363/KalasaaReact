@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 import { useTranslation } from "react-i18next";
 
@@ -8,17 +8,34 @@ export default function AuthBar() {
   const [err, setErr] = useState("");
   const { t } = useTranslation();
 
-  useEffect(() => onAuthStateChanged(auth, setUser), []);
+  useEffect(() => {
+  const unsub = onAuthStateChanged(auth, setUser);
 
-  const login = async () => {
-    setErr("");
-    try {
+  // Redirect-paluu (vain jos redirectiä käytetty)
+  getRedirectResult(auth).catch(() => {});
+
+  return () => unsub();
+}, []);
+
+const login = async () => {
+  setErr("");
+  try {
+    const host = window.location.hostname;
+    const isHosted =
+      host.endsWith(".web.app") || host.endsWith(".firebaseapp.com");
+
+    if (isHosted) {
+      // ✅ Firebase Hosting / tuotanto: redirect → ei COOP window.close varoitusta
+      await signInWithRedirect(auth, googleProvider);
+    } else {
+      // ✅ localhost/dev: popup → nopea
       await signInWithPopup(auth, googleProvider);
-    } catch (e) {
-      console.error("[Auth] signIn error:", e);
-      setErr(e?.message || "Login failed");
     }
-  };
+  } catch (e) {
+    console.error("[Auth] signIn error:", e);
+    setErr(e?.message || "Login failed");
+  }
+};
 
   const logout = async () => {
     setErr("");
@@ -45,13 +62,22 @@ export default function AuthBar() {
         >
           {t("auth.loginGoogle")}
         </button>
-        {err ? <span style={{ fontSize: 12, color: "#b00020" }}>{err}</span> : null}
+        {err ? (
+          <span style={{ fontSize: 12, color: "#b00020" }}>{err}</span>
+        ) : null}
       </div>
     );
   }
 
   return (
-    <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+    <div
+      style={{
+        display: "flex",
+        gap: 10,
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
+    >
       <span style={{ fontSize: 12, opacity: 0.8 }}>
         ✅ {user.displayName || user.email}
       </span>

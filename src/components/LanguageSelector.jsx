@@ -44,9 +44,19 @@ const LanguageSelector = () => {
 
   // modaalin kieli = käyttäjän valinta
   const modalLng = pendingLang || i18n.language;
+
+  // ✅ SAFE DEBUG (ei kaada appia)
+  const hasBundle =
+    typeof i18n?.hasResourceBundle === "function"
+      ? i18n.hasResourceBundle("en", "translation")
+      : null;
+
   console.log("i18n.language =", i18n.language);
-  console.log("has en bundle =", i18n.hasResourceBundle("en", "translation"));
-  console.log("en langDefault.title =", i18n.t("langDefault.title", { lng: "en" }));
+  console.log("has en bundle =", hasBundle);
+  console.log(
+    "en langDefault.title =",
+    t("langDefault.title", { lng: "en", defaultValue: "Default language" })
+  );
 
   return (
     <>
@@ -55,11 +65,7 @@ const LanguageSelector = () => {
           {t("language", { defaultValue: "Kieli" })}:
         </label>
 
-        <select
-          id="language-select"
-          value={i18n.language}
-          onChange={changeLanguage}
-        >
+        <select id="language-select" value={i18n.language} onChange={changeLanguage}>
           <option value="fi">suomi</option>
           <option value="en">english</option>
           <option value="sv">svenska</option>
@@ -104,13 +110,7 @@ const LanguageSelector = () => {
               })}
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: 10,
-                justifyContent: "flex-end",
-              }}
-            >
+            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <button type="button" onClick={cancel}>
                 {t("langDefault.cancel", {
                   lng: modalLng,

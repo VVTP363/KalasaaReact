@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { normalizeSpecies } from "../utils/species";
+import ConfirmModal from "./ConfirmModal";
 
 export default function ClearHistoryButton() {
   const { t, i18n } = useTranslation();
@@ -15,6 +16,7 @@ export default function ClearHistoryButton() {
   // ✅ UUSI: oppimisalusta (vältä tätä) — oletuksena pois
   const [clearLearning, setClearLearning] = useState(false);
   const handleClear = () => setShowDialog(true);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   // ---- keyt (pidä nämä yhdessä paikassa) ----
   const HISTORY_KEYS = ["virtavesisaaliit", "jarvisaaliit", "saaliit"]; // saaliit varmuuden vuoksi jos jossain vanhaa
@@ -107,183 +109,153 @@ const csvTargetFishLabel = (item) => {
   return tt(`fish.${sp}`, { defaultValue: raw || sp });
 };
 
-  const executeClear = () => {
-    // 0) oppimisalusta varmistus (koska “vältä tätä”)
-    if (clearLearning) {
-      const ok = window.confirm(
-        t("clearDialog.learningConfirm", {
-          defaultValue:
-            "Haluatko varmasti tyhjentää oppimisalustan? Tämä heikentää ennusteen oppimista.",
-        })
-      );
-      if (!ok) return;
-    }
+  const runClear = () => {
+  const tt = i18n.getFixedT(exportLng()); // ✅ tarvitaan tuossa river-osassa (speciesLabel)
 
-    const csvRiverSpeciesLabel = (item) => {
-    const raw =
-    item.species ?? item.laji ?? item.targetSpecies ?? item.target ?? "";
-
+  const csvRiverSpeciesLabel = (item) => {
+    const raw = item.species ?? item.laji ?? item.targetSpecies ?? item.target ?? "";
     const key = normalizeSpecies(raw || "");
     if (!key) return "";
-
-    // UI-kielen mukaan (sama kuin historiassa)
     return t(`fish.${key}`, { defaultValue: key });
   };
 
-    // 1) CSV-vienti (ennen tyhjennystä)
-    if (exportCSV) {
-      const river = safeParse("virtavesisaaliit");
-      const lake = safeParse("jarvisaaliit"); // ✅ nykyinen järvi/meri historia
-      const lakeLegacy = safeParse("saaliit"); // varmuuden vuoksi, jos vanhaa dataa vielä
+  // 1) CSV-vienti (ennen tyhjennystä)
+  if (exportCSV) {
+    const river = safeParse("virtavesisaaliit");
+    const lake = safeParse("jarvisaaliit");
+    const lakeLegacy = safeParse("saaliit");
 
-      const csvRows = [
-        [
-          "Aika",
-          "Tyyppi",
-          "Laji",
-          "Kpl",
-          "Paino (kg)",
-          "Pituus",
-          "C&R",
-          "Kieli",
-          "Paine (hPa)",
-          "OH_ennuste",
-          "OH_toteuma",
-          "OH_suhde",
-          "Tuuli",
-          "Kuu",
-          "Kuu_avain",
-          "Arviointi",
-          "TargetLaji",
-          "TargetOutcome",
-        ],
-      ];
+    const csvRows = [
+      [
+        "Aika",
+        "Tyyppi",
+        "Laji",
+        "Kpl",
+        "Paino (kg)",
+        "Pituus",
+        "C&R",
+        "Kieli",
+        "Paine (hPa)",
+        "OH_ennuste",
+        "OH_toteuma",
+        "OH_suhde",
+        "Tuuli",
+        "Kuu",
+        "Kuu_avain",
+        "Arviointi",
+        "TargetLaji",
+        "TargetOutcome",
+      ],
+    ];
 
-      // Virtavesi
-      river.forEach((item) => {
-  const m = Number(item.ohMatchFactor);
-  const ratio = Number.isFinite(m) ? m.toFixed(2) : "";
+    // Virtavesi
+    river.forEach((item) => {
+      const m = Number(item.ohMatchFactor);
+      const ratio = Number.isFinite(m) ? m.toFixed(2) : "";
 
-  const aika =
-    `${item.date ?? ""} ${item.time ?? ""}`.trim() ||
-    (item.aika ?? "");
+      const aika = `${item.date ?? ""} ${item.time ?? ""}`.trim() || (item.aika ?? "");
 
-  const raw = String(item?.species ?? item?.laji ?? item?.targetSpecies ?? "").trim();
+      const raw = String(item?.species ?? item?.laji ?? item?.targetSpecies ?? "").trim();
+      const key = String(item?.speciesKey || normalizeSpecies(raw) || "").trim();
 
-  // ✅ tärkein: ota speciesKey jos löytyy, muuten normalisoi raw
-  const key = String(item?.speciesKey || normalizeSpecies(raw) || "").trim();
+      const speciesLabel = key ? tt(`fish.${key}`, { defaultValue: raw || key }) : (raw || "");
 
-  // ✅ käännä aina key:stä
-  const speciesLabel = key
-    ? tt(`fish.${key}`, { defaultValue: raw || key })
-    : (raw || "");
+      csvRows.push([
+        aika,
+        tt("water.river", { defaultValue: "Virtavesi" }),
+        speciesLabel,
+        "",
+        item.amount ?? item.maara ?? "",
+        item.weight ?? item.paino ?? "",
+        item.length ?? item.pituus ?? item.lengthClass ?? "",
+        item.cr ?? item.crCount ?? "",
+        exportLng(),
+        item.pressure ?? item.pressure_hPa ?? "",
+        item.riverOH ?? item.oh ?? item.fishingInterest ?? "",
+        item.realizedOH ?? "",
+        ratio,
+        item.windDirection ?? item.windText ?? item.windHuman ?? "",
+        item.moonPhase ??
+          (item.moonEmoji && item.moonPhaseKey ? `${item.moonEmoji} ${item.moonPhaseKey}` : ""),
+        item.moonPhaseKey ?? "",
+        item.rating ?? item.ratingDisplay ?? item.feedback ?? item.arvio ?? "",
+        csvTargetFishLabel(item),
+        item.targetOutcome ?? "",
+      ]);
+    });
 
-  csvRows.push([
-    aika,
-    tt("water.river", { defaultValue: "Virtavesi" }),
+    // Järvi/Meri
+    const pushLakeRows = (arr) => {
+      arr.forEach((item) => {
+        const m = Number(item.ohMatchFactor);
+        const ratio = Number.isFinite(m) ? m.toFixed(2) : "";
 
-    // ✅ tähän se kalannimi (ei csvFishLabel tähän väliin)
-    speciesLabel,
+        const aika =
+          item.aika ??
+          (item.date ? `${item.date} ${item.time ?? ""}`.trim() : "") ??
+          "";
 
-    // jos tämä sarake on tarkoitettu jollekin muulle, pidä,
-    // mutta jos se on "toinen kalannimi", se sotkee testauksen.
-    // Suosittelen tilapäisesti laittaa tähän tyhjäksi:
-    // csvFishLabel(item),
-    "",
+        const ohForecast =
+          item.fishingInterest ??
+          item.oh ??
+          (item.ohDisplay ? String(item.ohDisplay).replace("/8", "") : "");
 
-    item.amount ?? item.maara ?? "",
-    item.weight ?? item.paino ?? "",
-    item.length ?? item.pituus ?? item.lengthClass ?? "",
-    item.cr ?? item.crCount ?? "",
-    exportLng(),
-    item.pressure ?? item.pressure_hPa ?? "",
-    item.riverOH ?? item.oh ?? item.fishingInterest ?? "",
-    item.realizedOH ?? "",
-    ratio,
-    item.windDirection ?? item.windText ?? item.windHuman ?? "",
-    item.moonPhase ??
-      (item.moonEmoji && item.moonPhaseKey ? `${item.moonEmoji} ${item.moonPhaseKey}` : ""),
-    item.moonPhaseKey ?? "",
-    item.rating ?? item.ratingDisplay ?? item.feedback ?? item.arvio ?? "",
-    csvTargetFishLabel(item),
-    item.targetOutcome ?? "",
-  ]);
-});
+        csvRows.push([
+          aika,
+          "Järvi/Meri",
+          item.speciesDisplay ?? item.laji ?? item.species ?? item.targetSpecies ?? "",
+          item.maara ?? item.amount ?? "",
+          item.paino ?? item.weightKg ?? item.weight ?? "",
+          item.pituus ?? item.lengthClass ?? item.length ?? "",
+          item.cr ?? item.crCount ?? "",
+          item.lang ?? item.kieli ?? "fi",
+          item.pressure ?? item.pressure_hPa ?? item.pressureDisplay ?? "",
+          ohForecast ?? "",
+          item.realizedOH ?? "",
+          ratio,
+          item.windHuman ?? item.windText ?? "",
+          item.moonPhase ??
+            (item.moonEmoji && item.moonPhaseKey ? `${item.moonEmoji} ${item.moonPhaseKey}` : ""),
+          item.moonPhaseKey ?? "",
+          item.ratingDisplay ?? item.arvio ?? item.catchRating ?? "",
+          item.targetSpecies ?? "",
+          item.targetOutcome ?? "",
+        ]);
+      });
+    };
 
-      // Järvi/Meri (nykyinen)
-      const pushLakeRows = (arr) => {
-        arr.forEach((item) => {
-          const m = Number(item.ohMatchFactor);
-          const ratio = Number.isFinite(m) ? m.toFixed(2) : "";
+    pushLakeRows(lake);
+    if (lakeLegacy.length) pushLakeRows(lakeLegacy);
 
-          const aika =
-            item.aika ??
-            (item.date ? `${item.date} ${item.time ?? ""}`.trim() : "") ??
-            "";
-
-          const ohForecast =
-            item.fishingInterest ??
-            item.oh ??
-            (item.ohDisplay ? String(item.ohDisplay).replace("/8", "") : "");
-
-          csvRows.push([
-            aika,
-            "Järvi/Meri",
-            item.speciesDisplay ?? item.laji ?? item.species ?? item.targetSpecies ?? "",
-            item.maara ?? item.amount ?? "",
-            item.paino ?? item.weightKg ?? item.weight ?? "",
-            item.pituus ?? item.lengthClass ?? item.length ?? "",
-            item.cr ?? item.crCount ?? "",
-            item.lang ?? item.kieli ?? "fi",
-            item.pressure ?? item.pressure_hPa ?? item.pressureDisplay ?? "",
-            ohForecast ?? "",
-            item.realizedOH ?? "",
-            ratio,
-            item.windHuman ?? item.windText ?? "",
-            item.moonPhase ??
-              (item.moonEmoji && item.moonPhaseKey ? `${item.moonEmoji} ${item.moonPhaseKey}` : ""),
-            item.moonPhaseKey ?? "",
-            item.ratingDisplay ?? item.arvio ?? item.catchRating ?? "",
-            item.targetSpecies ?? "",
-            item.targetOutcome ?? "",
-          ]);
-        });
-      };
-
-      pushLakeRows(lake);
-
-      // myös legacy “saaliit” jos siellä on vielä jotain
-      if (lakeLegacy.length) pushLakeRows(lakeLegacy);
-
-      if (csvRows.length > 1) {
-        const csvText = buildCSV(csvRows);
-        downloadTextFile("saalishistoria_virtavesi_jarvimeri.csv", csvText);
-      }
+    if (csvRows.length > 1) {
+      const csvText = buildCSV(csvRows);
+      downloadTextFile("saalishistoria_virtavesi_jarvimeri.csv", csvText);
     }
+  }
 
-    // 2) Tyhjennykset
-    if (clearHistory) {
-      HISTORY_KEYS.forEach((k) => localStorage.removeItem(k));
+  // 2) Tyhjennykset
+  if (clearHistory) HISTORY_KEYS.forEach((k) => localStorage.removeItem(k));
+  if (clearSummary) SUMMARY_KEYS.forEach((k) => localStorage.removeItem(k));
+
+  if (clearLearning) {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i);
+      if (!key) continue;
+      if (LEARNING_PREFIXES.some((p) => key.startsWith(p))) localStorage.removeItem(key);
     }
+  }
 
-    if (clearSummary) {
-      SUMMARY_KEYS.forEach((k) => localStorage.removeItem(k));
-    }
+  emitUpdated();
+  setShowDialog(false);
+};
 
-    if (clearLearning) {
-      // poistetaan vain prefiksillä → ei “vahinko-tyhjennystä”
-      for (let i = localStorage.length - 1; i >= 0; i--) {
-        const key = localStorage.key(i);
-        if (!key) continue;
-        if (LEARNING_PREFIXES.some((p) => key.startsWith(p))) {
-          localStorage.removeItem(key);
-        }
-      }
-    }
-
-    emitUpdated();
-    setShowDialog(false);
-  };
+const executeClear = () => {
+  if (clearLearning) {
+    setConfirmOpen(true);
+    return;
+  }
+  runClear();
+};
 
   return (
     <>
@@ -303,7 +275,7 @@ const csvTargetFishLabel = (item) => {
           gap: "6px",
         }}
       >
-        🧹 {t("clear", "Tyhjennä")}
+        🧹 {t("clear", { defaultValue: "Tyhjennä" })}
       </button>
 
       {showDialog && (
@@ -331,7 +303,7 @@ const csvTargetFishLabel = (item) => {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3>{t("clearDialog.title", "Tyhjennetään tietoja")}</h3>
+            <h3>{t("clearDialog.title", { defaultValue: "Tyhjennetään tietoja" })}</h3>
 
             <label>
               <input
@@ -339,7 +311,7 @@ const csvTargetFishLabel = (item) => {
                 checked={exportCSV}
                 onChange={() => setExportCSV(!exportCSV)}
               />
-              &nbsp;{t("clearDialog.exportCsv", "Vie CSV ennen tyhjennystä")}
+              &nbsp;{t("clearDialog.exportCsv", { defaultValue: "Vie CSV ennen tyhjennystä" })}
             </label>
 
             <br />
@@ -350,7 +322,7 @@ const csvTargetFishLabel = (item) => {
                 checked={clearHistory}
                 onChange={() => setClearHistory(!clearHistory)}
               />
-              &nbsp;{t("clearDialog.clearHistory", "Tyhjennä Historia")}
+              &nbsp;{t("clearDialog.clearHistory", { defaultValue: "Tyhjennä Historia" })}
             </label>
 
             <br />
@@ -361,7 +333,7 @@ const csvTargetFishLabel = (item) => {
                 checked={clearSummary}
                 onChange={() => setClearSummary(!clearSummary)}
               />
-              &nbsp;{t("clearDialog.clearSummary", "Tyhjennä Yhteenveto")}
+              &nbsp;{t("clearDialog.clearSummary", { defaultValue: "Tyhjennä Yhteenveto" })}
             </label>
 
             <br />
@@ -373,9 +345,9 @@ const csvTargetFishLabel = (item) => {
                 checked={clearLearning}
                 onChange={() => setClearLearning(!clearLearning)}
               />
-              &nbsp;{t("clearDialog.clearLearning", "Tyhjennä oppimisalusta")}{" "}
+              &nbsp;{t("clearDialog.clearLearning", { defaultValue: "Tyhjennä oppimisalusta" })}{" "}
               <span style={{ opacity: 0.65 }}>
-                ({t("clearDialog.avoid", "vältä tätä")})
+                ({t("clearDialog.avoid", { defaultValue: "vältä tätä" })})
               </span>
             </label>
 
@@ -390,16 +362,32 @@ const csvTargetFishLabel = (item) => {
                   borderRadius: 4,
                 }}
               >
-                {t("clearDialog.execute", "Suorita")}
+                {t("clearDialog.execute", { defaultValue: "Suorita" })}
               </button>
 
               <button
                 onClick={() => setShowDialog(false)}
                 style={{ padding: "6px 12px" }}
               >
-                {t("clearDialog.cancel", "Peruuta")}
+                {t("clearDialog.cancel", { defaultValue: "Peruuta" })}
               </button>
             </div>
+              <ConfirmModal
+              open={confirmOpen}
+              title={t("clearDialog.clearLearning", {
+                defaultValue: "Tyhjennä oppiminen (Älä näytä uudelleen)",
+              })}
+              message={t("clearDialog.learningConfirm", {
+                defaultValue: "Tyhjennetäänkö oppimisdatan tiedot?",
+              })}
+              cancelText={t("common.cancel", { defaultValue: "Peruuta" })}
+              confirmText={t("common.ok", { defaultValue: "OK" })}
+              onCancel={() => setConfirmOpen(false)}
+              onConfirm={() => {
+                setConfirmOpen(false);
+                runClear();
+              }}
+            />
           </div>
         </div>
       )}

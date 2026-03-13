@@ -1,14 +1,14 @@
 // src/utils/species.js
 
-// 1) Kaikki mahdolliset nimet (fi/en/sv/no) → FI-kanoninen
-export const SPECIES_ALIASES = {
-  // FI kirjoitusasut
+// 1) Alias-taulukot kielittäin
+const FI_ALIASES = {
   "Saimaan nieriä": "Saimaannieriä",
   "Saimaanieriä": "Saimaannieriä",
   "Saimaannieriä": "Saimaannieriä",
   "Särkikalat": "Särkikalat",
+};
 
-  // EN
+const EN_ALIASES = {
   Salmon: "Lohi",
   Trout: "Taimen",
   Char: "Rautu",
@@ -23,8 +23,9 @@ export const SPECIES_ALIASES = {
   Burbot: "Made",
   Vendace: "Muikku",
   Bream: "Lahna",
+};
 
-  // SV
+const SV_ALIASES = {
   Lax: "Lohi",
   Öring: "Taimen",
   Röding: "Rautu",
@@ -37,8 +38,9 @@ export const SPECIES_ALIASES = {
   Lake: "Made",
   Siklöja: "Muikku",
   Braxen: "Lahna",
+};
 
-  // NO
+const NO_ALIASES = {
   Laks: "Lohi",
   Ørret: "Taimen",
   Røye: "Rautu",
@@ -48,10 +50,19 @@ export const SPECIES_ALIASES = {
   Gjørs: "Kuha",
   Abbor: "Ahven",
   Lake: "Made",
-  Sik: "Siika",
 };
 
-// 2) FI-kanoninen → pysyvä key (käännösavain)
+// 2) Yhdistetty alias-sanakirja
+// Huom: sama avain saa esiintyä vain kerran lopullisessa objektissa.
+// Tässä Sik ja Lake tulevat vain kerran, vaikka ne toimivat sekä sv että no.
+export const SPECIES_ALIASES = {
+  ...FI_ALIASES,
+  ...EN_ALIASES,
+  ...SV_ALIASES,
+  ...NO_ALIASES,
+};
+
+// 3) FI-kanoninen → pysyvä key (käännösavain)
 export const FI_TO_KEY = {
   Lohi: "salmon",
   Taimen: "trout",
@@ -69,36 +80,36 @@ export const FI_TO_KEY = {
   Särkikalat: "cyprinids",
 };
 
-// 3) Keyt tunnistetaan myös (jos dataan on joskus päätynyt jo key)
+// 4) Keyt tunnistetaan myös suoraan
 const KNOWN_KEYS = new Set(Object.values(FI_TO_KEY));
 
+// 5) Muunnos: mikä tahansa alias → pysyvä fish key
 export function toFishKey(input) {
   if (!input) return "";
 
   const raw = String(input).trim();
   const aliased = SPECIES_ALIASES[raw] || raw;
 
-  // jos käyttäjä/data antaa suoraan keyn, pidä se
   if (KNOWN_KEYS.has(aliased)) return aliased;
-
-  // jos aliased on FI-kanoninen, mapataan keyksi
   if (FI_TO_KEY[aliased]) return FI_TO_KEY[aliased];
 
-  // fallback: älä “arvaa” uutta keytä (tämä aiheutti teillä trout/hauki-caseja)
   return "";
 }
 
+// 6) Yhteensopivuus vanhaan käyttöön
 export function normalizeSpecies(input) {
   return toFishKey(input);
 }
 
+// 7) Käännös fish.<key> kautta
 export function translateSpecies(t, input) {
   const key = toFishKey(input);
   return key ? t(`fish.${key}`, { defaultValue: key }) : "";
 }
 
+// 8) Palauta FI-kanoninen nimi
 export function toFiCanonical(input) {
   if (!input) return "";
   const raw = String(input).trim();
-  return SPECIES_ALIASES[raw] || raw; // palauttaa FI-kanonisen nimen, esim "Lohi"
+  return SPECIES_ALIASES[raw] || raw;
 }

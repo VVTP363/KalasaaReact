@@ -6,6 +6,7 @@ import { AppProvider } from "./components/AppContext.jsx";
 import "./index.css";
 import { registerSW } from "virtual:pwa-register";
 registerSW({ immediate: true });
+import "./i18n";
 
 window.addEventListener("error", e => {
   console.error("💥 window.onerror:", e.message, e.error);

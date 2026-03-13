@@ -4,6 +4,7 @@ import { normalizeSpecies } from "../utils/species";
 import SpeciesStrikeForecast from "./SpeciesStrikeForecast";
 import { recomputeAndStoreCatchStats } from "../utils/catchStats";
 import { toCsv, downloadCsv } from "../utils/csvExport";
+import ClearHistoryButton from "./ClearHistoryButton";
 
 // ---- utils ----
 function toISODateSafe(s) {
@@ -148,6 +149,28 @@ function pickWindText(x) {
   return Number.isFinite(deg) ? `${deg}°` : "";
 }
 
+function extractLeadingNumber(v) {
+  if (v === null || v === undefined) return null;
+  const s = String(v).trim();
+  if (!s) return null;
+
+  // Ota ensimmäinen numerojakso (sallii myös desimaalit , tai .)
+  const m = s.match(/-?\d+(?:[.,]\d+)?/);
+  if (!m) return null;
+
+  const n = Number(m[0].replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+}
+function csvNum(v, decimals = null) {
+  if (v === null || v === undefined || v === "") return "";
+  const n = Number(String(v).replace(",", ".").trim());
+  if (!Number.isFinite(n)) return "";
+  const s = decimals == null ? String(n) : n.toFixed(decimals);
+  // ✅ FI-Excel: desimaalipilkku
+  return s.replace(".", ",");
+}
+
+
 export default function SaalisHistoria({ mode = "lake", speciesFilter = "ALL" }) {
   const { t, i18n } = useTranslation("translation");
 
@@ -203,7 +226,6 @@ export default function SaalisHistoria({ mode = "lake", speciesFilter = "ALL" })
       return [];
     }
   }
-
 
   useEffect(() => {
     setRows(loadRowsByMode());
@@ -285,7 +307,7 @@ const displayName = isNoTargetRow
 
       const count = asNum(r.amount ?? r.count ?? r.maara) ?? 0;
       const cr = asNum(r.cr ?? r.crCount ?? r.crAmount) ?? 0;
-      const weight = asNum(r.weight ?? r.weightKg ?? r.paino) ?? 0;
+      const weight = extractLeadingNumber(r.weight ?? r.weightKg ?? r.paino) ?? 0;
       const place = r.locationName || r.paikka || r.location || "-";
       const pressure = asNum(r.pressure ?? r.pressure_hPa);
       
@@ -320,11 +342,10 @@ const displayName = isNoTargetRow
   
       // Toteuma + kerroin vain saalisriveille
       let realizedStored =
-        asNum(r.realizedOH) ??
-        asNum(r.realizedOHActive) ??
-        asNum(r.ohRealized) ??
-        (r.summaryData ? asNum(r.summaryData.realizedOH) : null);
-
+	  extractLeadingNumber(r.realizedOH) ??
+	  extractLeadingNumber(r.realizedOHActive) ??
+	  extractLeadingNumber(r.ohRealized) ??
+	  (r.summaryData ? extractLeadingNumber(r.summaryData.realizedOH) : null);
       let matchStored =
         asNum(r.ohMatchFactor) ??
         asNum(r.OH_matchFactor) ??
@@ -335,7 +356,7 @@ const displayName = isNoTargetRow
         realizedStored = null;
         matchStored = null;
       }
-
+      
       const factor = asNum(matchStored);
       const showFactor = !isNoTargetRow && !isSess && Number.isFinite(factor) && factor > 0.01;
 
@@ -428,113 +449,121 @@ const displayName = isNoTargetRow
     }
   }, [mode, rows]);
 
-  const downloadCSV = () => {
-  console.log("[CSV] lang:", i18n.language);
-
-  const header = [
-    t("csv.date", { defaultValue: "Päivämäärä" }),
-    t("csv.place", { defaultValue: "Paikka" }),
-    t("csv.species", { defaultValue: "Kalalaji" }),
-    t("csv.count", { defaultValue: "Kappalemäärä" }),
-    t("csv.weightKg", { defaultValue: "Paino (kg)" }),
-    t("csv.length", { defaultValue: "Pituus" }),
-    t("cr", "Catch & Release"),
-    t("pressure", "Ilmanpaine"),
-    t("catchLikelihoodShort", "Ottihalukkuus"),
-    t("windDirection", "Tuulen suunta"),
-    t("csv.realizedOH", { defaultValue: "Toteutunut OH" }),
-    t("csv.realizedVsForecast", { defaultValue: "Toteuma / ennuste" }),
-    t("csv.source", { defaultValue: "Lähde" }),
-  ];
-
-  // ✅ helperit TÄHÄN (ennen dataRows)
-  const getSpeciesKey = (r) => {
-    const direct = String(r?.speciesKey || "").trim();
-    if (direct) return direct;
-
-    const raw = String(
-      r?.speciesRaw || r?.laji || r?.species || r?.displayName || ""
-    ).trim();
-
-    return normalizeSpecies(raw) || "";
-  };
-
-  const getSpeciesLabel = (r) => {
-    const key = getSpeciesKey(r);
-    const fallback = String(
-      r?.speciesRaw || r?.laji || r?.species || r?.displayName || key || ""
-    ).trim();
-
-    return key ? t(`fish.${key}`, { defaultValue: fallback }) : fallback;
-  };
-
-  // (valinnainen) debug sample nyt oikein:
-  console.log(
-    "[CSV] sample:",
-    filtered.slice(0, 5).map((r) => {
-      const key = getSpeciesKey(r);
-      return {
-        raw: r.speciesRaw || r.laji || r.species || r.displayName,
-        stored: r.speciesKey,
-        normalizedKey: key,
-        exists: key ? i18n.exists(`fish.${key}`, { ns: "translation" }) : null,
-        translated: key ? t(`fish.${key}`, { defaultValue: "MISSING" }) : null,
-      };
-    })
-  );
-
-  const asText = (v) =>
-    v === null || v === undefined || v === "" ? "" : "\t" + String(v);
-
-  const dataRows = filtered.map((r) => {
-    const csvSpecies = getSpeciesLabel(r);
-
-    // ... tee muut sarakkeet kuten ennen ...
-    // PALAUTA TAULUKKORIVI:
-    return [
-      r.date || "",
-      r.paikka || r.place || "",
-      csvSpecies,
-      asText(r.amount ?? r.maara ?? ""),
-      asText(r.weightKg ?? r.paino ?? ""),
-      r.lengthClass ?? r.pituus ?? "",
-      asText(r.crCount ?? r.cr ?? ""),
-      asText(r.pressure ?? ""),
-      asText(r.oh ?? r.fishingInterest ?? ""),
-      r.windText ?? r.windHuman ?? "",
-      r.realizedOH ?? "",
-      r.ohMatchFactor ?? "",
-      r.source ?? r.origin ?? "",
+    const downloadCSV = () => {
+    // ✅ käytetään vain saalisrivit
+    const exportRows = filtered; 
+    const header = [
+      t("csv.date", { defaultValue: "Päivämäärä" }),
+      t("csv.place", { defaultValue: "Paikka" }),
+      t("csv.species", { defaultValue: "Kalalaji" }),
+      t("csv.count", { defaultValue: "Kappalemäärä" }),
+      t("csv.weightKg", { defaultValue: "Paino (kg)" }),
+      t("csv.length", { defaultValue: "Pituus" }),
+      t("cr", { defaultValue: "Catch & Release" }),
+      t("pressure", { defaultValue: "Ilmanpaine" }),
+      t("catchLikelihoodShort", { defaultValue: "Ottihalukkuus" }),
+      t("windDirection", { defaultValue: "Tuulen suunta" }),
+      t("csv.realizedOH", { defaultValue: "Toteutunut OH (0–8)" }),
+      t("csv.realizedVsForecast", { defaultValue: "Toteuma / ennuste" }),
+      t("csv.source", { defaultValue: "Lähde" }),
     ];
-  });
 
-  const allRows = [header, ...dataRows];
+    const getSpeciesLabel = (r) => {
+      const key = String(r?.speciesKey || "").trim();
+      const fallback = String(r?.speciesRaw || key || "").trim();
+      return key ? t(`fish.${key}`, { defaultValue: fallback }) : fallback;
+    };
 
-  const csvBody = allRows
-    .map((row) =>
-      row
-        .map((v) => (v === null || v === undefined ? "" : String(v).replace(/"/g, '""')))
-        .map((v) => `"${v}"`)
-        .join(";")
-    )
-    .join("\n");
+    const getSourceLabel = (r) => {
+      const src = String(r?.origin || "").toLowerCase();
+      if (src === "river") return t("origin.river", { defaultValue: "Virtavesi" });
+      return t("origin.lake", { defaultValue: "Järvi/Meri" });
+    };
 
-  const blob = new Blob(["\uFEFF" + csvBody], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "catch_history_filtered.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-};
+    const dataRows = exportRows.map((r) => {
+  const isSessionRow = r?.isSession === true || r?.isTargetNone === true;
+
+  // ✅ sessio/noTarget mukaan CSV:ään (mutta tyhjillä saaliskentillä)
+  if (isSessionRow) {
+    return [
+      r?.dateISO || "",
+      r?.place || "",
+      r?.displayName || "",
+      "", // count
+      "", // weight
+      "", // length
+      "", // C&R
+      csvNum(r?.pressure, 1),
+      "", // forecast OH
+      r?.windDirText || "",
+      "", // realized
+      "", // ratio
+      getSourceLabel(r),
+    ];
+  }
+
+  // ✅ saalisrivi
+  const forecastN = csvNum(r?.OH);
+  const realizedN = Number.isFinite(Number(r?.realizedOH)) ? Number(r.realizedOH) : null;
+  const ratioN = Number.isFinite(Number(r?.ohMatchFactor)) ? Number(r.ohMatchFactor) : null;
+
+  return [
+    r?.dateISO || "",
+    r?.place || "",
+    getSpeciesLabel(r),
+
+    csvNum(r?.count),
+    csvNum(r?.weight, 2),
+    r?.length || "",
+    csvNum(r?.cr),
+    csvNum(r?.pressure, 1),
+
+    forecastN,
+    r?.windDirText || "",
+
+    realizedN == null ? "" : csvNum(Math.round(realizedN)),
+    ratioN == null ? "" : csvNum(ratioN, 6),
+
+    getSourceLabel(r),
+  ];
+});
+
+    const allRows = [header, ...dataRows];
+
+    // ✅ CSV: Excel/Sheets -ystävällinen (FI-Excel tykkää ; erottimesta)
+    const csvBody = allRows
+      .map((row) =>
+        row
+          .map((v) => (v === null || v === undefined ? "" : String(v)))
+          .map((v) => `"${v.replace(/"/g, '""')}"`)
+          .join(";")
+      )
+      .join("\n");
+
+    // BOM auttaa Exceliä ääkkösissä
+    const blob = new Blob(["\uFEFF" + csvBody], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = mode === "river"
+      ? "virtavesi_saalishistoria.csv"
+      : "jarvi_meri_saalishistoria.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   // ✅ ennuste käyttää samaa lajia kuin suodatin; jos ALL, näytä vaikka Ahven fallbackina
   const forecastSpeciesKey = species !== "ALL" ? species : "Ahven";
   const storageKey = mode === "river" ? "virtavesisaaliit" : "jarvisaaliit";
 
-  return (
-    <div>
-      <h3 style={{ marginTop: 0 }}>{t("historyTitle", "Saalishistoria")}</h3>
+ return (
+  <div>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+      <h3 style={{ marginTop: 0, marginBottom: 0 }}>{t("historyTitle", "Saalishistoria")}</h3>
+
+      {/* ✅ Tyhjennä data (Historia / Yhteenveto / Oppiminen) */}
+      <ClearHistoryButton />
+    </div>
 
       {/* ✅ Lajikohtainen ottiennuste (synkassa lajivalikon kanssa) */}
       <div
@@ -578,11 +607,12 @@ const displayName = isNoTargetRow
         </label>
 
         <button type="button" onClick={downloadCSV}>
-          ⬇️ {t("downloadCSV", "Lataa CSV")}
-        </button>
+	  ⬇️ {t("csv.download", { defaultValue: "Lataa CSV" })}
+	</button>
+
       </div>
 
-      <div style={{ margin: "0.5rem 0", opacity: 0.85 }}>
+            <div style={{ margin: "0.5rem 0", opacity: 0.85 }}>
         {t("history.total", { defaultValue: "Yhteensä" })}: {catchRows.length}{" "}
         {t("history.rows", { defaultValue: "riviä" })} •{" "}
         {t("history.pcs", { defaultValue: "kpl" })}: {totals.count} •{" "}
@@ -590,7 +620,10 @@ const displayName = isNoTargetRow
       </div>
 
       {!filtered.length ? (
-        <p>{t("noHistory", "Ei tallennettuja saaliita valituilla suodattimilla.")}</p>
+        <p>
+	  {t("noHistory", { defaultValue: "No saved catches with selected filters." })}
+	</p>
+
       ) : (
         <ul style={{ paddingLeft: "1em" }}>
           {[...filtered].map((r, idx) => {
@@ -601,7 +634,9 @@ const displayName = isNoTargetRow
                 <li key={key} style={{ marginBottom: "0.25em" }}>
                   {r.dateISO} – {r.displayName}
                   {" | "} 📍 {r.place}
-                  {Number.isFinite(r.effortHours) ? ` • ${r.effortHours.toFixed(2)} h` : ""}
+                  {Number.isFinite(r.effortHours)
+                    ? ` • ${r.effortHours.toFixed(2)} h`
+                    : ""}
                 </li>
               );
             }
@@ -618,7 +653,10 @@ const displayName = isNoTargetRow
 
                 {Number.isFinite(r.realizedOH) ? (
                   <>
-                    {" | "} {t("oh.realizedLine", { defaultValue: "Toteutunut OH" })}{" "}
+                    {" | "}{" "}
+                    {t("oh.realizedLine", {
+                      defaultValue: "Toteutunut OH",
+                    })}{" "}
                     {Math.round(r.realizedOH)}/8
                     {r.showFactor && Number.isFinite(r.ohMatchFactor)
                       ? ` (${r.ohMatchFactor.toFixed(2)}×)`
@@ -626,27 +664,28 @@ const displayName = isNoTargetRow
                   </>
                 ) : r.showFactor && Number.isFinite(r.ohMatchFactor) ? (
                   <>
-                    {" | "} {t("oh.realizedLine", { defaultValue: "Toteutunut OH" })}{" "}
-                    {t("history.missingRealized", { defaultValue: "(puuttuu)" })} (
-                    {r.ohMatchFactor.toFixed(2)}×)
+                    {" | "}{" "}
+                    {t("oh.realizedLine", {
+                      defaultValue: "Toteutunut OH",
+                    })}{" "}
+                    {t("history.missingRealized", {
+                      defaultValue: "(puuttuu)",
+                    })}{" "}
+                    ({r.ohMatchFactor.toFixed(2)}×)
                   </>
                 ) : null}
-                
 
+                {" | "}
                 {r.origin === "river" ? (
-                  <>
-                    {" | "} 🌊 {t("origin.river", "Virtavesi")}
-                  </>
+                  <>🌊 {t("origin.river", { defaultValue: "Virtavesi" })}</>
                 ) : (
-                  <>
-                    {" | "} 🌅 {t("origin.lake", "Järvi/Meri")}
-                  </>
+                  <>🌅 {t("origin.lake", { defaultValue: "Järvi/Meri" })}</>
                 )}
               </li>
             );
           })}
         </ul>
       )}
-    </div>
+   </div>
   );
 }

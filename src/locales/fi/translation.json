@@ -4,20 +4,39 @@
   "getLocation": "Oma paikka",
   "moonPhase": "Kuun vaihe",
   "moonPhaseTranslations": {
-  "waning-gibbous": "Vähenevä kupera",
-  "waxing-gibbous": "Kasvava kupera",
-  "new-moon": "Uusikuu",
-  "first-quarter": "Ensimmäinen neljännes",
-  "last-quarter": "Viimeinen neljännes",
-  "full-moon": "Täysikuu",
-  "waxing-crescent": "Kasvava sirppi",
-  "waning-crescent": "Vähenevä sirppi"
-  },
+  "newMoon": "Uusikuu",
+  "waxingCrescent": "Kasvava sirppi",
+  "firstQuarter": "Ensimmäinen neljännes",
+  "waxingGibbous": "Kasvava kupera",
+  "fullMoon": "Täysikuu",
+  "waningGibbous": "Vähenevä kupera",
+  "lastQuarter": "Viimeinen neljännes",
+  "waningCrescent": "Vähenevä sirppi"
+},
 
 "pro": {
   "lockedTabs": "🔒 Pro-versiossa: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla.",
   "freeInfo": "Free-versiossa näkyy vain Sää/Ennuste + Saalisilmoitus. Pro avaa Virtavedet ja muut sivut.",
-  "proInfo": "🔒 Pro-versio: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla."
+  "proInfo": "🔒 Pro-versio: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla.",
+   "backToFree": "Palautettu Free-tilaan.",
+    "activeTitle": "✅ PRO käytössä",
+  "activeSource": "({{source}})",
+  "backToFree": "Palauta Free-versioon",
+  "backToFreeMsg": "Siirrytään takaisin Free-versioon.",
+  "lockedTitle": "🔒 PRO-ominaisuus",
+  "freeInfo": "Tämä ominaisuus on rajoitettu Free-versiossa.",
+  "proInfo": "Avaa PRO saadaksesi kaikki ominaisuudet käyttöön.",
+  "codePlaceholder": "Syötä koodi",
+  "unlockBtn": "Avaa PRO",
+  "invalidCode": "Virheellinen koodi",
+  "unlocked": "PRO aktivoitu!",
+  "active": "PRO aktiivinen",
+  "notActive": "PRO ei aktiivinen",
+  "sources": {
+    "manual_code": "Manuaalikoodi",
+    "promo": "Kampanjakoodi",
+    "admin": "Ylläpitäjän aktivointi"
+  }
 },
 
 "auth": {
@@ -34,6 +53,8 @@
   "lockedTitle": "🔒 PRO-ominaisuudet lukittu",
   "codePlaceholder": "Syötä testikoodi",
   "unlockBtn": "Avaa PRO",
+  "buyBtn": "Osta Pro",
+  "lockedFeatures": "🔒 Pro-versiossa: {{features}}. Avaa Pro testikoodilla tai ostamalla.",
   "freeInfo": "Free-versiossa näkyy vain Sää/Ennuste + Saalisilmoitus. Pro avaa Virtavedet ja muut sivut.",
   "proInfo": "🔒 Pro-versio: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla.",
   "activeTitle": "✅ PRO käytössä",
@@ -42,10 +63,29 @@
   "invalidCode": "Väärä testikoodi.",
   "unlocked": "PRO avattu tälle laitteelle.",
   "backToFreeMsg": "Palautettu Free-tilaan.",
-  "invalidCode": "Väärä testikoodi.",
-  "unlocked": "PRO avattu tälle laitteelle.",
-  "proInfo": "🔒 Pro-versiossa: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla."
+  "buyBtn": "Osta PRO",
+  "buying": "Ohjataan...",
+  "loggedIn": "Kirjautunut",
+  "loggedOut": "Ei kirjautunut",
+  "loginOk": "Kirjautuminen onnistui",
+  "redirectingToCheckout": "Ohjataan maksamaan…",
+  "buyFailed": "Maksun aloitus epäonnistui.",
+  "unlockFailed": "Avaus epäonnistui.",
+  "trialEnded": "🔒 PRO-ominaisuudet lukittu.",
+  "missingFeatures": "Ilman PRO:ta et näe:"
 },
+
+"proBanner": {
+  "trialRunning": "PRO-versio käytössä 7 päivän kokeiluna.",
+  "trialEnded": "PRO-ominaisuudet lukittu. FREE-versio käytössä.",
+  "unlock": "Avaa PRO",
+  "benefit": "⭐ PRO auttaa löytämään parhaat ottiajat."
+},
+
+"proPage": {
+  "badge": "KalasääApp PRO"
+},
+
 "proSource": {
   "manual_code": "testikoodi",
   "stripe": "osto",
@@ -142,11 +182,8 @@
   "weightKg": "Paino (kg)",
   "riverSummaryTab": "Virtavesiyhteenveto",
   "exportCSVRiver": "Vie CSV (virtavedet)",
-
   "catchLikelihoodShort": "Ottitodennäköisyys",
-
   "noHistory": "Ei tallennettuja saaliita valituilla suodattimilla.",
-
   "effortHours": "Kalastustunnit",
   "kgPerHour": "kg / h",
   "hoursPerKg": "h / kg",
@@ -168,27 +205,6 @@
   "speciesStrikeTitle": "🐟 {{species}} ottiennuste nyt",
   "baseOhNow": "Perus-OH nyt",
   "adjustedOhNow": "Laji-korjattu ennuste",
-
-
-   "moonPhaseTranslations": {
-  "newMoon": "Uusikuu",
-  "new-Moon": "Uusikuu",
-  "waxingCrescent": "Kasvava sirppi",
-  "firstQuarter": "Ensimmäinen neljännes",
-  "waxingGibbous": "Kasvava kupera",
-  "fullMoon": "Täysikuu",
-  "full-Moon": "Täysikuu",
-  "waxing-Gibbous": "Kasvava kupera",
-  "waningGibbous": "Vähenevä kupera",
-  "lastQuarter": "Viimeinen neljännes",
-   "last-Quarter": "Viimeinen neljännes",
-   "lastquarter": "Viimeinen neljännes",
-   "last-quarter": "Viimeinen neljännes",
-   "waxing-crescent": "Kasvava sirppi", 
-  "first-quarter": "Ensimmäinen neljännes", 
-  "waning-gibbous": "Vähenevä kupera",
-  "waning-Crescent": "Vähenevä sirppi"
-},
 
   "moonPhaseEmoji": {
   "new-moon": "🌑",
@@ -351,6 +367,11 @@
     "river": "Virtavedet",
     "lake": "Järvi/Meri"
   },
+"tabs": {
+  "history": "Saalishistoria",
+  "summary": "Yhteenveto",
+  "stats": "Tilastot"
+},
 
  "clear": "Tyhjennä",
   "clearDialog": {
@@ -453,10 +474,6 @@
   "previewCSV": "CSV-esikatselu",
   "previewHint": "Tarkista tiedot ennen tallennusta."
 },
-
-"proUnlock": {
-    "buyBtn": "Osta Pro"
-  },
 
 "source": {
   "lake": "Järvi/Meri",
@@ -753,7 +770,6 @@
   "notFound": "Ei löytynyt",
   "noCatchesYet": "Ei saalistietoja.",
   "continueCatch": "Jatka saalisilmoitusta",
-  "noHistory": "Ei tallennettuja saaliita valituilla suodattimilla.",
   "targetSavedContinue": "Tavoitesaalis tallennettu — voit tallentaa muita saaliita.",
   "targetNoneSaved": "Ei tavoitesaalista kirjattu — voit tallentaa nyt muun saaliin.",
    "stop": "Lopeta sessio",
@@ -799,7 +815,7 @@
     "rows": "rivia",
     "missing": "puuttuu",
     "pcs": "kpl",
-    "weightKg": "kg",
+    "weightKg": "kg",    
     "avgForecast": "Ennuste-OH ka.",
     "avgRealized": "Toteutunut OH ka.",
     "avgError": "Keskivirhe",
@@ -815,14 +831,56 @@
   "tooltip": "Tästä avautuvasta sivustosta näet Suomen uhanalaiset, saaliiksi saadut ilmoitusta edellyttävät uhanalaiset kalalajit sekä muunkin saalisilmoituksen. Lisäksi Suomen alueen vesistöjen syvyyskartat löytyy täältä!",
   "tooltipTitle": "Omakala"
 },
+
 "gearUnits": "Pyydysyksiköt",
 
-  "charts": {
-    "pressureOh": {
-      "title": "Ilmanpaineen ja ottihalukkuuden yhteys",
-      "x": "Ilmanpaine (hPa)",
-      "y": "Ottihalukkuus (1-8)",
-      "explanation": "Kuvaaja näyttää, miten ilmanpaine ja ottihalukkuus ovat toteutuneet järvi-/merivesillä (🌅) ja virtavesillä (🌊). Mitä enemmän saalistietoa kertyy, sitä paremmin kuvaaja paljastaa omalle kalastuksellesi tyypillisiä painealueita."
-    }
+"charts": {
+  "pressureOh": {
+    "title": "Ilmanpaineen ja ottihalukkuuden yhteys",
+    "x": "Ilmanpaine (hPa)",
+    "y": "Ottihalukkuus (1-8)",
+    "explanation": "Kuvaaja näyttää, miten ilmanpaine ja ottihalukkuus ovat toteutuneet järvi-/merivesillä (🌅) ja virtavesillä (🌊). Mitä enemmän saalistietoa kertyy, sitä paremmin kuvaaja paljastaa omalle kalastuksellesi tyypillisiä painealueita."
   }
-}
+},
+
+
+"noCatchesYet": "Ei saalistietoja.",
+
+"validation": {
+  "selectSpecies": "Valitse kalalaji."
+},
+
+"proBanner": {
+  "trialRunning": "PRO-versio käytössä 7 päivän kokeiluna.",
+  "trialEnded": "PRO-ominaisuudet lukittu. FREE-versio käytössä."
+},
+
+"proPage": {
+  "badge": "KalasääApp PRO",
+  "title": "Kalasta oikeaan aikaan.",
+  "lead": "KalasääApp PRO yhdistää säädatan, ilmanpaineen, kuun vaiheen ja tuulensuunnan kalojen ottihalukkuusennusteeksi.",
+  "trialTitle": "7 päivän täysi kokeilu",
+  "trialText": "Kokeile kaikkia PRO-ominaisuuksia 7 päivän ajan. Kokeilun jälkeen voit jatkaa FREE-versiona tai avata PRO-version käyttöösi.",
+  "proHeading": "PRO sisältää",
+  "freeHeading": "FREE sisältää",
+  "valueTitle": "Kenelle PRO sopii?",
+  "valueText": "PRO sopii aktiiviselle kalastajalle, joka haluaa hyödyntää säätä, paikkatietoa ja saalishistoriaa kalastuksen suunnittelussa.",
+  "buyButton": "Avaa PRO",
+  "buyLoading": "Ohjataan maksamaan...",
+  "continueFreeButton": "Jatka FREE-versiona",
+  "proFeatures": [
+    "Tarkempi ottihalukkuusennuste",
+    "Tilastot ja analyysit saalishistoriasta",
+    "Kuun vaiheen vaikutus kalastukseen",
+    "Tuulen suunnan ja ilmanpaineen vaikutus",
+    "Virtavesien erilliset PRO-ominaisuudet",
+    "Laajempi ennuste- ja historiakäyttö"
+  ],
+  "freeFeatures": [
+    "Päivittäinen kalastusennuste",
+    "Saaliiden tallennus",
+    "Perussaalishistoria",
+    "Paikkakohtainen sää"
+  ]
+} 
+}   

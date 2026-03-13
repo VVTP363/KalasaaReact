@@ -2,32 +2,34 @@
   "openOmakala": "Åpne Omakala",
   "open": "Åpne",
   "close": "Lukk",
+  "weightKg": "Vekt (kg)",
+  "fishingHours": "Fisketimer",
+  "noCatchesYet": "Ingen fangstdata ennå.",
   "lakeSeaForecastTitle": "Innsjø-/Havfiske Værvarsel",
   "getLocation": "MIN POSISJON",
   "moonPhase": "Månefase",
   "moonPhaseTranslations": {
-    "new-moon": "Nymåne",
-    "waxing-crescent": "Voksende halvmåne",
-    "first-quarter": "Første kvarter",
-    "waxing-gibbous": "Voksende måne",
-    "full-moon": "Fullmåne",
-    "waning-gibbous": "Avtagende måne",
-    "last-quarter": "Siste kvarter",
-    "waning-crescent": "Avtagende halvmåne",
-    "newMoon": "Uusikuu",
-    "new-Moon": "Uusikuu",
-    "waxingCrescent": "Kasvava sirppi",
-    "firstQuarter": "Ensimmäinen neljännes",
-    "waxingGibbous": "Kasvava kupera",
-    "fullMoon": "Täysikuu",
-    "full-Moon": "Täysikuu",
-    "waxing-Gibbous": "Kasvava kupera",
-    "waningGibbous": "Vähenevä kupera",
-    "lastQuarter": "Viimeinen neljännes",
-    "last-Quarter": "Viimeinen neljännes",
-    "lastquarter": "Viimeinen neljännes",
-    "waning-Crescent": "Vähenevä sirppi"
-  },
+  "newMoon": "Nymåne",
+  "waxingCrescent": "Voksende sigd",
+  "firstQuarter": "Første kvarter",
+  "waxingGibbous": "Voksende måne",
+  "fullMoon": "Fullmåne",
+  "waningGibbous": "Avtagende måne",
+  "lastQuarter": "Siste kvarter",
+  "waningCrescent": "Avtagende sigd"
+},
+
+  "moonPhaseNames": {
+  "new-moon": "Nymåne",
+  "waxing-crescent": "Voksende månesigd",
+  "first-quarter": "Første kvarter",
+  "waxing-gibbous": "Voksende måne",
+  "full-moon": "Fullmåne",
+  "waning-gibbous": "Avtagende måne",
+  "last-quarter": "Siste kvarter",
+  "waning-crescent": "Avtagende månesigd"
+},
+
   "auth": {
     "loginGoogle": "Logg inn (Google)",
     "logout": "Logg ut",
@@ -37,25 +39,67 @@
     "proActive": "PRO aktiv",
     "backToFree": "Tilbake til Free"
   },
+
+"clear": "Tøm",
+"clearDialog": {
+  "title": "Tøm data",
+  "exportCsv": "Eksporter CSV før tømming",
+  "clearHistory": "Tøm historikk",
+  "clearSummary": "Tøm sammendrag",
+  "clearLearning": "Tøm læringsdata",
+  "avoid": "Ikke vis igjen",
+  "execute": "Kjør",
+  "cancel": "Avbryt",
+  "learningConfirm": "Er du sikker på at du vil tømme læringsdata? Dette vil svekke prognosens læring."
+},
+
+  "validation": { "selectSpecies": "Velg en fiskesort." },
   "pro": {
-    "lockedTabs": "🔒 Pro-versjon: Fangsthistorikk, Sammendrag og Statistikk. Lås opp Pro med testkode eller ved kjøp.",
+  "lockedTabs": "🔒 Pro-versjon: Fangsthistorikk, Sammendrag og Statistikk. Lås opp Pro med en testkode eller ved å kjøpe.",
+  "backToFree": "Tilbakestilt til Free-modus.",
+  "pro.unlockedDevice": "PRO låst opp på denne enheten.",
+  "pro.returnedFree": "Tilbake til Free-modus.",
     "freeInfo": "Gratisversjonen viser bare Vær/Varsel og Fangstregistrering. Pro låser opp elver og andre sider.",
-    "proInfo": "Pro-versjon: Historikk, Sammendrag og Statistikk. Lås opp med kode eller kjøp."
+    "proInfo": "Pro-versjon: Historikk, Sammendrag og Statistikk. Lås opp med kode eller kjøp.",
+   "pro.lockedInfo": "🔒 I Pro-versjonen: Fangsthistorikk, Sammendrag og Statistikk. Lås opp Pro med testkode eller kjøp."
   },
   "proUnlock": {
-    "lockedTitle": "🔒 PRO-funksjoner låst",
-    "codePlaceholder": "Skriv inn testkode",
-    "unlockBtn": "Lås opp PRO",
-    "freeInfo": "Gratisversjonen viser bare Vær/Varsel og Fangstregistrering. Pro låser opp elver og andre sider.",
-    "proInfo": "🔒 Pro-versjon: Historikk, Sammendrag og Statistikk. Lås opp med kode eller kjøp.",
-    "activeTitle": "✅ PRO aktiv",
-    "activeSource": "({{source}})",
-    "backToFree": "Tilbake til Free",
-    "invalidCode": "Ugyldig testkode.",
-    "unlocked": "PRO låst opp for denne enheten.",
-    "backToFreeMsg": "Tilbake til Free.",
-    "buyBtn": "Osta Pro"
+  "lockedTitle": "🔒 PRO-funksjoner låst",
+  "codePlaceholder": "Skriv inn testkode",
+  "unlockBtn": "Lås opp PRO",
+  "lockedFeatures": "🔒 I Pro: {{features}}. Lås opp Pro med en testkode eller ved å kjøpe.",
+  "freeInfo": "I Free-modus ser du bare Vær/Varsel + Fangstrapport. Pro låser opp Elver og andre sider.",
+  "proInfo": "🔒 Pro-versjon: Fangsthistorikk, Sammendrag og Statistikk. Lås opp Pro med testkode eller kjøp.",
+  "activeTitle": "✅ PRO aktiv",
+  "activeSource": "({{source}})",
+  "backToFree": "Tilbake til Free",
+  "invalidCode": "Ugyldig testkode.",
+  "unlocked": "PRO låst opp på denne enheten.",
+  "backToFreeMsg": "Tilbake til Free-modus.",
+  "loggedIn": "Innlogget",
+  "loggedOut": "Utlogget",
+  "loginOk": "Innlogging vellykket",
+  "buyBtn": "Kjøp PRO",
+  "buying": "Omdirigerer...",
+  "redirectingToCheckout": "Omdirigerer til betaling…",
+  "buyFailed": "Kunne ikke starte betalingen.",
+  "unlockFailed": "Opplåsing mislyktes.",
+  "loginRequired": "Logg inn for å starte 7 dagers prøveperiode.",
+  "lockedTitle": "🔒 PRO-funksjoner låst"
   },
+
+  "proBanner": {
+  "trialRunning": "PRO-versjonen er aktiv i 7 dagers prøveperiode.",
+  "trialEnded": "🔒 PRO-funksjoner låst.",
+  "missingFeatures": "Uten PRO får du ikke tilgang til:",
+  "unlock": "Lås opp PRO",
+  "benefit": "⭐ PRO hjelper deg å finne de beste bittperiodene."
+},
+
+"proPage": {
+  "badge": "KalasääApp PRO"
+},
+
   "proSource": {
     "manual_code": "testkode",
     "stripe": "kjøp",
@@ -81,24 +125,12 @@
     "count": "stk",
     "weightKg": "kg",
     "hours": "t",
-    "Saved": "Lagret!",
     "kgPerHour": "kg/t",
     "hourPerKg": "t/kg"
   },
   "select": "Velg",
   "clear": "Tøm",
-  "clearDialog": {
-    "title": "Tøm data",
-    "exportCsv": "Eksporter CSV før tømming",
-    "clearHistory": "Tøm historikk",
-    "clearSummary": "Tøm sammendrag",
-    "execute": "Utfør",
-    "cancel": "Avbryt",
-    "done": "Valgte data er tømt.",
-    "learningConfirm": "Tyhjennetäänkö oppimisdatan tiedot?",
-    "clearLearning": "Tyhjennä oppiminen",
-    "avoid": "Älä näytä uudelleen"
-  },
+ 
   "openKarttaselain": "Karttaselain",
   "openKarttaselainNote": "(småvann)",
   "catchReportTitle": "Fangstdata",
@@ -206,7 +238,6 @@
   "last365Days": "Siste året",
   "allTime": "Alle",
   "all": "Alle",
-  "moonPhase_full-moon": "Fullmåne",
   "useMyLocation": "Bruk min posisjon",
   "tideTimeSet": "Flo-toppen satt: {{time}}",
   "clearHistory": "Tøm historikk",
@@ -231,17 +262,8 @@
   "active": "Aktiv",
   "historyExported": "Historikk eksportert til CSV og tømt.",
   "historyCleared": "Historikk tømt.",
-  "newMoon": "Nymåne",
-  "waxingCrescent": "Tiltakende halvmåne",
-  "firstQuarter": "Første kvarter",
-  "waxingGibbous": "Tiltakende hvelvet",
-  "fullMoon": "Fullmåne",
-  "waningGibbous": "Avtakende hvelvet",
-  "lastQuarter": "Siste kvarter",
-  "waningCrescent": "Avtakende halvmåne",
   "summaryTitle": "Fangstoppsummering",
   "noData": "Ingen fangster lagret.",
-  "csvExportTitle": "CSV-forhåndsvisning",
   "fishingForecastTitle": "Fiskeværvarsel",
   "switchToVirtavesi": "Bytt til elvemodus",
   "arcticCharSaimaa": "Saimaa røye (fredet)!",
@@ -249,7 +271,6 @@
   "chartTitle": "Sammenheng mellom trykk og bittaktivitet",
   "csvPreviewLabel": "Forhåndsvisning av CSV-rad",
   "pcs": "stk",
-  "feedback": "Vurdering",
   "saveCatch": "💾 Lagre fangst",
   "saveSuccess": "Fangst lagret!",
   "noCatchData": "Ingen fangstdata",
@@ -269,6 +290,7 @@
     "ohForecast": "Bitevilje",
     "windDirection": "Vindretning",
     "moon": "Månefase",
+    "download": "Last ned CSV",
     "rating": "Vurdering",
     "realizedOH": "Faktisk OH",
     "realizedVsForecast": "Faktisk / prognose",
@@ -302,26 +324,11 @@
     "NW": "Nordvest"
   },
   "search": "Søk",
-  "csvPreview": "Forhåndsvisning av CSV",
-  "downloadCsv": "Last ned CSV",
-  "catchData": "Fangstdata",
   "fishSpecies": "Fiskeslag",
-  "species_lax": "Laks",
-  "species_ørret": "Ørret",
-  "species_pukkellaks": "Pukkellaks",
-  "species_harr": "Harr",
-  "species_røye": "Røye",
-  "species_sik": "Sik",
-  "Saimaannieriä": "Saimaa-røye",
-  "Saimaanieriä": "Saimaa-røye",
   "lengthClass": "Lengdeklasse",
-  "amountPcs": "Antall (stk)",
   "crAmount": "Antall gjenutsatt",
-  "clearCatchData": "🗑️ Tøm fangstdata",
-  "riverView": "Elv",
   "openOskari": "Traficon Oskari",
   "openOskariNote": "(store vann)",
-  "riverCatchTitle": "Elvefangstrapport",
   "searchPlaceholder": "Søk sted...",
   "searchButton": "Søk",
   "myLocation": "MIN POSISJON",
@@ -335,14 +342,6 @@
   "searchedLocation": "Søkt posisjon",
   "noResult": "Sted ikke funnet",
   "searchFailed": "Søket mislyktes",
-  "fishNames": {
-    "Lohi": "Laks",
-    "Taimen": "Ørret",
-    "Harjus": "Harr",
-    "Rautu": "Røye",
-    "Kyttyrälohi": "Pukkellaks",
-    "Siika": "Sik"
-  },
   "fish": {
     "Hauki": "Gjedde",
     "Made": "Lake",
@@ -387,23 +386,16 @@
   },
   "exportCSV": "Eksporter CSV",
   "location": "Sted",
-  "distance": "Avstand",
-  "tideBase": "Tidevann kl",
   "pressure": "Lufttrykk",
   "windDirection": "Vindretning",
-  "biteTime": "Forventet bitetid",
   "temperature": "Temperatur",
   "feelsLike": "Føles som",
   "windSpeed": "Vindhastighet",
   "prev": "Forrige",
   "next": "Neste",
-  "loadingOrNoData": "Laster værdata...",
   "date": "Dato",
   "language": "Språk",
   "saved": "Lagret!",
-  "reportCatch": "Rapporter fangst",
-  "statistics": "Statistikk",
-  "summary": "Sammendrag",
   "dateFilter": "Datofilter",
   "averageStrikeInterest": "Gj.snittlig bitevilje",
   "unknown": "ukjent",
@@ -419,6 +411,13 @@
     "showSpeciesForecast": " Vis artsvis biteprognose",
     "downloadSummaryCSV": "Last ned sammendrag (CSV)"
   },
+
+  "tabs": {
+  "history": "Fangsthistorikk",
+  "summary": "Sammendrag",
+  "stats": "Statistikk"
+},
+
   "pages": {
     "statistics": {
       "title": "Statistikk",
@@ -440,19 +439,6 @@
       "timeHours": "Pyyntiaika (h)",
       "method": "⚙️ Pyyntitapa"
     }
-  },
-  "tide": {
-    "openSehavniva": "🌊 Åpne SeHavniva tidevannsside"
-  },
-  "forecast": {
-    "strikeTitle": "🎣 Biteprognose:"
-  },
-  "gear": {
-    "units": "Redskapsenheter:"
-  },
-  "fishing": {
-    "timeHours": "Fisketid (t)",
-    "method": "⚙️ Fiskemetode"
   },
   "history": {
     "missingRealized": "(mangler)",
@@ -496,8 +482,7 @@
     "realizedLong": "Faktisk bitevilje",
     "ohTimesEffort": "OH × fisketid",
     "sessionDuration": "Fisketid (økt)",
-    "realizedMissing": "Realisert OH: -",
-    "realizedActiveLine": "Realisert OH (aktiv): {{realized}}{{match}}"
+    "realizedMissing": "Realisert OH: -"
   },
   "origin": {
     "river": "Elv",
@@ -508,8 +493,8 @@
   "toast": {
     "catchSaved": "Fangst lagret!",
     "missingCatchKgAndCount": "Velg fiskeslag og oppgi både antall og vekt før du lagrer.",
-    "csvSaved": "CSV tallennettu.",
-    "saveError": "Tallennus epäonnistui."
+    "csvSaved": "CSV lagret!",
+    "saveError": "Lagring mislyktes."
   },
   "statsLabel": "Statistikk",
   "stats": {
@@ -537,14 +522,6 @@
     "outliersGoodLabel": "Uvanlig bra (≥2,0x)",
     "outliersBadLabel": "Uvanlig svakt (≤0,6x)",
     "samplesTotalLabel": "Totalt antall",
-    "selectTitle": "🎯 Velg målfisk",
-    "selectPlaceholder": "Velg",
-    "lockHint": "Målfisken låses i artsvelgeren til du lagrer fangsten eller trykker på “Ingen målfangst”.",
-    "cancel": "Avbryt",
-    "start": "Start",
-    "exit": "🚪 Avslutt",
-    "continueCatch": "✍️ Fortsett fangstrapport",
-    "close": "⚙️ Lukk",
     "insight": {
       "noData": "Når det samles mer fangstdata, foreslår jeg de beste kombinasjonene av øktlengde og vind.",
       "bestCombo": "Du lykkes best med {{bucket}} økter i {{wind}} vind (gjennomsnitt {{avg}}x, n={{n}}).",
@@ -597,7 +574,6 @@
     "chooseTargetHelp": "Dette hjelper den lærende modellen (kg / innsats).",
     "targetLocksSpecies": "Målfisken låses i artsvelgeren til du lagrer fangsten eller trykker på “Ingen målfangst”.",
     "targetSaved": "Målfangst lagret — du kan registrere andre fangster.",
-    "noHistory": "Ingen lagrede fangster med valgte filtre.",
     "continueCatch": "Fortsett fangstrapport",
     "targetSpeciesLabel": "Målfisk",
     "selectPlaceholder": "Velg…",
@@ -605,7 +581,6 @@
     "start": "Start",
     "menuTitle": "Økt",
     "menuClose": "Lukk",
-    "realizedLabel": "Realisert OH",
     "targetSavedContinue": "Målfangst lagret — du kan lagre andre fangster.",
     "targetNoneSaved": "Ingen målfangst registrert — du kan lagre andre fangster.",
     "exit": "🚪 Poistu",
@@ -663,15 +638,15 @@
       "explanation": "Diagrammet viser hvordan lufttrykk og bitevilje har slått ut i innsjø/hav (🌅) og i elv (🌊). Jo mer fangstdata som samles, desto tydeligere blir trykkområdene som er typiske for ditt fiske."
     }
   },
-  "contextLakeSea": "Konteksti Järvi-/merivesi OH",
-  "contextRiver": "Konteksti Virtavesi OH",
-  "riverSummaryTab": "Virtavesiyhteenveto",
-  "exportCSVRiver": "Vie CSV (virtavedet)",
-  "catchLikelihoodShort": "Ottihalukkuus",
-  "noHistory": "Ei tallennettuja saaliita valituilla suodattimilla.",
-  "effortHours": "Kalastustunnit",
-  "kgPerHour": "kg / h",
-  "hoursPerKg": "h / kg",
+  "contextLakeSea": "Kontekst innsjø-/havfiske OH",
+  "contextRiver": "Kontekst elvefiske OH",
+  "riverSummaryTab": "Elvefiske-oversikt",
+  "exportCSVRiver": "Eksporter CSV (elver)",
+  "catchLikelihoodShort": "Bittvillighet",
+  "effortHours": "Fisketimer",
+  "kgPerHour": "kg / t",
+  "hoursPerKg": "t / kg",
+
   "moonPhaseEmoji": {
     "new-moon": "🌑",
     "waxing-crescent": "🌒",
@@ -693,18 +668,57 @@
   "cr": "Catch & Release",
   "judgment": "Arvio",
   "previewCSV": "Esikatsele CSV-rivi",
-  "direction": {
-    "N": "N",
-    "NE": "NE",
-    "E": "E",
-    "SE": "SE",
-    "S": "S",
-    "SW": "SW",
-    "W": "W",
-    "NW": "NW"
-  },
-  "saveToHistory": "Tallenna rivi historiaan",
-  "downloadAllCsv": "Lataa historia CSV:nä",
-  "historyCount": "Rivejä",
-  "confirmClearHistory": "Tyhjennetäänkö historia?"
+ "direction": {
+  "N": "N",
+  "NE": "NE",
+  "E": "E",
+  "SE": "SE",
+  "S": "S",
+  "SW": "SW",
+  "W": "W",
+  "NW": "NW"
+},
+"saveToHistory": "Tallenna rivi historiaan",
+"downloadAllCsv": "Lataa historia CSV:nä",
+"historyCount": "Rivejä",
+"noHistory": "Ingen lagrede fangster med valgte filtre.",
+"confirmClearHistory": "Tyhjennetäänkö historia?",
+
+"validation": {
+  "selectSpecies": "Valitse kalalaji."
+},
+
+"pro": {
+  "lockedTabs": "🔒 Pro-versiossa: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla.",
+  "backToFree": "Palautettu Free-tilaan."
+},
+
+"proPage": {
+  "badge": "KalasääApp PRO",
+  "title": "Fisk på riktig tidspunkt.",
+  "lead": "KalasääApp PRO kombinerer værdata, lufttrykk, månefase og vindretning til en prognose for fiskens bittvilje.",
+  "trialTitle": "7 dagers full prøveperiode",
+  "trialText": "Prøv alle PRO-funksjoner i 7 dager. Etter prøveperioden kan du fortsette med FREE-versjonen eller åpne PRO.",
+  "proHeading": "PRO inkluderer",
+  "freeHeading": "FREE inkluderer",
+  "valueTitle": "Hvem passer PRO for?",
+  "valueText": "PRO passer for aktive fiskere som vil bruke vær, posisjonsdata og fangsthistorikk til å planlegge fisket bedre.",
+  "buyButton": "Åpne PRO",
+  "buyLoading": "Sender til betaling...",
+  "continueFreeButton": "Fortsett med FREE",
+  "proFeatures": [
+    "Mer presis prognose for bittvilje",
+    "Statistikk og analyse fra fangsthistorikk",
+    "Månefase og påvirkning på fisket",
+    "Effekt av vindretning og lufttrykk",
+    "Egne PRO-funksjoner for elv og strømmende vann",
+    "Utvidet bruk av prognoser og historikk"
+  ],
+  "freeFeatures": [
+    "Daglig fiskeprognose",
+    "Lagring av fangst",
+    "Grunnleggende fangsthistorikk",
+    "Stedsbasert vær"
+  ]
+}
 }

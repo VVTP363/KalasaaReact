@@ -213,24 +213,21 @@ const renderYhteenveto = () => {
 
   const handleExportCSV = () => {
   if (!rows.length) return;
-  const exportLng =
-  localStorage.getItem("app_lang") ||
-  i18n.resolvedLanguage ||
-  i18n.language ||
-  "fi";
+  const exportLng = i18n.resolvedLanguage || i18n.language || "fi";
 
-const tt = i18n.getFixedT(exportLng);
+  const tt = i18n.getFixedT(exportLng);
 
-console.log("[CSV] VirtavesiTabs exportLng =", exportLng);
+  console.log("[CSV] VirtavesiTabs exportLng =", exportLng);
 
   const COLUMNS = [
-    { key: "species", label: "Laji", type: "text" },
-    { key: "kpl", label: "kpl", type: "int" },
-    { key: "kg", label: "kg", type: "num", decimals: 1 },
-    { key: "h", label: "h", type: "num", decimals: 1 },
-    { key: "kgph", label: "kg/h", type: "num", decimals: 2 },
-    { key: "hpkg", label: "h/kg", type: "num", decimals: 2 },
-  ];
+  { key: "species", label: tt("csvSummary.species", { defaultValue: "Laji" }), type: "text" },
+  { key: "kpl",     label: tt("csvSummary.count",   { defaultValue: "kpl" }), type: "int"  },
+  { key: "kg",      label: tt("csvSummary.weightKg",{ defaultValue: "kg"  }), type: "num", decimals: 1 },
+  { key: "h",       label: tt("csvSummary.hours",   { defaultValue: "h"   }), type: "num", decimals: 1 },
+  { key: "kgph",    label: tt("csvSummary.kgPerHour",{ defaultValue: "kg/h"}), type: "num", decimals: 2 },
+  { key: "hpkg",    label: tt("csvSummary.hourPerKg",{ defaultValue: "h/kg"}), type: "num", decimals: 2 },
+];
+
 
 const trFish = (raw) => {
   const s = String(raw || "").trim();
@@ -293,17 +290,33 @@ const trFish = (raw) => {
           <div style={{ marginTop: "0.75rem", overflowX: "auto" }}>
             <table style={{ borderCollapse: "collapse", minWidth: 520, width: "100%" }}>
               <thead>
-                <tr>
-                  <th style={{ textAlign: "left", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>
-                    {t("species", "Laji")}
-                  </th>
-                  <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>kpl</th>
-                  <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>kg</th>
-                  <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>h</th>
-                  <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>kg/h</th>
-                  <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>h/kg</th>
-                </tr>
-              </thead>
+  <tr>
+    <th style={{ textAlign: "left", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>
+      {t("csvSummary.species", { defaultValue: "Laji" })}
+    </th>
+
+    <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>
+      {t("csvSummary.count", { defaultValue: "kpl" })}
+    </th>
+
+    <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>
+      {t("csvSummary.weightKg", { defaultValue: "kg" })}
+    </th>
+
+    <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>
+      {t("csvSummary.hours", { defaultValue: "h" })}
+    </th>
+
+    <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>
+      {t("csvSummary.kgPerHour", { defaultValue: "kg/h" })}
+    </th>
+
+    <th style={{ textAlign: "right", padding: "6px 8px", borderBottom: "1px solid #ddd" }}>
+      {t("csvSummary.hourPerKg", { defaultValue: "h/kg" })}
+    </th>
+  </tr>
+</thead>
+
 
               <tbody>
                 {rows.map((r) => (
