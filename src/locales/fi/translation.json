@@ -14,6 +14,30 @@
   "waningCrescent": "Vähenevä sirppi"
 },
 
+"payment": {
+  "brand": "KalasääApp",
+  "title": "KalasääApp PRO",
+  "badge": "7 päivän kokeilu ensin",
+  "price": "Kertamaksu 9.90 €",
+  "buyButton": "Osta PRO-oikeus",
+  "cancel": "Peruuta",
+  "description": "PRO-versio avaa kaikki KalasääAppin edistyneet ominaisuudet, kuten laajemmat tilastot, ottihalukkuus-analyysin sekä kalastussessioiden dataan perustuvan ennusteen tarkentumisen.",
+  "heroText": "Ammattimainen näkymä aktiiviselle käyttäjälle, joka haluaa enemmän irti omasta kalastusdatastaan.",
+  "featuresTitle": "Mitä PRO sisältää",
+  "feature1": "Laajemmat tilastot kalastuskerroista",
+  "feature2": "Tarkempi ottihalukkuusennuste datan karttuessa",
+  "feature3": "Edistyneet näkymät aktiiviseen kalastukseen",
+  "feature4": "Maksullinen käyttöoikeus samalle varmennetulle sähköpostille",
+  "trialTitle": "Kokeile ensin rauhassa",
+  "trialText": "Käytä ensin 7 päivän koejakso. Kun olet todennut sovelluksen toimivan haluamallasi tavalla, voit avata PRO-oikeuden yhdellä kertamaksulla.",
+  "dataTitle": "Itseoppiva ennuste",
+  "dataText": "Sovellus hyödyntää tallennettuja kalastussessioita ja tarkentaa ennustetta sitä mukaa, kun omaa dataasi kertyy enemmän.",
+  "emailTitle": "Käyttöoikeus säilyy",
+  "emailText": "Maksettu oikeus sidotaan varmennettuun sähköpostiin, jotta käyttöoikeus voidaan palauttaa myös uid-vaihdoksen jälkeen.",
+  "infoText": "Suositus on, että ostat PRO-oikeudet vasta 7 vuorokauden koejakson päätyttyä. Näin ehdit tutustua sovellukseen rauhassa ja varmistua sen toimivuudesta. KalasääApp on itseoppiva sovellus, joka parantaa ottiennusteen tarkkuutta sitä mukaa kun kalastussessioista tallennetaan lisää dataa.",
+  "secure": "Maksu suoritetaan turvallisesti Stripe-maksupalvelun kautta."
+},
+
 "pro": {
   "lockedTabs": "🔒 Pro-versiossa: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla.",
   "freeInfo": "Free-versiossa näkyy vain Sää/Ennuste + Saalisilmoitus. Pro avaa Virtavedet ja muut sivut.",
@@ -54,6 +78,7 @@
   "codePlaceholder": "Syötä testikoodi",
   "unlockBtn": "Avaa PRO",
   "buyBtn": "Osta Pro",
+  "alreadyPro": "PRO-oikeus on jo käytössä tällä tilillä.",
   "lockedFeatures": "🔒 Pro-versiossa: {{features}}. Avaa Pro testikoodilla tai ostamalla.",
   "freeInfo": "Free-versiossa näkyy vain Sää/Ennuste + Saalisilmoitus. Pro avaa Virtavedet ja muut sivut.",
   "proInfo": "🔒 Pro-versio: Saalishistoria, Yhteenveto ja Tilastot. Avaa Pro testikoodilla tai ostamalla.",
@@ -72,7 +97,11 @@
   "buyFailed": "Maksun aloitus epäonnistui.",
   "unlockFailed": "Avaus epäonnistui.",
   "trialEnded": "🔒 PRO-ominaisuudet lukittu.",
-  "missingFeatures": "Ilman PRO:ta et näe:"
+  "missingFeatures": "Ilman PRO:ta et näe:",
+  "loginRequired": "Kirjaudu sisään jatkaaksesi.",
+  "buyFailed": "Oston käynnistys epäonnistui.",
+  "buying": "Ohjataan...",
+  "redirectingToCheckout": "Ohjataan maksusivulle..."
 },
 
 "proBanner": {

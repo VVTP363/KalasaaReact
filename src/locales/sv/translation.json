@@ -27,6 +27,30 @@
   "lastQuarter": "Sista kvarteret",
   "waningCrescent": "Avtagande månskära"
 },
+ 
+  "payment": {
+  "brand": "KalasääApp",
+  "title": "KalasääApp PRO",
+  "badge": "7 dagars testperiod först",
+  "price": "Engångsbetalning 9,90 €",
+  "buyButton": "Köp PRO-åtkomst",
+  "cancel": "Avbryt",
+  "description": "PRO-versionen låser upp alla avancerade funktioner i KalasääApp, inklusive utökad statistik, analys av fiskens aktivitet och mer exakta prognoser baserade på registrerade fiskepass.",
+  "heroText": "En professionell vy för aktiva användare som vill få ut mer av sin fiskedata.",
+  "featuresTitle": "Vad PRO innehåller",
+  "feature1": "Utökad statistik från fiskepass",
+  "feature2": "Mer exakt aktivitetsprognos när mer data samlas",
+  "feature3": "Avancerade vyer för aktivt fiske",
+  "feature4": "Betald åtkomst kopplad till verifierad e-post",
+  "trialTitle": "Prova först",
+  "trialText": "Använd applikationen under 7 dagars testperiod. När du har bekräftat att allt fungerar kan du låsa upp PRO med en engångsbetalning.",
+  "dataTitle": "Självlärande prognos",
+  "dataText": "Applikationen förbättrar prognoserna ju mer data som sparas från fiskepass.",
+  "emailTitle": "Åtkomsten bevaras",
+  "emailText": "Den betalda åtkomsten kopplas till en verifierad e-post så att PRO-rättigheten kan återställas även om användar-ID ändras.",
+  "infoText": "Vi rekommenderar att du köper PRO-åtkomst först efter att 7-dagars testperioden har avslutats. Då kan du bekanta dig med applikationen och säkerställa att allt fungerar korrekt.",
+  "secure": "Betalningen behandlas säkert via Stripe."
+},
 
   "moonPhaseNames": {
   "new-moon": "Nymåne",
@@ -93,6 +117,7 @@
   "freeInfo": "I Free-läget ser du bara Väder/Prognos + Fångstrapport. Pro låser upp Älvar och andra sidor.",
   "proInfo": "🔒 Pro-version: Fångsthistorik, Sammanfattning och Statistik. Lås upp Pro med testkod eller köp.",
   "activeTitle": "✅ PRO aktiv",
+  "alreadyPro": "PRO-åtkomst är redan aktiv på detta konto.",
   "activeSource": "({{source}})",
   "backToFree": "Tillbaka till Free",
   "invalidCode": "Fel testkod.",
@@ -107,7 +132,11 @@
   "buyFailed": "Kunde inte starta betalningen.",
   "unlockFailed": "Upplåsningen misslyckades.",
   "loginRequired": "Logga in för att starta 7 dagars provperiod.",
-  "lockedTitle": "🔒 PRO-funktioner låsta"
+  "lockedTitle": "🔒 PRO-funktioner låsta",
+  "loginRequired": "Logga in för att fortsätta.",
+  "buyFailed": "Kunde inte starta köpet.",
+  "buying": "Omdirigerar...",
+  "redirectingToCheckout": "Omdirigerar till betalning..."
 },
 
 "proPage": {

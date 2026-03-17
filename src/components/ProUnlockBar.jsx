@@ -1,5 +1,5 @@
 // src/components/ProUnlockBar.jsx
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { useEntitlement } from "./EntitlementContext";
 import { useTranslation } from "react-i18next";
 import { httpsCallable } from "firebase/functions";
@@ -16,8 +16,8 @@ export default function ProUnlockBar() {
   const SHOW_BUY_BUTTON = true; // julkaisu: trial-only
 
   const createCheckoutSession = useMemo(() => {
-  return httpsCallable(functions, "createCheckoutSession");
-  }, [functions]);
+    return httpsCallable(functions, "createCheckoutSession");
+  }, []);
 
   const onBuy = async () => {
     try {
@@ -32,8 +32,12 @@ export default function ProUnlockBar() {
       // varmista että callable saa tuoreen tokenin
       await auth.currentUser.getIdToken(true);
 
-      const res = await createCheckoutSession({});
+      const res = await createCheckoutSession({
+        locale: i18n.resolvedLanguage || i18n.language || "fi",
+      });
+
       console.log("checkout response:", res?.data);
+
       if (res?.data?.alreadyPro) {
         setMsgKey("proUnlock.alreadyPro");
         return;
@@ -111,91 +115,91 @@ export default function ProUnlockBar() {
     );
   }
 
- return (
-  <div
-    style={{
-      padding: "8px 12px",
-      border: "1px solid #eee",
-      borderRadius: 8,
-      marginBottom: 10,
-    }}
-  >
-    <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-      <strong>
-        {t("proUnlock.lockedTitle", { defaultValue: "🔒 PRO-ominaisuudet lukittu" })}
-      </strong>
+  return (
+    <div
+      style={{
+        padding: "8px 12px",
+        border: "1px solid #eee",
+        borderRadius: 8,
+        marginBottom: 10,
+      }}
+    >
+      <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+        <strong>
+          {t("proUnlock.lockedTitle", { defaultValue: "🔒 PRO-ominaisuudet lukittu" })}
+        </strong>
 
-      <span style={{ fontSize: 12, opacity: 0.75 }}>
-        user: <b>{user?.email || "—"}</b>
-      </span>
-
-      {!isLoggedIn ? (
-        <span style={{ fontSize: 12, opacity: 0.8 }}>
-          {t("proUnlock.loginRequired", {
-            defaultValue: "Kirjaudu sisään aloittaaksesi 7 päivän kokeilun.",
-          })}
+        <span style={{ fontSize: 12, opacity: 0.75 }}>
+          user: <b>{user?.email || "—"}</b>
         </span>
-      ) : (
-        <>
-          <input
-            id="proCode"
-            name="proCode"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder={t("proUnlock.codePlaceholder", { defaultValue: "Syötä testikoodi" })}
-            style={{ padding: "6px 10px", borderRadius: 8, border: "1px solid #ddd" }}
-          />
 
-          <button
-            type="button"
-            onClick={async () => {
-              try {
-                const r = await unlockWithCode(code);
-                if (r.ok) setMsgKey("proUnlock.unlocked");
-                else if (r?.reason === "login_required") setMsgKey("proUnlock.loginRequired");
-                else setMsgKey("proUnlock.invalidCode");
-              } catch (e) {
-                console.error("unlock failed", e);
-                setMsgKey("proUnlock.unlockFailed");
-              }
-            }}
-            disabled={buying || !isLoggedIn || !code.trim()}
-          >
-            {t("proUnlock.unlockBtn", { defaultValue: "Avaa PRO" })}
-          </button>
+        {!isLoggedIn ? (
+          <span style={{ fontSize: 12, opacity: 0.8 }}>
+            {t("proUnlock.loginRequired", {
+              defaultValue: "Kirjaudu sisään aloittaaksesi 7 päivän kokeilun.",
+            })}
+          </span>
+        ) : (
+          <>
+            <input
+              id="proCode"
+              name="proCode"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder={t("proUnlock.codePlaceholder", { defaultValue: "Syötä testikoodi" })}
+              style={{ padding: "6px 10px", borderRadius: 8, border: "1px solid #ddd" }}
+            />
 
-          {SHOW_BUY_BUTTON && (
-            <button type="button" onClick={onBuy} disabled={buying}>
-              {buying
-                ? t("proUnlock.buying", { defaultValue: "Ohjataan..." })
-                : t("proUnlock.buyBtn", { defaultValue: "Osta PRO" })}
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  const r = await unlockWithCode(code);
+                  if (r.ok) setMsgKey("proUnlock.unlocked");
+                  else if (r?.reason === "login_required") setMsgKey("proUnlock.loginRequired");
+                  else setMsgKey("proUnlock.invalidCode");
+                } catch (e) {
+                  console.error("unlock failed", e);
+                  setMsgKey("proUnlock.unlockFailed");
+                }
+              }}
+              disabled={buying || !isLoggedIn || !code.trim()}
+            >
+              {t("proUnlock.unlockBtn", { defaultValue: "Avaa PRO" })}
             </button>
-          )}
-        </>
-      )}
 
-      {msgKey ? <span style={{ fontSize: 12, opacity: 0.8 }}>{t(msgKey)}</span> : null}
+            {SHOW_BUY_BUTTON && isLoggedIn && (
+              <button type="button" onClick={onBuy} disabled={buying}>
+                {buying
+                  ? t("proUnlock.buying", { defaultValue: "Ohjataan..." })
+                  : t("proUnlock.buyBtn", { defaultValue: "Osta PRO" })}
+              </button>
+            )}
+          </>
+        )}
+
+        {msgKey ? <span style={{ fontSize: 12, opacity: 0.8 }}>{t(msgKey)}</span> : null}
+      </div>
+
+      <div style={{ marginTop: 8, fontSize: 13, lineHeight: 1.45 }}>
+        <div style={{ fontWeight: 600 }}>
+          {t("proBanner.trialEnded", { defaultValue: "🔒 PRO-ominaisuudet lukittu" })}
+        </div>
+
+        <div style={{ marginTop: 6 }}>
+          {t("proBanner.missingFeatures", { defaultValue: "Ilman PRO:ta et näe:" })}
+        </div>
+
+        <div style={{ marginTop: 4, opacity: 0.85 }}>
+          • {t("tabs.history", { defaultValue: "Saalishistoria" })}<br />
+          • {t("tabs.summary", { defaultValue: "Yhteenveto" })}<br />
+          • {t("tabs.stats", { defaultValue: "Tilastot" })}
+        </div>
+
+        <div style={{ marginTop: 8, opacity: 0.9 }}>
+          {t("proBanner.benefit", { defaultValue: "⭐ PRO auttaa löytämään parhaat ottiajat" })}
+        </div>
+      </div>
     </div>
-
-    <div style={{ marginTop: 8, fontSize: 13, lineHeight: 1.45 }}>
-      <div style={{ fontWeight: 600 }}>
-        {t("proBanner.trialEnded", { defaultValue: "🔒 PRO-ominaisuudet lukittu" })}
-      </div>
-
-      <div style={{ marginTop: 6 }}>
-        {t("proBanner.missingFeatures", { defaultValue: "Ilman PRO:ta et näe:" })}
-      </div>
-
-      <div style={{ marginTop: 4, opacity: 0.85 }}>
-        • {t("tabs.history", { defaultValue: "Saalishistoria" })}<br />
-        • {t("tabs.summary", { defaultValue: "Yhteenveto" })}<br />
-        • {t("tabs.stats", { defaultValue: "Tilastot" })}
-      </div>
-
-      <div style={{ marginTop: 8, opacity: 0.9 }}>
-        {t("proBanner.benefit", { defaultValue: "⭐ PRO auttaa löytämään parhaat ottiajat" })}
-      </div>
-    </div>
-  </div>
-);
+  );
 }

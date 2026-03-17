@@ -17,6 +17,30 @@
    "pro.lockedInfo": "🔒 Pro version includes: Catch history, Summary and Statistics. Unlock Pro with a test code or purchase."
   },
 
+  "payment": {
+  "brand": "KalasääApp",
+  "title": "KalasääApp PRO",
+  "badge": "7-day trial first",
+  "price": "One-time payment €9.90",
+  "buyButton": "Buy PRO access",
+  "cancel": "Cancel",
+  "description": "The PRO version unlocks all advanced KalasääApp features, including extended statistics, fish activity analysis and improved forecasts based on your recorded fishing sessions.",
+  "heroText": "A professional view for active users who want to get more out of their fishing data.",
+  "featuresTitle": "What PRO includes",
+  "feature1": "Extended statistics from fishing sessions",
+  "feature2": "More accurate fish activity predictions as data grows",
+  "feature3": "Advanced views for active fishing",
+  "feature4": "Paid access linked to the same verified email",
+  "trialTitle": "Try it first",
+  "trialText": "Use the application freely during the 7-day trial. Once you confirm the app works as expected, you can unlock PRO with a one-time payment.",
+  "dataTitle": "Self-learning prediction",
+  "dataText": "The application improves prediction accuracy as more fishing session data is stored.",
+  "emailTitle": "Access stays with you",
+  "emailText": "Your paid access is linked to a verified email so the PRO rights can be restored even if the user ID changes.",
+  "infoText": "We recommend purchasing PRO access after the 7-day trial period. This allows you to explore the application and confirm everything works correctly. KalasääApp is a self-learning system that improves fish activity predictions as more fishing data is recorded.",
+  "secure": "Payment is processed securely via Stripe."
+},
+
   "auth": {
     "loginGoogle": "Sign in (Google)",
     "logout": "Sign out",
@@ -43,6 +67,7 @@
   "freeInfo": "In Free mode you only see Weather/Forecast + Catch report. Pro unlocks Rivers and other pages.",
   "proInfo": "🔒 Pro version: Catch history, Summary and Statistics. Unlock Pro with a test code or purchase.",
   "activeTitle": "✅ PRO active",
+  "alreadyPro": "PRO access is already active on this account.",
   "activeSource": "({{source}})",
   "backToFree": "Back to Free",
   "invalidCode": "Invalid test code.",
@@ -57,7 +82,11 @@
   "buyFailed": "Failed to start payment.",
   "unlockFailed": "Unlock failed.",
   "loginRequired": "Sign in to start the 7-day trial.",
-  "lockedTitle": "🔒 PRO features locked"
+  "lockedTitle": "🔒 PRO features locked",
+  "loginRequired": "Please sign in to continue.",
+  "buyFailed": "Failed to start the purchase.",
+  "buying": "Redirecting...",
+  "redirectingToCheckout": "Redirecting to checkout..."
 },
 
 "proBanner": {

@@ -59,7 +59,7 @@ const VirtavesiIlmoitus = ({
 }) => {
 const targetGateOn =
   !!sessionDraft?.targetSpecies &&
-  sessionDraft?.targetResolved === false;
+  sessionDraft?.targetResolved !== true;
 
 const lockedTargetSpecies =
   sessionDraft?.targetSpecies?.trim?.() || null;
@@ -140,9 +140,17 @@ const gearUnits = Math.max(0, Number(form.gearUnits) || 0);
 
 // ✅ sessio minuutteina (draftista)
 const sessionDurMin = useMemo(() => {
+  if (!sessionDraft?.targetSpecies && sessionDraft?.targetResolved !== false) {
+    return 0;
+  }
+
   const n = Number(sessionDraft?.durationMinutes);
   return Number.isFinite(n) && n > 0 ? n : 0;
-}, [sessionDraft?.durationMinutes]);
+}, [
+  sessionDraft?.durationMinutes,
+  sessionDraft?.targetSpecies,
+  sessionDraft?.targetResolved,
+]);
 
 // ✅ tunnit sessiosta
 const fishingHours = useMemo(() => {
@@ -154,7 +162,6 @@ const effortHours = useMemo(() => {
   if (gearUnits <= 0 || fishingHours <= 0) return 0;
   return Number((gearUnits * fishingHours).toFixed(2));
 }, [gearUnits, fishingHours]);
-
 const fishingTimeText = useMemo(() => {
   if (fishingHours <= 0) return "-";
   return `~${fishingHours.toFixed(2)} h`;
@@ -335,10 +342,29 @@ const sessionTimeText = useMemo(() => {
 	  if (targetGateOn && lockedTargetSpecies) {
 	    setForm((prev) => ({
 	      ...prev,
-	      species: lockedTargetSpecies, // 🎯 pakotus
+	      species: lockedTargetSpecies,
+	      length: "",
+	      amount: "",
+	      weight: "",
+	      cr: "",
+	      feedback: "",
 	    }));
 	  }
 	}, [targetGateOn, lockedTargetSpecies]);
+
+	useEffect(() => {
+	  if (!targetGateOn) {
+	    setForm((prev) => ({
+	      ...prev,
+	      species: "",
+	      length: "",
+	      amount: "",
+	      weight: "",
+	      cr: "",
+	      feedback: "",
+	    }));
+	  }
+	}, [targetGateOn]);
 
  const handleSubmit = () => {
   // ✅ 0) EI TAVOITESAALISTA ei ole saalistallennus (se tehdään omalla napilla)

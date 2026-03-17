@@ -19,6 +19,30 @@
   "waningCrescent": "Avtagende sigd"
 },
 
+"payment": {
+  "brand": "KalasääApp",
+  "title": "KalasääApp PRO",
+  "badge": "7 dagers prøveperiode først",
+  "price": "Engangsbetaling €9,90",
+  "buyButton": "Kjøp PRO-tilgang",
+  "cancel": "Avbryt",
+  "description": "PRO-versjonen låser opp alle avanserte funksjoner i KalasääApp, inkludert utvidet statistikk, analyse av fiskens aktivitet og mer presise prognoser basert på registrerte fisketurer.",
+  "heroText": "En profesjonell visning for aktive brukere som vil få mer ut av sine fiskedata.",
+  "featuresTitle": "Hva PRO inneholder",
+  "feature1": "Utvidet statistikk fra fisketurer",
+  "feature2": "Mer presis aktivitetsprognose når mer data samles",
+  "feature3": "Avanserte visninger for aktivt fiske",
+  "feature4": "Betalt tilgang knyttet til verifisert e-post",
+  "trialTitle": "Prøv først",
+  "trialText": "Bruk applikasjonen fritt i 7 dagers prøveperiode. Når du har bekreftet at alt fungerer kan du låse opp PRO med en engangsbetaling.",
+  "dataTitle": "Selvlærende prognose",
+  "dataText": "Applikasjonen forbedrer prognosene etter hvert som mer data fra fisketurer lagres.",
+  "emailTitle": "Tilgangen beholdes",
+  "emailText": "Den betalte tilgangen kobles til en verifisert e-post slik at PRO-rettigheten kan gjenopprettes selv om bruker-ID endres.",
+  "infoText": "Vi anbefaler å kjøpe PRO-tilgang etter at 7-dagers prøveperiode er avsluttet, slik at du kan teste applikasjonen og bekrefte at den fungerer som forventet.",
+  "secure": "Betalingen behandles sikkert via Stripe."
+},
+
   "moonPhaseNames": {
   "new-moon": "Nymåne",
   "waxing-crescent": "Voksende månesigd",
@@ -80,12 +104,17 @@
   "loggedOut": "Utlogget",
   "loginOk": "Innlogging vellykket",
   "buyBtn": "Kjøp PRO",
+  "alreadyPro": "PRO-tilgang er allerede aktiv på denne kontoen.",
   "buying": "Omdirigerer...",
   "redirectingToCheckout": "Omdirigerer til betaling…",
   "buyFailed": "Kunne ikke starte betalingen.",
   "unlockFailed": "Opplåsing mislyktes.",
   "loginRequired": "Logg inn for å starte 7 dagers prøveperiode.",
-  "lockedTitle": "🔒 PRO-funksjoner låst"
+  "lockedTitle": "🔒 PRO-funksjoner låst",
+  "loginRequired": "Logg inn for å fortsette.",
+  "buyFailed": "Kunne ikke starte kjøpet.",
+  "buying": "Sender videre...",
+  "redirectingToCheckout": "Sender deg til betaling..."
   },
 
   "proBanner": {
@@ -296,7 +325,7 @@
     "realizedVsForecast": "Faktisk / prognose",
     "source": "Kilde",
     "fishingHours": "Fisketid (t)",
-    "previewRow": "Esikatsele CSV-rivi",
+    "previewRow": "Forhåndsvis CSV-rad",
     "pieces": "kpl",
     "oh": "Ottihalukkuus",
     "Saved": "Tallennettu",
@@ -667,7 +696,7 @@
   },
   "cr": "Catch & Release",
   "judgment": "Arvio",
-  "previewCSV": "Esikatsele CSV-rivi",
+  "previewCSV": "Forhåndsvis CSV-rad",
  "direction": {
   "N": "N",
   "NE": "NE",
