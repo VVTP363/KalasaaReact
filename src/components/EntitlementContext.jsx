@@ -1,285 +1,332 @@
 // src/components/EntitlementContext.jsx
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { auth, db, functions } from "../firebase";
-import {
-  doc,
-  onSnapshot,
-  setDoc,
-  serverTimestamp,
-  runTransaction,
-  Timestamp,
-} from "firebase/firestore";
+import { computeAccess } from "../utils/accessConfig";
 
-const STORAGE_KEY = "kalasaa_entitlement_v1";
+const EntitlementContext = createContext(null);
+
+const LOCAL_KEY = "kalasaa_entitlement_v1";
 const DEVICE_KEY = "kalasaa_device_id_v1";
 
-// ✅ Testikoodit (vaihda / lisää tarpeen mukaan)
-const TEST_CODES = new Set([
-  "KALASAA-PRO-TEST-001",
-  "KALASAA-PRO-TEST-002",
-  "KALASAA-PRO-TEST-003",
-]);
-
-function getOrCreateDeviceId() {
-  let id = localStorage.getItem(DEVICE_KEY);
-  if (!id) {
-    id = `${Date.now()}-${Math.random().toString(16).slice(2)}-${Math.random()
-      .toString(16)
-      .slice(2)}`;
-    localStorage.setItem(DEVICE_KEY, id);
-  }
-  return id;
+function makeDeviceId() {
+  return `dev_${Math.random().toString(36).slice(2)}_${Date.now()}`;
 }
 
-function safeJsonParse(s) {
+function getDeviceId() {
   try {
-    return JSON.parse(s);
+    const existing = localStorage.getItem(DEVICE_KEY);
+    if (existing) return existing;
+    const next = makeDeviceId();
+    localStorage.setItem(DEVICE_KEY, next);
+    return next;
+  } catch {
+    return makeDeviceId();
+  }
+}
+
+function tsToMs(value) {
+  if (!value) return null;
+  if (typeof value?.toMillis === "function") return value.toMillis();
+  if (typeof value === "number") return value;
+  return null;
+}
+
+function isProTier(tier) {
+  const t = String(tier || "free").toLowerCase();
+  return (
+    t === "pro" ||
+    t === "pro_trial" ||
+    t === "pro_paid" ||
+    t === "pro_permanent"
+  );
+}
+
+function isExpiredMs(expiresAtMs) {
+  if (!expiresAtMs) return false;
+  return Date.now() > Number(expiresAtMs);
+}
+
+function normalizeEntitlement(raw, fallbackSource = "local") {
+  const tier = String(raw?.tier || "free").toLowerCase();
+  const expiresAtMs =
+    raw?.expiresAtMs ??
+    tsToMs(raw?.expiresAt) ??
+    null;
+
+  const expired = isExpiredMs(expiresAtMs);
+
+  return {
+    ok: raw?.ok !== false,
+    tier,
+    source: raw?.source || fallbackSource,
+    expiresAtMs,
+    expired,
+    unlockedAt:
+      typeof raw?.unlockedAt === "number"
+        ? raw.unlockedAt
+        : tsToMs(raw?.unlockedAt) ?? Date.now(),
+    updatedAtMs:
+      tsToMs(raw?.updatedAt) ??
+      (typeof raw?.updatedAtMs === "number" ? raw.updatedAtMs : Date.now()),
+    meta: raw?.meta || {},
+  };
+}
+
+function loadLocalEntitlement() {
+  try {
+    const raw = localStorage.getItem(LOCAL_KEY);
+    if (!raw) return null;
+    return normalizeEntitlement(JSON.parse(raw), "local");
   } catch {
     return null;
   }
 }
 
-function toMsMaybe(v) {
-  if (v == null) return null;
-
-  // Firestore Timestamp
-  if (typeof v === "object") {
-    if (typeof v.toMillis === "function") return v.toMillis();
-    if (typeof v.seconds === "number") return v.seconds * 1000;
+function saveLocalEntitlement(ent) {
+  try {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(ent));
+  } catch {
+    // ignore
   }
-
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
 }
 
-function isProTier(tier) {
-  const t = String(tier || "free").toLowerCase();
-  return ["pro_trial", "pro", "pro_paid", "pro_permanent"].includes(t);
-}
-
-function normalizeEntitlement(raw, fallbackSource = "firebase") {
-  const tier =
-    raw?.tier ||
-    raw?.taso ||
-    "free";
-
-  const source =
-    raw?.source ||
-    raw?.lähde ||
-    fallbackSource;
-
-  const expiresAtMs =
-    toMsMaybe(raw?.expiresAtMs) ??
-    toMsMaybe(raw?.expiresAt) ??
-    toMsMaybe(raw?.vanheneeKlo);
-
-  const expired = expiresAtMs != null && Date.now() > expiresAtMs;
-
-  if (expired) {
-    return {
-      ...raw,
-      tier: "free",
-      source,
-      unlockedAt: raw?.unlockedAt || raw?.lukitsematon || null,
-      expiresAtMs,
-      expired: true,
-    };
+function clearLocalEntitlement() {
+  try {
+    localStorage.removeItem(LOCAL_KEY);
+  } catch {
+    // ignore
   }
-
-  return {
-    ...raw,
-    tier,
-    source,
-    unlockedAt: raw?.unlockedAt || raw?.lukitsematon || null,
-    expiresAtMs: expiresAtMs ?? null,
-    expired: false,
-  };
 }
-
-function loadLocalEntitlement() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  const obj = safeJsonParse(raw);
-  if (!obj) return { tier: "free", source: "local", expired: false };
-
-  const normalized = normalizeEntitlement(obj, "local");
-
-  // ✅ JULKAISU: ei local PRO:ta ilman kirjautumista
-  if (isProTier(normalized?.tier)) {
-    return { tier: "free", source: "local_blocked", expired: false, expiresAtMs: null };
-  }
-
-  return normalized;
-}
-
-function saveLocalEntitlement(obj) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
-}
-
-function dbRunTransactionSafe(fn) {
-  return runTransaction(db, fn);
-}
-
-const EntitlementContext = createContext(null);
 
 export function EntitlementProvider({ children }) {
-  const [deviceId] = useState(() => getOrCreateDeviceId());
+  const [deviceId] = useState(() => getDeviceId());
   const [user, setUser] = useState(null);
-
-  // ent = “lähin totuus”: kirjautuneella Firestore, muuten localStorage
-  const [ent, setEnt] = useState(() => loadLocalEntitlement());
-
-  const syncEntitlement = useMemo(
-    () => httpsCallable(functions, "syncEntitlement"),
-    []
-  );
-
-  // Auth state
-  useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (u) => setUser(u || null));
-    return () => unsubAuth();
-  }, []);
-
-  // 🔒 Pyydetään serveriltä “totuus” kirjautumisen jälkeen
-  useEffect(() => {
-    if (!user?.uid) return;
-
-    (async () => {
-      try {
-        console.log("Calling syncEntitlement...");
-        const res = await syncEntitlement({});
-        console.log("syncEntitlement OK:", res?.data);
-
-        if (res?.data?.ok) {
-          const normalized = normalizeEntitlement(res.data, "firebase");
-          setEnt(normalized);
-          saveLocalEntitlement(normalized);
-        }
-      } catch (e) {
-        console.log("syncEntitlement FAILED:", e?.code, e?.message, e);
-      }
-    })();
-  }, [user?.uid, syncEntitlement]);
-
-  // ✅ UUSI: jos laitteella on local PRO ja käyttäjä kirjautuu sisään,
-  // siirretään PRO käyttäjätilille (Pro = käyttäjätili kaikilla laitteilla)
-  useEffect(() => {
-    if (!user?.uid) return;
-
-    const local = loadLocalEntitlement();
-    const localIsPro = isProTier(local?.tier) && !local?.expired;
-    if (!localIsPro) return;
-
-    (async () => {
-      try {
-        const ref = doc(db, "entitlements", user.uid);
-
-        await dbRunTransactionSafe(async (tx) => {
-          const snap = await tx.get(ref);
-          const cur = snap.exists() ? snap.data() || {} : {};
-
-          // 1) Älä yliaja ostettua/pysyvää
-          const curTier = String(cur.tier || "free").toLowerCase();
-          if (curTier === "pro_paid" || curTier === "pro_permanent") return;
-
-          const hasExpiry = local.expiresAtMs != null;
-          const nextTier = hasExpiry ? "pro_trial" : "pro_permanent";
-
-          tx.set(
-            ref,
-            {
-              tier: nextTier,
-              source: "local_migrate",
-              unlockedAt: local.unlockedAt || Date.now(),
-              ...(hasExpiry
-                ? { expiresAt: Timestamp.fromMillis(Number(local.expiresAtMs)) }
-                : {}),
-              updatedAt: serverTimestamp(),
-              meta: { migratedFromDevice: true, deviceId },
-            },
-            { merge: true }
-          );
-        });
-
-        // Tyhjennä local, ettei jää kummittelemaan
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (e) {
-        console.log("local->account migrate FAILED:", e?.code, e?.message, e);
-      }
-    })();
-  }, [user?.uid, deviceId]);
-
-  // Entitlement data source: localStorage (logged out) / Firestore (logged in)
-  useEffect(() => {
-    // Jos ei käyttäjää → localStorage ent
-    if (!user?.uid) {
-      setEnt(loadLocalEntitlement());
-
-      const onStorage = (e) => {
-        if (e.key === STORAGE_KEY) setEnt(loadLocalEntitlement());
-      };
-      window.addEventListener("storage", onStorage);
-      return () => window.removeEventListener("storage", onStorage);
-    }
-
-    // Käyttäjä sisällä → kuuntele Firestore entitlement
-    const ref = doc(db, "entitlements", user.uid);
-
-    const unsub = onSnapshot(
-      ref,
-      async (snap) => {
-        if (snap.exists()) {
-          const data = snap.data() || {};
-          const normalized = normalizeEntitlement(data, "firebase");
-          setEnt(normalized);
-
-          // ✅ Jos tier on pro* ja se on vanhentunut → siivoa
-          if (isProTier(data?.tier) && normalized.expired) {
-            try {
-              await setDoc(
-                ref,
-                { tier: "free", source: "firebase", updatedAt: serverTimestamp() },
-                { merge: true }
-              );
-            } catch {
-              // ignore
-            }
-          }
-        } else {
-          setEnt({ tier: "free", source: "firebase", expired: false, expiresAtMs: null });
-        }
-      },
-      () => {
-        // jos Firestore ei tavoita → fallback local
-        setEnt(loadLocalEntitlement());
+  const [authReady, setAuthReady] = useState(false);
+  const [entitlementLoading, setEntitlementLoading] = useState(true);
+  const [ent, setEnt] = useState(() => {
+    return (
+      loadLocalEntitlement() || {
+        ok: true,
+        tier: "free",
+        source: "local",
+        expiresAtMs: null,
+        expired: false,
+        unlockedAt: Date.now(),
+        updatedAtMs: Date.now(),
+        meta: {},
       }
     );
+  });
 
-    return () => unsub();
-  }, [user?.uid]);
+  const lastSyncedUidRef = useRef(null);
+  const syncInFlightRef = useRef(false);
 
-  const isPro = !!user?.uid && isProTier(ent?.tier) && !ent?.expired;
+  const isPro = useMemo(() => {
+    return isProTier(ent?.tier) && !ent?.expired;
+  }, [ent]);
 
-  // ✅ grantPro (permanent by default)
-  // opts: { expiresAtMs?: number|null, meta?: object }
+  const refreshFromFirestore = useCallback(async (currentUser) => {
+    if (!currentUser?.uid) {
+      const localEnt =
+        loadLocalEntitlement() || {
+          ok: true,
+          tier: "free",
+          source: "local",
+          expiresAtMs: null,
+          expired: false,
+          unlockedAt: Date.now(),
+          updatedAtMs: Date.now(),
+          meta: {},
+        };
+      setEnt(localEnt);
+      setEntitlementLoading(false);
+      return { ok: true, entitlement: localEnt };
+    }
+
+    try {
+      setEntitlementLoading(true);
+
+      const access = await computeAccess({ user: currentUser });
+      const rawEnt = access?.ent || null;
+
+      if (rawEnt) {
+        const normalized = normalizeEntitlement(rawEnt, "firebase");
+        setEnt(normalized);
+        saveLocalEntitlement(normalized);
+        lastSyncedUidRef.current = currentUser.uid;
+        return { ok: true, entitlement: normalized, access };
+      }
+
+      const freeEnt = normalizeEntitlement(
+        { tier: "free", source: "firebase", expiresAtMs: null },
+        "firebase"
+      );
+      setEnt(freeEnt);
+      saveLocalEntitlement(freeEnt);
+      lastSyncedUidRef.current = currentUser.uid;
+      return { ok: true, entitlement: freeEnt, access };
+    } catch (err) {
+      console.error("[EntitlementContext] refreshFromFirestore failed", err);
+
+      const fallback =
+        loadLocalEntitlement() || {
+          ok: true,
+          tier: "free",
+          source: "local",
+          expiresAtMs: null,
+          expired: false,
+          unlockedAt: Date.now(),
+          updatedAtMs: Date.now(),
+          meta: {},
+        };
+
+      setEnt(fallback);
+      return { ok: false, error: err, entitlement: fallback };
+    } finally {
+      setEntitlementLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let unsubEnt = null;
+
+    const unsubAuth = onAuthStateChanged(auth, async (nextUser) => {
+      setUser(nextUser || null);
+      setAuthReady(true);
+
+      if (!nextUser?.uid) {
+        if (unsubEnt) unsubEnt();
+        unsubEnt = null;
+
+        const localEnt =
+          loadLocalEntitlement() || {
+            ok: true,
+            tier: "free",
+            source: "local",
+            expiresAtMs: null,
+            expired: false,
+            unlockedAt: Date.now(),
+            updatedAtMs: Date.now(),
+            meta: {},
+          };
+
+        setEnt(localEnt);
+        setEntitlementLoading(false);
+        return;
+      }
+
+      await refreshFromFirestore(nextUser);
+
+      const ref = doc(db, "entitlements", nextUser.uid);
+      if (unsubEnt) unsubEnt();
+
+      unsubEnt = onSnapshot(
+  ref,
+  (snap) => {
+    if (!snap.exists()) {
+      const freeEnt = normalizeEntitlement(
+        { tier: "free", source: "firebase", expiresAtMs: null },
+        "firebase"
+      );
+      console.log("[ENT] snapshot -> no doc, using free");
+      setEnt(freeEnt);
+      saveLocalEntitlement(freeEnt);
+      return;
+    }
+
+    const raw = snap.data() || {};
+    const normalized = normalizeEntitlement(raw, "firebase");
+
+    console.log("[ENT] snapshot raw:", raw);
+    console.log("[ENT] snapshot normalized:", normalized);
+
+    setEnt(normalized);
+    saveLocalEntitlement(normalized);
+  },
+        (err) => {
+          console.error("[EntitlementContext] entitlement snapshot failed", err);
+        }
+      );
+    });
+
+    return () => {
+      if (unsubEnt) unsubEnt();
+      unsubAuth();
+    };
+  }, [refreshFromFirestore]);
+
+  const forceSyncEntitlement = useCallback(async () => {
+    if (!user?.uid) return { ok: false, reason: "not_logged_in" };
+    if (syncInFlightRef.current) return { ok: false, reason: "sync_in_flight" };
+
+    syncInFlightRef.current = true;
+
+    try {
+      const syncEntitlement = httpsCallable(functions, "syncEntitlement");
+      const res = await syncEntitlement({});
+
+      if (res?.data?.ok) {
+        const normalized = normalizeEntitlement(res.data, "firebase");
+        setEnt(normalized);
+        saveLocalEntitlement(normalized);
+        lastSyncedUidRef.current = user.uid;
+        return { ok: true, entitlement: normalized };
+      }
+
+      await refreshFromFirestore(user);
+      return { ok: false, reason: "sync_failed", data: res?.data || null };
+    } catch (err) {
+      console.error("[EntitlementContext] forceSyncEntitlement failed", err);
+      return { ok: false, reason: "sync_failed", error: err };
+    } finally {
+      syncInFlightRef.current = false;
+    }
+  }, [user, refreshFromFirestore]);
+
+  async function unlockWithCode(codeRaw) {
+    if (!user?.uid) return { ok: false, reason: "login_required" };
+
+    const code = String(codeRaw || "").trim().toUpperCase();
+    if (!code) return { ok: false, reason: "invalid_code" };
+
+    try {
+      const fn = httpsCallable(functions, "unlockWithTestCode");
+      const res = await fn({ code });
+
+      const normalized = normalizeEntitlement(res?.data || {}, "manual_code");
+      setEnt(normalized);
+      saveLocalEntitlement(normalized);
+
+      return { ok: true, data: res?.data || null };
+    } catch (err) {
+      console.error("[EntitlementContext] unlockWithCode failed", err);
+      return { ok: false, reason: "unlock_failed", error: err };
+    }
+  }
+
   async function grantPro(source = "manual_code", opts = {}) {
-    const expiresAtMs = opts?.expiresAtMs == null ? null : Number(opts.expiresAtMs);
+    const expiresAtMs =
+      opts?.expiresAtMs == null ? null : Number(opts.expiresAtMs);
     const hasExpiry = Number.isFinite(expiresAtMs);
 
-    const payload = {
-      tier: hasExpiry ? "pro_trial" : "pro_permanent",
-      source,
-      unlockedAt: Date.now(),
-      ...(hasExpiry ? { expiresAt: Timestamp.fromMillis(expiresAtMs) } : {}),
-      updatedAt: serverTimestamp(),
-      ...(opts?.meta ? { meta: opts.meta } : {}),
-    };
-
     if (user?.uid) {
-      const ref = doc(db, "entitlements", user.uid);
-      await setDoc(ref, payload, { merge: true });
-      return { ok: true };
+      if (source === "manual_code") {
+        const code = String(opts?.meta?.codeUsed || "").trim().toUpperCase();
+        return unlockWithCode(code);
+      }
+
+      return { ok: false, reason: "unsupported_remote_source" };
     }
 
     const localPayload = {
@@ -297,46 +344,31 @@ export function EntitlementProvider({ children }) {
     return { ok: true };
   }
 
-  // ✅ Testikoodi (PERMANENT)
-  async function unlockWithCode(codeRaw) {
-    if (!user?.uid) return { ok: false, reason: "login_required" };
+ async function lockToFree() {
+  const source = String(ent?.source || "").toLowerCase();
 
-    const code = String(codeRaw || "").trim().toUpperCase();
-    const ok = TEST_CODES.has(code);
-    if (!ok) return { ok: false, reason: "invalid_code" };
+  const canDowngradeLocally =
+    source === "manual_code" || source === "local";
 
-    await grantPro("manual_code", { meta: { codeUsed: code } });
-    return { ok: true };
+  if (!canDowngradeLocally) {
+    return { ok: false, reason: "not_allowed" };
   }
 
-  async function forceSyncEntitlement() {
-    if (!user?.uid) return { ok: false, reason: "not_logged_in" };
+  const freeEnt = {
+    ok: true,
+    tier: "free",
+    source: "local",
+    expiresAtMs: null,
+    expired: false,
+    unlockedAt: Date.now(),
+    updatedAtMs: Date.now(),
+    meta: {},
+  };
 
-    const res = await syncEntitlement({});
-    if (res?.data?.ok) {
-      const normalized = normalizeEntitlement(res.data, "firebase");
-      setEnt(normalized);
-      saveLocalEntitlement(normalized);
-      return { ok: true, entitlement: normalized };
-    }
-
-    return { ok: false, reason: "sync_failed", data: res?.data };
-  }
-
-  async function lockToFree() {
-    if (user?.uid) {
-      const ref = doc(db, "entitlements", user.uid);
-      await setDoc(
-        ref,
-        { tier: "free", source: "firebase", updatedAt: serverTimestamp() },
-        { merge: true }
-      );
-      return;
-    }
-
-    saveLocalEntitlement({ tier: "free", source: "local", expired: false, expiresAtMs: null });
-    setEnt({ tier: "free", source: "local", expired: false, expiresAtMs: null });
-  }
+  saveLocalEntitlement(freeEnt);
+  setEnt(freeEnt);
+  return { ok: true };
+}
 
   const value = useMemo(
     () => ({
@@ -344,12 +376,25 @@ export function EntitlementProvider({ children }) {
       user,
       entitlement: ent,
       isPro,
+      authReady,
+      entitlementLoading,
       forceSyncEntitlement,
       unlockWithCode,
       grantPro,
       lockToFree,
+      refreshFromFirestore,
+      clearLocalEntitlement,
     }),
-    [deviceId, user, ent, isPro]
+    [
+      deviceId,
+      user,
+      ent,
+      isPro,
+      authReady,
+      entitlementLoading,
+      forceSyncEntitlement,
+      refreshFromFirestore,
+    ]
   );
 
   return (
@@ -361,6 +406,8 @@ export function EntitlementProvider({ children }) {
 
 export function useEntitlement() {
   const ctx = useContext(EntitlementContext);
-  if (!ctx) throw new Error("useEntitlement must be used within EntitlementProvider");
+  if (!ctx) {
+    throw new Error("useEntitlement must be used inside EntitlementProvider");
+  }
   return ctx;
 }

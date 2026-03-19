@@ -1,67 +1,82 @@
 import React, { useEffect, useState } from "react";
-import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 import { useTranslation } from "react-i18next";
 
 export default function AuthBar() {
   const [user, setUser] = useState(null);
   const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
-  const unsub = onAuthStateChanged(auth, setUser);
+    const unsub = onAuthStateChanged(auth, (nextUser) => {
+      console.log("[AUTH] state changed:", nextUser ? nextUser.email : "no user");
+      setUser(nextUser);
+    });
 
-  // Redirect-paluu (vain jos redirectiä käytetty)
-  getRedirectResult(auth).catch(() => {});
+    return () => unsub();
+  }, []);
 
-  return () => unsub();
-}, []);
+  const login = async () => {
+    if (busy) return;
 
-const login = async () => {
-  setErr("");
-  try {
-    const host = window.location.hostname;
-    const isHosted =
-      host.endsWith(".web.app") || host.endsWith(".firebaseapp.com");
+    setBusy(true);
+    setErr("");
 
-    if (isHosted) {
-      // ✅ Firebase Hosting / tuotanto: redirect → ei COOP window.close varoitusta
-      await signInWithRedirect(auth, googleProvider);
-    } else {
-      // ✅ localhost/dev: popup → nopea
-      await signInWithPopup(auth, googleProvider);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("[AUTH] popup ok:", result?.user?.email || null);
+    } catch (e) {
+      console.error("[AUTH] signInWithPopup error:", e);
+      console.error("[AUTH] code:", e?.code);
+      console.error("[AUTH] message:", e?.message);
+      setErr(e?.message || "Login failed");
+    } finally {
+      setBusy(false);
     }
-  } catch (e) {
-    console.error("[Auth] signIn error:", e);
-    setErr(e?.message || "Login failed");
-  }
-};
+  };
 
   const logout = async () => {
+    if (busy) return;
+
+    setBusy(true);
     setErr("");
+
     try {
       await signOut(auth);
+      console.log("[AUTH] signed out");
     } catch (e) {
-      console.error("[Auth] signOut error:", e);
+      console.error("[AUTH] signOut error:", e);
       setErr(e?.message || "Logout failed");
+    } finally {
+      setBusy(false);
     }
   };
 
   if (!user) {
     return (
-      <div className="row">
+      <div
+        className="row"
+        style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}
+      >
         <button
+          type="button"
           onClick={login}
+          disabled={busy}
           style={{
             padding: "6px 10px",
             borderRadius: 8,
             border: "1px solid #ddd",
-            cursor: "pointer",
+            cursor: busy ? "default" : "pointer",
             background: "#fff",
           }}
         >
-          {t("auth.loginGoogle")}
+          {busy
+            ? t("auth.loggingIn", { defaultValue: "Kirjaudutaan..." })
+            : t("auth.loginGoogle", { defaultValue: "Kirjaudu Googlella" })}
         </button>
+
         {err ? (
           <span style={{ fontSize: 12, color: "#b00020" }}>{err}</span>
         ) : null}
@@ -81,19 +96,27 @@ const login = async () => {
       <span style={{ fontSize: 12, opacity: 0.8 }}>
         ✅ {user.displayName || user.email}
       </span>
+
       <button
+        type="button"
         onClick={logout}
+        disabled={busy}
         style={{
           padding: "6px 10px",
           borderRadius: 8,
           border: "1px solid #ddd",
-          cursor: "pointer",
+          cursor: busy ? "default" : "pointer",
           background: "#fff",
         }}
       >
-        {t("auth.logout")}
+        {busy
+          ? t("auth.loggingOut", { defaultValue: "Kirjaudutaan ulos..." })
+          : t("auth.logout", { defaultValue: "Kirjaudu ulos" })}
       </button>
-      {err ? <span style={{ fontSize: 12, color: "#b00020" }}>{err}</span> : null}
+
+      {err ? (
+        <span style={{ fontSize: 12, color: "#b00020" }}>{err}</span>
+      ) : null}
     </div>
   );
 }

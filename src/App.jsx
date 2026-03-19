@@ -19,9 +19,7 @@ import ProSuccess from "./components/ProSuccess";
 import ProInfoPage from "./components/ProInfoPage";
 console.log("[APP] render");
 
-<div style={{ background: "yellow", color: "black", padding: 8, fontWeight: "bold" }}>
-  EMU TESTI: {String(import.meta.env.VITE_USE_EMULATORS)}
-</div>
+
 
 // ✅ Lazy-load isot näkymät
 const WeatherTabs = lazy(() => import("./components/WeatherTabs"));
@@ -126,7 +124,7 @@ export default function App() {
     <AppProvider>
       <EntitlementProvider>
         <CheckoutSync />
-
+  
         <div className="app-container">
           <LanguageSelector />
           <AuthBar />

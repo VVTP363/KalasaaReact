@@ -2,12 +2,43 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Vain kirjautuneet käyttäjät saavat lukea ja kirjoittaa
     match /_meta/{docId} {
-  allow read: if true;
-  allow write: if request.auth != null;
-}
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
 
+    match /sovellusKonfig/paasy {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /entitlements/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /entitlement_email/{docId} {
+      allow read, write: if false;
+    }
+
+    match /pro_allowlist/{docId} {
+      allow read, write: if false;
+    }
+
+    match /pro_domain_allowlist/{docId} {
+      allow read, write: if false;
+    }
+
+    match /pro_domain_allowlist/{domain}/members/{memberId} {
+      allow read, write: if false;
+    }
+
+    match /analytics/{docId} {
+      allow read, write: if false;
+    }
+
+    match /proPurchases/{docId} {
+      allow read, write: if false;
+    }
   }
 }
-

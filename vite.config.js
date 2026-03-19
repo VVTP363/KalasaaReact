@@ -8,6 +8,14 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["icons/apple-touch-icon-180x180.png"],
+
+      workbox: {
+        navigateFallbackDenylist: [
+          /^\/__\//,          // Firebase reserved paths, incl. /__/auth/handler
+          /^\/api\//          // varalta, jos joskus lisäät omia API-polkuja
+        ],
+      },
+
       manifest: {
         name: "KalasääApp",
         short_name: "Kalasää",
@@ -32,7 +40,7 @@ export default defineConfig({
   ],
 
   build: {
-    chunkSizeWarningLimit: 1000, // nostaa varoitusrajaa vähän
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {

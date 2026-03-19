@@ -13,11 +13,29 @@ export default function ProUnlockBar() {
   const [buying, setBuying] = useState(false);
   const { t, i18n } = useTranslation();
 
-  const SHOW_BUY_BUTTON = true; // julkaisu: trial-only
+  const SHOW_BUY_BUTTON = true;
 
   const createCheckoutSession = useMemo(() => {
     return httpsCallable(functions, "createCheckoutSession");
   }, []);
+
+  const entSource = String(entitlement?.source || "").toLowerCase();
+const entTier = String(entitlement?.tier || "").toLowerCase();
+
+// Näytä nappi vain testikoodille tai paikalliselle dev-tilalle
+const canShowBackToFree =
+  entSource === "manual_code" || entSource === "local";
+
+// Jos entitlement on oikeasti maksettu/trial Firestoresta, älä koskaan näytä nappia
+const isServerManagedEntitlement =
+  entSource === "stripe" ||
+  entSource === "trial" ||
+  entSource === "pro_trial" ||
+  entSource === "allowlist_email" ||
+  entSource === "allowlist_domain" ||
+  entSource === "firebase";
+
+const showBackToFree = canShowBackToFree && !isServerManagedEntitlement;
 
   const onBuy = async () => {
     try {
@@ -29,11 +47,11 @@ export default function ProUnlockBar() {
         return;
       }
 
-      // varmista että callable saa tuoreen tokenin
       await auth.currentUser.getIdToken(true);
 
       const res = await createCheckoutSession({
         locale: i18n.resolvedLanguage || i18n.language || "fi",
+        origin: window.location.origin,
       });
 
       console.log("checkout response:", res?.data);
@@ -93,21 +111,23 @@ export default function ProUnlockBar() {
               : ""}
           </span>
 
-          <button
-            type="button"
-            onClick={() => {
-              lockToFree();
-              setMsgKey("proUnlock.backToFreeMsg");
-            }}
-            style={{
-              padding: "6px 10px",
-              borderRadius: 8,
-              border: "1px solid #ddd",
-              cursor: "pointer",
-            }}
-          >
-            {t("proUnlock.backToFree", { defaultValue: "Palauta Free" })}
-          </button>
+          {showBackToFree && (
+	  <button
+	    type="button"
+	    onClick={() => {
+	      lockToFree();
+	      setMsgKey("proUnlock.backToFreeMsg");
+	    }}
+	    style={{
+	      padding: "6px 10px",
+	      borderRadius: 8,
+	      border: "1px solid #ddd",
+	      cursor: "pointer",
+	    }}
+	  >
+	    {t("proUnlock.backToFree", { defaultValue: "Palauta Free" })}
+	  </button>
+	)}
 
           {msgKey ? <span style={{ fontSize: 12, opacity: 0.8 }}>{t(msgKey)}</span> : null}
         </div>

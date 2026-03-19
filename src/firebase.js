@@ -1,6 +1,12 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, connectAuthEmulator, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  connectAuthEmulator,
+  GoogleAuthProvider,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
@@ -16,30 +22,46 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence).catch((err) => {
+  console.error("[FB Auth] setPersistence failed:", err);
+});
+
 export const googleProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 export const functions = getFunctions(app, "europe-west1");
 
-// ✅ Käytä emulaattoreita, kun VITE_USE_EMULATORS=true (toimii sekä 5173 että 5000)
+const hostname = window.location.hostname;
+const isLocalhost =
+  hostname === "localhost" || hostname === "127.0.0.1";
 
-const USE_EMULATORS = import.meta.env.VITE_USE_EMULATORS === "true";
+const useEmulators =
+  import.meta.env.DEV &&
+  isLocalhost &&
+  import.meta.env.VITE_USE_EMULATORS === "true";
 
-if (USE_EMULATORS) {
-
-  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+if (useEmulators) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", {
+    disableWarnings: true,
+  });
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
   connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 
   console.log("🔥 Firebase emulators connected");
+} else {
+  console.log("✅ Firebase production services in use");
 }
 
 console.log(
   "[FB] DEV=",
   import.meta.env.DEV,
-  "USE_EMULATORS=",
-  USE_EMULATORS,
+  "VITE_USE_EMULATORS=",
+  import.meta.env.VITE_USE_EMULATORS,
+  "useEmulators=",
+  useEmulators,
   "functions region=",
   "europe-west1",
   "origin=",
   window.location.origin
 );
+
+console.log("🔥 FIREBASE CONFIG:", firebaseConfig);

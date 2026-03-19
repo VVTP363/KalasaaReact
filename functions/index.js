@@ -7,6 +7,7 @@ const Stripe = require("stripe");
 const { getFirestore, Timestamp, FieldValue } = require("firebase-admin/firestore");
 const { setGlobalOptions } = require("firebase-functions/v2");
 const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
+const { defineSecret } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
 
 if (!admin.apps.length) {
@@ -19,9 +20,9 @@ setGlobalOptions({ region: "europe-west1" });
 
 const TRIAL_DAYS = 7;
 
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";
-const STRIPE_PRICE_PRO = process.env.STRIPE_PRICE_PRO || "";
-const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
+const STRIPE_SECRET_KEY = defineSecret("STRIPE_SECRET_KEY");
+const STRIPE_PRICE_PRO = defineSecret("STRIPE_PRICE_PRO");
+const STRIPE_WEBHOOK_SECRET = defineSecret("STRIPE_WEBHOOK_SECRET");
 
 // ---------- helpers ----------
 function normalizeEmail(value) {
@@ -71,8 +72,9 @@ function normalizeCountryBucket(countryCode) {
 }
 
 async function getExistingPaidAccess({ uid, email }) {
+  const normalizedEmail = normalizeEmail(email);
   const entRef = db.doc(`entitlements/${uid}`);
-  const emailRef = db.doc(`entitlement_email/${email}`);
+  const emailRef = db.doc(`entitlement_email/${normalizedEmail}`);
 
   const [entSnap, emailSnap] = await Promise.all([
     entRef.get(),
@@ -131,6 +133,7 @@ function buildPaidEntitlement({
     tier,
     source,
     expiresAt,
+    email: email || null,
     unlockedAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
     meta: {
@@ -192,6 +195,63 @@ function getCheckoutInfoText(appLocale) {
 
   return "PRO-versio avaa kaikki KalasääAppin edistyneet ominaisuudet, kuten laajemmat tilastot, ottihalukkuus-analyysin sekä kalastussessioiden dataan perustuvan ennusteen tarkentumisen. Suositus on, että ostat PRO-oikeudet vasta 7 vuorokauden koejakson päätyttyä. Näin ehdit tutustua sovellukseen rauhassa ja varmistua sen toimivuudesta. KalasääApp on itseoppiva sovellus, joka parantaa ottiennusteen tarkkuutta sitä mukaa kun kalastussessioista tallennetaan lisää dataa.";
 }
+
+exports.unlockWithTestCode = onCall({}, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Login required");
+  }
+
+  const uid = request.auth.uid;
+  const email = normalizeEmail(request.auth.token.email || "");
+  const code = String(request.data?.code || "").trim().toUpperCase();
+
+  const TEST_CODES = new Set([
+    "KALASAA-PRO-TEST-001",
+  ]);
+
+  if (!TEST_CODES.has(code)) {
+    throw new HttpsError("permission-denied", "Invalid code");
+  }
+
+  await db.doc(`entitlements/${uid}`).set(
+    {
+      ok: true,
+      tier: "pro_permanent",
+      source: "manual_code",
+      email: email || null,
+      expiresAt: null,
+      unlockedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      meta: {
+        codeUsed: code,
+      },
+    },
+    { merge: true }
+  );
+
+  if (isValidEmail(email)) {
+    await db.doc(`entitlement_email/${email}`).set(
+      {
+        email,
+        tier: "pro_permanent",
+        source: "manual_code",
+        expiresAt: null,
+        trialUsed: true,
+        lastUid: uid,
+        unlockedAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+  }
+
+  return {
+    ok: true,
+    tier: "pro_permanent",
+    source: "manual_code",
+    expiresAtMs: null,
+  };
+});
 
 // ---------- 1) syncEntitlement ----------
 exports.syncEntitlement = onCall(
@@ -463,13 +523,17 @@ exports.syncEntitlement = onCall(
 );
 
 // ---------- 2) createCheckoutSession ----------
-exports.createCheckoutSession = onCall({}, async (request) => {
+exports.createCheckoutSession = onCall(
+  {
+    secrets: [STRIPE_SECRET_KEY, STRIPE_PRICE_PRO],
+  },
+  async (request) => {
   if (!request.auth) {
     throw new HttpsError("unauthenticated", "Login required");
   }
 
-  const key = STRIPE_SECRET_KEY.trim();
-  const priceId = STRIPE_PRICE_PRO.trim();
+  const key = STRIPE_SECRET_KEY.value().trim();
+  const priceId = STRIPE_PRICE_PRO.value().trim();;
 
   if (!key || !key.startsWith("sk_")) {
     throw new HttpsError("failed-precondition", "Stripe key missing");
@@ -486,6 +550,8 @@ exports.createCheckoutSession = onCall({}, async (request) => {
   const emailVerified = request.auth.token.email_verified === true;
 
   const appLocale = String(request.data?.locale || "fi").toLowerCase();
+  const origin = String(request.data?.origin || "http://127.0.0.1:5173").trim();
+
   const stripeLocale = mapAppLocaleToStripe(appLocale);
   const infoText = getCheckoutInfoText(appLocale);
 
@@ -496,7 +562,8 @@ exports.createCheckoutSession = onCall({}, async (request) => {
   if (!emailVerified) {
     throw new HttpsError("failed-precondition", "Verified email required");
   }
-const existing = await getExistingPaidAccess({ uid, email });
+
+  const existing = await getExistingPaidAccess({ uid, email });
 
   if (existing.alreadyPro) {
     logger.info("[createCheckoutSession] alreadyPro, skipping checkout", {
@@ -504,6 +571,8 @@ const existing = await getExistingPaidAccess({ uid, email });
       email,
       source: existing.source,
       tier: existing.entitlement?.tier || null,
+      expiresAt: existing.entitlement?.expiresAt || null,
+      entitlement: existing.entitlement || null,
     });
 
     return {
@@ -513,53 +582,51 @@ const existing = await getExistingPaidAccess({ uid, email });
       url: null,
     };
   }
+
   try {
+    const idempotencyKey = `checkout_${uid}_${Math.random().toString(36).slice(2)}`;
 
-  const idempotencyKey = `checkout_${uid}`;
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: "payment",
+        automatic_tax: { enabled: false },
+        billing_address_collection: "auto",
 
-  const session = await stripe.checkout.sessions.create(
-    {
-      mode: "payment",
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
 
-      automatic_tax: { enabled: false },
+        success_url: `${origin}/?checkout=success`,
+        cancel_url: `${origin}/?checkout=cancel`,
 
-      billing_address_collection: "auto",
+        client_reference_id: uid,
+        customer_email: email,
 
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
+        locale: stripeLocale,
+
+        custom_text: {
+          submit: {
+            message: infoText,
+          },
         },
-      ],
-      success_url: "http://127.0.0.1:5173/?checkout=success",
-      cancel_url: "http://127.0.0.1:5173/?checkout=cancel",
 
-      client_reference_id: uid,
-      customer_email: email,
-
-      locale: stripeLocale,
-
-      custom_text: {
-        submit: {
-          message: infoText,
+        metadata: {
+          uid,
+          email,
+          app: "kalasaaapp",
+          license: "pro",
+          emailVerified: "true",
+          appLocale,
+          env: "prod",
         },
       },
-
-      metadata: {
-        uid,
-        email,
-        app: "kalasaaapp",
-        license: "pro",
-        emailVerified: "true",
-        appLocale,
-        env: "prod"
-      },
-    },
-
-    {
-      idempotencyKey
-    }
-  );
+      {
+        idempotencyKey,
+      }
+    );
 
     if (!session?.url) {
       throw new HttpsError("internal", "Stripe session URL missing");
@@ -572,6 +639,7 @@ const existing = await getExistingPaidAccess({ uid, email });
       uid,
       email,
       appLocale,
+      origin,
       stripeLocale,
     });
     throw new HttpsError("internal", safeErrorMessage(err));
@@ -583,10 +651,11 @@ exports.stripeWebhook = onRequest(
   {
     region: "europe-west1",
     invoker: "public",
+    secrets: [STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET],
   },
   async (req, res) => {
-    const key = String(STRIPE_SECRET_KEY || "").trim();
-    const webhookSecret = String(STRIPE_WEBHOOK_SECRET || "").trim();
+    const key = STRIPE_SECRET_KEY.value().trim();
+    const webhookSecret = STRIPE_WEBHOOK_SECRET.value().trim();
 
     if (!key || !key.startsWith("sk_")) {
       logger.error("[webhook] Missing/invalid STRIPE_SECRET_KEY", {
@@ -741,18 +810,49 @@ exports.stripeWebhook = onRequest(
 	      );
 	    }
 
+	logger.info("[webhook] final entitlement payload", {
+	  uid,
+	  email,
+	  tier: "pro_permanent",
+	  source: "stripe",
+	  stripeSessionId,
+	});
+
     const entRef = db.doc(`entitlements/${uid}`);
 
-    const entDoc = buildPaidEntitlement({
-      tier: "pro_permanent",
-      source: "stripe",
-      expiresAt: null,
-      email: email || null,
-      stripeCustomerId,
-      stripeSessionId,
-    });
+	const entDoc = buildPaidEntitlement({
+	  tier: "pro_permanent",
+	  source: "stripe",
+	  expiresAt: null,
+	  email: email || null,
+	  stripeCustomerId,
+	  stripeSessionId,
+	});
 
-    await entRef.set(entDoc, { merge: true });
+	logger.info("[webhook] final entitlement payload", {
+	  uid,
+	  email,
+	  tier: "pro_permanent",
+	  source: "stripe",
+	  stripeSessionId,
+	});
+
+await entRef.set(
+  {
+    tier: "pro_permanent",
+    source: "stripe",
+    email: email || null,
+    expiresAt: null,
+    unlockedAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+    meta: {
+      email: email || null,
+      stripeCustomerId: stripeCustomerId || null,
+      stripeSessionId: stripeSessionId || null,
+    },
+  },
+  { merge: true }
+);
 
     logger.info("[webhook] entitlement doc write ok", {
       uid,
