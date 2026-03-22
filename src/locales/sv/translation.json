@@ -9,8 +9,8 @@
   "getLocation": "Min plats",
   "moonPhase": "Månfas",
 
- "moonPhaseTranslations": {
-  "new-moon": "Nymåne",
+  "moonPhaseTranslations": {
+    "new-moon": "Nymåne",
     "waxing-crescent": "Tilltagande skära",
     "first-quarter": "Första kvarteret",
     "waxing-gibbous": "Tilltagande gibbe",
@@ -18,67 +18,66 @@
     "waning-gibbous": "Avtagande gibbe",
     "last-quarter": "Sista kvarteret",
     "waning-crescent": "Avtagande skära",
-  "newMoon": "Nymåne",
-  "waxingCrescent": "Tilltagande månskära",
-  "firstQuarter": "Första kvarteret",
-  "waxingGibbous": "Tilltagande gibbe",
-  "fullMoon": "Fullmåne",
-  "waningGibbous": "Avtagande gibbe",
-  "lastQuarter": "Sista kvarteret",
-  "waningCrescent": "Avtagande månskära"
-},
- 
+    "newMoon": "Nymåne",
+    "waxingCrescent": "Tilltagande månskära",
+    "firstQuarter": "Första kvarteret",
+    "waxingGibbous": "Tilltagande gibbe",
+    "fullMoon": "Fullmåne",
+    "waningGibbous": "Avtagande gibbe",
+    "lastQuarter": "Sista kvarteret",
+    "waningCrescent": "Avtagande månskära"
+  },
+
   "payment": {
-  "brand": "KalasääApp",
-  "title": "KalasääApp PRO",
-  "badge": "7 dagars testperiod först",
-  "price": "Engångsbetalning 9,90 €",
-  "buyButton": "Köp PRO-åtkomst",
-  "cancel": "Avbryt",
-  "description": "PRO-versionen låser upp alla avancerade funktioner i KalasääApp, inklusive utökad statistik, analys av fiskens aktivitet och mer exakta prognoser baserade på registrerade fiskepass.",
-  "heroText": "En professionell vy för aktiva användare som vill få ut mer av sin fiskedata.",
-  "featuresTitle": "Vad PRO innehåller",
-  "feature1": "Utökad statistik från fiskepass",
-  "feature2": "Mer exakt aktivitetsprognos när mer data samlas",
-  "feature3": "Avancerade vyer för aktivt fiske",
-  "feature4": "Betald åtkomst kopplad till verifierad e-post",
-  "trialTitle": "Prova först",
-  "trialText": "Använd applikationen under 7 dagars testperiod. När du har bekräftat att allt fungerar kan du låsa upp PRO med en engångsbetalning.",
-  "dataTitle": "Självlärande prognos",
-  "dataText": "Applikationen förbättrar prognoserna ju mer data som sparas från fiskepass.",
-  "emailTitle": "Åtkomsten bevaras",
-  "emailText": "Den betalda åtkomsten kopplas till en verifierad e-post så att PRO-rättigheten kan återställas även om användar-ID ändras.",
-  "infoText": "Vi rekommenderar att du köper PRO-åtkomst först efter att 7-dagars testperioden har avslutats. Då kan du bekanta dig med applikationen och säkerställa att allt fungerar korrekt.",
-  "secure": "Betalningen behandlas säkert via Stripe."
-},
+    "brand": "KalasääApp",
+    "title": "KalasääApp PRO",
+    "badge": "7 dagars testperiod först",
+    "price": "Engångsbetalning 9,90 €",
+    "buyButton": "Köp PRO-åtkomst",
+    "cancel": "Avbryt",
+    "description": "PRO-versionen låser upp alla avancerade funktioner i KalasääApp, inklusive utökad statistik, analys av fiskens aktivitet och mer exakta prognoser baserade på registrerade fiskepass.",
+    "heroText": "En professionell vy för aktiva användare som vill få ut mer av sin fiskedata.",
+    "featuresTitle": "Vad PRO innehåller",
+    "feature1": "Utökad statistik från fiskepass",
+    "feature2": "Mer exakt aktivitetsprognos när mer data samlas",
+    "feature3": "Avancerade vyer för aktivt fiske",
+    "feature4": "Betald åtkomst kopplad till verifierad e-post",
+    "trialTitle": "Prova först",
+    "trialText": "Använd applikationen under 7 dagars testperiod. När du har bekräftat att allt fungerar kan du låsa upp PRO med en engångsbetalning.",
+    "dataTitle": "Självlärande prognos",
+    "dataText": "Applikationen förbättrar prognoserna ju mer data som sparas från fiskepass.",
+    "emailTitle": "Åtkomsten bevaras",
+    "emailText": "Den betalda åtkomsten kopplas till en verifierad e-post så att PRO-rättigheten kan återställas även om användar-ID ändras.",
+    "infoText": "Vi rekommenderar att du köper PRO-åtkomst först efter att 7-dagars testperioden har avslutats. Då kan du bekanta dig med applikationen och säkerställa att allt fungerar korrekt.",
+    "secure": "Betalningen behandlas säkert via Stripe."
+  },
 
   "moonPhaseNames": {
-  "new-moon": "Nymåne",
-  "waxing-crescent": "Tilltagande månskära",
-  "first-quarter": "Första kvarteret",
-  "waxing-gibbous": "Tilltagande gibbe",
-  "full-moon": "Fullmåne",
-  "waning-gibbous": "Avtagande gibbe",
-  "last-quarter": "Sista kvarteret",
-  "waning-crescent": "Avtagande månskära"
-},
+    "new-moon": "Nymåne",
+    "waxing-crescent": "Tilltagande månskära",
+    "first-quarter": "Första kvarteret",
+    "waxing-gibbous": "Tilltagande gibbe",
+    "full-moon": "Fullmåne",
+    "waning-gibbous": "Avtagande gibbe",
+    "last-quarter": "Sista kvarteret",
+    "waning-crescent": "Avtagande månskära"
+  },
 
-"clear": "Rensa",
-"clearDialog": {
-  "title": "Rensa data",
-    "execute": "Utför",
+  "clear": "Rensa",
+
+  "clearDialog": {
+    "title": "Rensa data",
+    "execute": "Kör",
     "cancel": "Avbryt",
     "done": "Valda data har rensats.",
-  "exportCsv": "Exportera CSV innan rensning",
-  "clearHistory": "Rensa historik",
-  "clearSummary": "Rensa sammanfattning",
-  "clearLearning": "Rensa lärdata",
-  "avoid": "Visa inte igen",
-  "execute": "Kör",
-  "cancel": "Avbryt",
-  "clearLearning": "Rensa inlärning (Visa inte igen)",
-  "learningConfirm": "Vill du verkligen rensa lärdata? Detta försvagar prognosens inlärning."
-},
+    "exportCsv": "Exportera CSV innan rensning",
+    "clearHistory": "Rensa historik",
+    "clearSummary": "Rensa sammanfattning",
+    "clearLearning": "Rensa inlärning (Visa inte igen)",
+    "avoid": "Visa inte igen",
+    "learningConfirm": "Vill du verkligen rensa lärdata? Detta försvagar prognosens inlärning."
+  },
+
   "auth": {
     "loginGoogle": "Logga in (Google)",
     "logout": "Logga ut",
@@ -88,60 +87,83 @@
     "proActive": "PRO aktiv",
     "backToFree": "Tillbaka till Free"
   },
-  "validation": { "selectSpecies": "Välj en fiskart." },
+
+  "validation": {
+    "selectSpecies": "Välj fiskart.",
+    "enterWeight": "Ange vikt (kg)."
+  },
+
   "pro": {
     "lockedTabs": "🔒 Pro-version: Fångsthistorik, Sammanfattning och Statistik. Lås upp Pro med testkod eller genom köp.",
     "backToFree": "Återställd till Free-läge.",
-    "pro.unlockedDevice": "PRO upplåst på denna enhet.",
-    "pro.returnedFree": "Återställd till Free-läge.",
+    "unlockedDevice": "PRO upplåst på denna enhet.",
+    "returnedFree": "Återställd till Free-läge.",
     "freeInfo": "Gratisversionen visar endast Väder/Prognos och Fångstrapport. Pro låser upp älvar och andra sidor.",
     "proInfo": "Pro-version: Historik, Sammanfattning och Statistik. Lås upp med kod eller köp.",
-    "pro.lockedInfo": "🔒 I Pro-versionen: Fångsthistorik, Sammanfattning och Statistik. Lås upp Pro med testkod eller köp."
-   },
+    "lockedInfo": "🔒 I Pro-versionen: Fångsthistorik, Sammanfattning och Statistik. Lås upp Pro med testkod eller köp."
+  },
 
   "proBanner": {
-  "trialRunning": "PRO-versionen är aktiv under 7 dagars provperiod.",
-   "trialEnded": "🔒 PRO-funktioner låsta.",
-   "missingFeatures": "Utan PRO ser du inte:",
-   "benefit": "⭐ PRO hjälper dig hitta de bästa huggperioderna.",
-   "trialRunning": "PRO-versionen är aktiv under 7 dagars provperiod.",
-   "trialEnded": "PRO-funktioner låsta. FREE-version används.",
-   "unlock": "Lås upp PRO"
-},
+    "trialRunning": "PRO-versionen är aktiv under 7 dagars provperiod.",
+    "trialEnded": "PRO-funktioner låsta. FREE-version används.",
+    "missingFeatures": "Utan PRO ser du inte:",
+    "benefit": "⭐ PRO hjälper dig hitta de bästa huggperioderna.",
+    "unlock": "Lås upp PRO"
+  },
 
   "proUnlock": {
-  "lockedTitle": "🔒 PRO-funktioner låsta",
-  "codePlaceholder": "Ange testkod",
-  "unlockBtn": "Lås upp PRO",
-  "lockedFeatures": "🔒 I Pro: {{features}}. Lås upp Pro med en testkod eller genom att köpa.",
-  "freeInfo": "I Free-läget ser du bara Väder/Prognos + Fångstrapport. Pro låser upp Älvar och andra sidor.",
-  "proInfo": "🔒 Pro-version: Fångsthistorik, Sammanfattning och Statistik. Lås upp Pro med testkod eller köp.",
-  "activeTitle": "✅ PRO aktiv",
-  "alreadyPro": "PRO-åtkomst är redan aktiv på detta konto.",
-  "activeSource": "({{source}})",
-  "backToFree": "Tillbaka till Free",
-  "invalidCode": "Fel testkod.",
-  "unlocked": "PRO upplåst på denna enhet.",
-  "backToFreeMsg": "Återställd till Free-läge.",
-  "loggedIn": "Inloggad",
-  "loggedOut": "Utloggad",
-  "loginOk": "Inloggning lyckades",
-  "buyBtn": "Köp PRO",
-  "buying": "Omdirigerar...",
-  "redirectingToCheckout": "Omdirigerar till betalning…",
-  "buyFailed": "Kunde inte starta betalningen.",
-  "unlockFailed": "Upplåsningen misslyckades.",
-  "loginRequired": "Logga in för att starta 7 dagars provperiod.",
-  "lockedTitle": "🔒 PRO-funktioner låsta",
-  "loginRequired": "Logga in för att fortsätta.",
-  "buyFailed": "Kunde inte starta köpet.",
-  "buying": "Omdirigerar...",
-  "redirectingToCheckout": "Omdirigerar till betalning..."
-},
+    "lockedTitle": "🔒 PRO-funktioner låsta",
+    "codePlaceholder": "Ange testkod",
+    "unlockBtn": "Lås upp PRO",
+    "lockedFeatures": "🔒 I Pro: {{features}}. Lås upp Pro med en testkod eller genom att köpa.",
+    "freeInfo": "I Free-läget ser du bara Väder/Prognos + Fångstrapport. Pro låser upp Älvar och andra sidor.",
+    "proInfo": "🔒 Pro-version: Fångsthistorik, Sammanfattning och Statistik. Lås upp Pro med testkod eller köp.",
+    "activeTitle": "✅ PRO aktiv",
+    "alreadyPro": "PRO-åtkomst är redan aktiv på detta konto.",
+    "activeSource": "({{source}})",
+    "backToFree": "Tillbaka till Free",
+    "invalidCode": "Fel testkod.",
+    "unlocked": "PRO upplåst på denna enhet.",
+    "backToFreeMsg": "Återställd till Free-läge.",
+    "loggedIn": "Inloggad",
+    "loggedOut": "Utloggad",
+    "loginOk": "Inloggning lyckades",
+    "buyBtn": "Köp PRO",
+    "buying": "Omdirigerar...",
+    "redirectingToCheckout": "Omdirigerar till betalning...",
+    "buyFailed": "Kunde inte starta köpet.",
+    "unlockFailed": "Upplåsningen misslyckades.",
+    "loginRequired": "Logga in för att fortsätta."
+  },
 
-"proPage": {
-  "badge": "KalasääApp PRO"
-},
+  "proPage": {
+    "badge": "KalasääApp PRO",
+    "title": "Fiska vid rätt tidpunkt.",
+    "lead": "KalasääApp PRO kombinerar väderdata, lufttryck, månfas och vindriktning till en prognos för fiskens aktivitet.",
+    "trialTitle": "7 dagars full provperiod",
+    "trialText": "Prova alla PRO-funktioner i 7 dagar. Efter provperioden kan du fortsätta med FREE-versionen eller aktivera PRO.",
+    "proHeading": "PRO innehåller",
+    "freeHeading": "FREE innehåller",
+    "valueTitle": "Vem passar PRO för?",
+    "valueText": "PRO passar aktiva fiskare som vill använda väder, platsdata och fångsthistorik för att planera sitt fiske bättre.",
+    "buyButton": "Aktivera PRO",
+    "buyLoading": "Vidare till betalning...",
+    "continueFreeButton": "Fortsätt med FREE",
+    "proFeatures": [
+      "Mer exakt prognos för fiskens aktivitet",
+      "Statistik och analys från fångsthistorik",
+      "Månfasens påverkan på fisket",
+      "Vindriktningens och lufttryckets påverkan",
+      "Separata PRO-funktioner för strömmande vatten",
+      "Utökad prognos- och historikanvändning"
+    ],
+    "freeFeatures": [
+      "Daglig fiskeprognos",
+      "Sparning av fångster",
+      "Grundläggande fångsthistorik",
+      "Platsbaserat väder"
+    ]
+  },
 
   "proSource": {
     "manual_code": "testkod",
@@ -149,6 +171,7 @@
     "firebase": "konto",
     "unknown": "okänd"
   },
+
   "csvSummary": {
     "species": "Art",
     "count": "st",
@@ -158,11 +181,13 @@
     "kgPerHour": "kg/h",
     "hourPerKg": "h/kg"
   },
+
   "tabs": {
-  "history": "Fångsthistorik",
-  "summary": "Sammanfattning",
-  "stats": "Statistik"
-},
+    "history": "Fångsthistorik",
+    "summary": "Sammanfattning",
+    "stats": "Statistik"
+  },
+
   "rating": {
     "1": "Svag",
     "2": "Tillfredsställande",
@@ -177,6 +202,7 @@
     "Erinomainen": "Utmärkt",
     "Tyydyttävä": "Tyydyttävä"
   },
+
   "select": "Välj",
   "openOskari": "Traficon Oskari",
   "openOskariNote": "stora vatten",
@@ -205,20 +231,24 @@
   "summaryBlock": "Sammanställning",
   "debugSpecies": "Art",
   "openSehavniva": "Öppna SeHavniva-sidan för tidvatten",
-  "debugTotalRows": "Antal fångstrader",
-  "debugPairedRows": "Rader med OH sparat (prognos+utfall)",
+
   "langDefault": {
     "title": "Standardspråk",
     "question": "Vill du ange detta som standard?",
     "ok": "OK",
     "cancel": "Inte nu"
   },
+
+  "debugTotalRows": "Antal fångstrader",
+  "debugPairedRows": "Rader med OH sparat (prognos+utfall)",
   "debugForecastOhs": "Prognos-OH värden",
   "debugRealizedOhs": "Utförda OH-värden",
+
   "water": {
     "lakeSea": "Sjö / hav",
     "river": "Älv"
   },
+
   "showSpeciesForecast": " Visa art-specifik nappförutsägelse",
   "hideSpeciesForecast": " Dölj art-specifik nappförutsägelse",
   "catchHistory": "Fångsthistorik (vattendrag)",
@@ -226,7 +256,6 @@
   "debugRealizedAvgPairs": "Utfört OH medel (parade)",
   "debugFactor": "Faktor (utfört / prognos)",
   "debugAdjustedNow": "Artjusterad prognos nu",
-  "fishingHours": "Fisketid (h)",
   "riverCatchHistory": "Fångsthistoria (älvar)",
   "adjustedOhNow": "Artjusterad prognos",
   "speciesStrikeTitleShort": "{{species}} huggprognos nu",
@@ -296,11 +325,13 @@
   "catchRating": "Fångstbedömning",
   "gearUnits": "Redskapsenheter",
   "fishingTime": "Fisketid",
+
   "fishingMethod": {
     "label": "Fiskemetod",
     "active": "Aktiv",
     "passive": "Passiv"
   },
+
   "passive": "Passiv",
   "active": "Aktiv",
   "clearHistory": "Rensa historik",
@@ -328,7 +359,6 @@
   "prev": "Föregående",
   "next": "Nästa",
   "pcs": "st",
-  "weightKg": "Vikt (kg)",
   "noStatsAvailable": "Ingen statistik tillgänglig.",
   "pressureVsStrike": "Lufttryck vs. Huggvilja",
   "lakeSeaCatchFormTitle": "🎣 Sjö- och havsområdets Fiskväderprognos",
@@ -341,9 +371,11 @@
   "waningGibbous": "Avtagande halvfull",
   "lastQuarter": "Sista kvarteret",
   "waningCrescent": "Avtagande skära",
+
   "virtavesi": {
     "title": "Strömvattensvy"
   },
+
   "csv": {
     "date": "Datum",
     "place": "Plats",
@@ -368,8 +400,8 @@
     "Saved": "Sparad",
     "previewCSV": "CSV-förhandsgranskning",
     "previewHint": "Kontrollera uppgifterna innan du sparar."
-
   },
+
   "source": {
     "river": "Vattendrag",
     "lake": "Sjö/Hav",
@@ -377,6 +409,7 @@
     "lakeSea": "Sjö/Hav",
     "unknown": "-"
   },
+
   "windDirections": {
     "N": "Norr",
     "NE": "Nordost",
@@ -387,7 +420,9 @@
     "W": "Väst",
     "NW": "Nordväst"
   },
+
   "search": "Sök",
+  "loadingForecast": "Laddar prognos...",
   "csvPreview": "CSV-förhandsvisning",
   "downloadCsv": "Ladda ner CSV",
   "catchData": "Fångstdata",
@@ -431,6 +466,7 @@
   "saveSuccess": "Fångst sparad!",
   "previewCSV": "Förhandsvisning av CSV-rad",
   "count": "Antal",
+
   "fish": {
     "Hauki": "Gädda",
     "Made": "Lake",
@@ -463,22 +499,25 @@
     "vendace": "Muikku",
     "bream": "Lahna"
   },
-  
+
   "averageStrikeInterest": "Genomsnittlig huggvilja",
   "unknown": "okänd",
   "biteTime": "Beräknad huggtid",
   "reportCatch": "Rapportera fångst",
   "summary": "Sammanfattning",
   "statistics": "Statistik",
+
   "labels": {
     "realizedOH": "Utfört OH",
     "pressure": "Lufttryck"
   },
+
   "buttons": {
     "openSehavniva": "Öppna SeHavniva tidvattensida",
     "showSpeciesForecast": " Visa artens huggprognos",
     "downloadSummaryCSV": "Ladda ner sammanfattning (CSV)"
   },
+
   "pages": {
     "statistics": {
       "title": "Statistik",
@@ -486,22 +525,26 @@
     },
     "history": {
       "riverTitle": "Fångsthistorik (älv)"
-     }
-    },
-    
+    }
+  },
+
   "tide": {
     "openSehavniva": "🌊 Öppna SeHavniva-sidan för tidvatten"
   },
+
   "forecast": {
     "strikeTitle": "🎣 Nappintresseprognos:"
   },
+
   "gear": {
     "units": "Redskapsenheter:"
   },
+
   "fishing": {
     "timeHours": "Fisketid (h)",
     "method": "⚙️ Fiskemetod"
   },
+
   "history": {
     "missingRealized": "(saknas)",
     "total": "Totalt",
@@ -514,6 +557,7 @@
     "avgError": "Medelfel",
     "avgRatio": "Utfall/prognos"
   },
+
   "pressureCard": {
     "riverTitle": "🌡️ Lufttryck & huggvilja – älvfångster",
     "loading": "Laddar statistik…",
@@ -530,13 +574,15 @@
     "timesShort": "ggr",
     "explanationRiver": "Det här kortet visar vid vilka lufttryck du har fått fångst i älvar och vid vilka tryckområden huggviljan (OH) varit bäst i snitt. Statistiken bygger på din egen fångsthistorik, inte direkt på väderprognosen."
   },
+
   "pressureRanges": {
     "low": "Låg",
     "normal": "Normal",
     "high": "Hög"
   },
+
   "oh": {
-    "realizedActiveBase": " Realiserad OH (aktiv): {{realized}}/8",
+    "realizedActiveBase": "Realiserad OH (aktiv): {{realized}}/8",
     "realizedActiveFactor": "- jämfört med prognosen {{factor}}×",
     "realizedLine": "Utfall OH",
     "realized": "Utfall OH",
@@ -545,21 +591,25 @@
     "ohTimesEffort": "OH × fisketid",
     "sessionDuration": "Fisketid (pass)",
     "realizedMissing": "Realiserad OH: -",
-    "realizedActiveLine": " Realiserad OH (aktiv): {{realized}}{{match}}"
+    "realizedActiveLine": "Realiserad OH (aktiv): {{realized}}{{match}}"
   },
+
   "origin": {
     "river": "Älv",
     "lake": "Sjö/Hav",
     "lakeSea": "Sjö / hav",
     "description": "Statistikdiagram för fångster i älv och sjö/hav."
   },
+
   "toast": {
     "catchSaved": "Fångst sparad!",
     "missingCatchKgAndCount": "Välj fiskart och ange både antal och vikt innan du sparar.",
     "csvSaved": "CSV sparad.",
     "saveError": "Sparandet misslyckades."
   },
+
   "statsLabel": "Statistik",
+
   "stats": {
     "noStatsData": "Diagrammet kan inte ritas ännu – lägg till mer fångstdata.",
     "chartTitle": "Lufttryck och huggvilja",
@@ -621,6 +671,7 @@
     "excellent": "Utmärkt",
     "speciesShareChart": "Arternas andel av fångsten"
   },
+
   "session": {
     "fishingTime": "Fisketid",
     "duration": "Fisketid (pass)",
@@ -647,52 +698,51 @@
     "menuTitle": "Pass",
     "menuClose": "Stäng",
     "targetSavedContinue": "Målfångst sparad — du kan spara andra fångster.",
-    "targetNoneSaved": "Ingen målfångst registrerad — du kan spara andra fångster.",   
-   "debugBlock": "Debuginformation",
-   "realizedOH": "Realiserad huggvillighet",
-   "strikePredictionTitle": "Huggprognos",
-   "strikePredictionTooltip": "Baseras på fångsthistorik och väderdata.",
-   "currentPressure": "Aktuellt lufttryck",
-   "predictionSpeciesLabel": "Art för prognos",
-   "noSpeciesFilter": "Ingen artfiltrering",
-   "noHistoryForPrediction": "Inte tillräckligt med historik för prognos.",
-   "lakeSea": "Sjö / Hav",
-   "river": "Vattendrag",
-   "noLakeData": "Ingen sjö-/havdata.",
-   "noRiverData": "Ingen data för vattendrag.",
-   "basedOnN": "Baseras på {{n}} observationer",
-   "selectedSpeciesPrediction": "Prognos för vald art",
-   "noSpeciesData": "Ingen artspecifik data.",
-   "strikePredictionNote": "Prognosen är vägledande.",
-   "confirmClear": "Vill du verkligen rensa?",
-   "top5ByWeight": "Topp 5 efter vikt",
-   "protected": "Fridlyst",
-   "unknownFish": "Okänd fisk",
-   "target": "Mål",
-   "point": "Punkt",
-   "noCoords": "Koordinater saknas.",
-   "pleaseUseLocation": "Använd position.",
-   "tideSet": "Tidvattnet inställt",
-   "notFound": "Hittades inte",
-   "stop": "Avsluta session",
-   "noTargetSelected": "Ingen målfisk vald.",
-   "noSessionTime": "Ingen sessionstid inställd.",
-   "targetMismatch": "Fångsten motsvarade inte målfisken."
+    "targetNoneSaved": "Ingen målfångst registrerad — du kan spara andra fångster.",
+    "debugBlock": "Debuginformation",
+    "realizedOH": "Realiserad huggvillighet",
+    "strikePredictionTitle": "Huggprognos",
+    "strikePredictionTooltip": "Baseras på fångsthistorik och väderdata.",
+    "currentPressure": "Aktuellt lufttryck",
+    "predictionSpeciesLabel": "Art för prognos",
+    "noSpeciesFilter": "Ingen artfiltrering",
+    "noHistoryForPrediction": "Inte tillräckligt med historik för prognos.",
+    "lakeSea": "Sjö / Hav",
+    "river": "Vattendrag",
+    "noLakeData": "Ingen sjö-/havdata.",
+    "noRiverData": "Ingen data för vattendrag.",
+    "basedOnN": "Baseras på {{n}} observationer",
+    "selectedSpeciesPrediction": "Prognos för vald art",
+    "noSpeciesData": "Ingen artspecifik data.",
+    "strikePredictionNote": "Prognosen är vägledande.",
+    "confirmClear": "Vill du verkligen rensa?",
+    "top5ByWeight": "Topp 5 efter vikt",
+    "protected": "Fridlyst",
+    "unknownFish": "Okänd fisk",
+    "target": "Mål",
+    "point": "Punkt",
+    "noCoords": "Koordinater saknas.",
+    "pleaseUseLocation": "Använd position.",
+    "tideSet": "Tidvattnet inställt",
+    "notFound": "Hittades inte",
+    "stop": "Avsluta session",
+    "noTargetSelected": "Ingen målfisk vald.",
+    "noSessionTime": "Ingen sessionstid inställd.",
+    "targetMismatch": "Fångsten motsvarade inte målfisken."
   },
-  "validation": {
-    "selectSpecies": "Välj fiskart.",
-    "enterWeight": "Ange vikt (kg)."
-  },
+
   "common": {
     "select": "Välj",
     "cancel": "Avbryt",
     "start": "Starta",
-    "missing": "Puuttuu"
+    "missing": "Saknas"
   },
+
   "omakala": {
     "tooltipTitle": "Omakala",
     "tooltip": "På den här webbplatsen kan du se Finlands hotade fiskarter, de hotade arter som kräver rapportering vid fångst samt annan information om fångstrapportering. Här hittar du också djupkartor för vattendrag i Finland!"
   },
+
   "charts": {
     "pressureOh": {
       "title": "Samband mellan lufttryck och huggvilja",
@@ -701,6 +751,7 @@
       "explanation": "Diagrammet visar hur lufttryck och huggvilja har utfallit i sjö/hav (🌅) och i älv (🌊). Ju mer fångstdata som samlas, desto tydligare syns de tryckområden som är typiska för ditt fiske."
     }
   },
+
   "contextLakeSea": "Kontext Sjö-/havsfiske OH",
   "contextRiver": "Kontext Strömvatten OH",
   "riverSummaryTab": "Sammanfattning (strömvatten)",
@@ -709,6 +760,7 @@
   "effortHours": "Fisketimmar",
   "kgPerHour": "kg / h",
   "hoursPerKg": "h / kg",
+
   "moonPhaseEmoji": {
     "new-moon": "🌑",
     "waxing-crescent": "🌒",
@@ -727,10 +779,12 @@
     "lastQuarter": "🌗",
     "waningCrescent": "🌘"
   },
+
   "cr": "Catch & Release",
   "judgment": "Bedömning",
   "dateFilter": "Datumfilter",
   "saved": "Sparad!",
+
   "direction": {
     "N": "N",
     "NE": "NE",
@@ -741,39 +795,10 @@
     "W": "W",
     "NW": "NW"
   },
-   "noHistory": "Inga sparade fångster med valda filter.",
-   "saveToHistory": "Spara raden i historiken",
-   "downloadAllCsv": "Ladda ner historiken som CSV",
-   "historyCount": "Rader",
-   "confirmClearHistory": "Rensa historiken?",
 
-"proPage": {
-  "badge": "KalasääApp PRO",
-  "title": "Fiska vid rätt tidpunkt.",
-  "lead": "KalasääApp PRO kombinerar väderdata, lufttryck, månfas och vindriktning till en prognos för fiskens aktivitet.",
-  "trialTitle": "7 dagars full provperiod",
-  "trialText": "Prova alla PRO-funktioner i 7 dagar. Efter provperioden kan du fortsätta med FREE-versionen eller aktivera PRO.",
-  "proHeading": "PRO innehåller",
-  "freeHeading": "FREE innehåller",
-  "valueTitle": "Vem passar PRO för?",
-  "valueText": "PRO passar aktiva fiskare som vill använda väder, platsdata och fångsthistorik för att planera sitt fiske bättre.",
-  "buyButton": "Aktivera PRO",
-  "buyLoading": "Vidare till betalning...",
-  "continueFreeButton": "Fortsätt med FREE",
-  "proFeatures": [
-    "Mer exakt prognos för fiskens aktivitet",
-    "Statistik och analys från fångsthistorik",
-    "Månfases påverkan på fisket",
-    "Vindriktningens och lufttryckets påverkan",
-    "Separata PRO-funktioner för strömmande vatten",
-    "Utökad prognos- och historikanvändning"
-  ],
-
-  "freeFeatures": [
-    "Daglig fiskeprognos",
-    "Sparning av fångster",
-    "Grundläggande fångsthistorik",
-    "Platsbaserat väder"
-  ]
-}
+  "noHistory": "Inga sparade fångster med valda filter.",
+  "saveToHistory": "Spara raden i historiken",
+  "downloadAllCsv": "Ladda ner historiken som CSV",
+  "historyCount": "Rader",
+  "confirmClearHistory": "Rensa historiken?"
 }

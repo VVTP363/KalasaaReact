@@ -678,7 +678,7 @@ const hourlyWindow = useMemo(
   }, [dayObj, isToday, t]);
 
     if (!dayKeys.length) {
-    return <p style={{ padding: "1rem" }}>Ladataan ennustetta...</p>;
+    return <p style={{ padding: "1rem" }}>{t("loadingForecast", { defaultValue: "Ladataan ennustetta..." })}</p>;
   }
 
 

@@ -2,166 +2,12 @@
   "openOmakala": "Open Omakala",
   "open": "Open",
   "close": "Close",
+  "loadingForecast": "Loading forecast...",
   "lakeSeaForecastTitle": "Lake/Sea Fishing Weather Forecast",
   "getLocation": "My location",
   "moonPhase": "Moon Phase",
-  "noCatchesYet": "No catch data yet.",  
-  "validation": { "selectSpecies": "Select a fish species." },
-  "pro": {
-  "lockedTabs": "🔒 Pro version: Catch history, Summary and Stats. Unlock Pro with a test code or by purchasing.",
-  "backToFree": "Switched back to Free mode.",
-    "freeInfo": "Free version shows only Weather/Forecast and Catch form. Pro unlocks rivers and other pages.",
-    "proInfo": "Pro version: History, Summary and Stats. Unlock with code or purchase.",
-   "pro.unlockedDevice": "PRO unlocked on this device.",
-   "pro.returnedFree": "Returned to Free mode.",
-   "pro.lockedInfo": "🔒 Pro version includes: Catch history, Summary and Statistics. Unlock Pro with a test code or purchase."
-  },
-
-  "payment": {
-  "brand": "KalasääApp",
-  "title": "KalasääApp PRO",
-  "badge": "7-day trial first",
-  "price": "One-time payment €9.90",
-  "buyButton": "Buy PRO access",
-  "cancel": "Cancel",
-  "description": "The PRO version unlocks all advanced KalasääApp features, including extended statistics, fish activity analysis and improved forecasts based on your recorded fishing sessions.",
-  "heroText": "A professional view for active users who want to get more out of their fishing data.",
-  "featuresTitle": "What PRO includes",
-  "feature1": "Extended statistics from fishing sessions",
-  "feature2": "More accurate fish activity predictions as data grows",
-  "feature3": "Advanced views for active fishing",
-  "feature4": "Paid access linked to the same verified email",
-  "trialTitle": "Try it first",
-  "trialText": "Use the application freely during the 7-day trial. Once you confirm the app works as expected, you can unlock PRO with a one-time payment.",
-  "dataTitle": "Self-learning prediction",
-  "dataText": "The application improves prediction accuracy as more fishing session data is stored.",
-  "emailTitle": "Access stays with you",
-  "emailText": "Your paid access is linked to a verified email so the PRO rights can be restored even if the user ID changes.",
-  "infoText": "We recommend purchasing PRO access after the 7-day trial period. This allows you to explore the application and confirm everything works correctly. KalasääApp is a self-learning system that improves fish activity predictions as more fishing data is recorded.",
-  "secure": "Payment is processed securely via Stripe."
-},
-
-  "auth": {
-    "loginGoogle": "Sign in (Google)",
-    "logout": "Sign out",
-    "proLocked": "PRO features locked",
-    "enterCode": "Enter test code",
-    "unlockPro": "Unlock PRO",
-    "proActive": "PRO active",
-    "backToFree": "Back to Free"
-  },
-
-  "proBanner": {
-  "trialRunning": "PRO version active during the 7-day trial.",
-  "trialRunning": "🔓 PRO version active (7-day trial).",
-  "trialEnded": "🔒 PRO features locked.",
-  "missingFeatures": "Without PRO you cannot access:",
-  "benefit": "⭐ PRO helps you find the best strike times."
-  },
-
-  "proUnlock": {
-  "lockedTitle": "🔒 PRO features locked",
-  "codePlaceholder": "Enter test code",
-  "unlockBtn": "Unlock PRO",
-  "lockedFeatures": "🔒 In Pro: {{features}}. Unlock Pro with a test code or by purchasing.",
-  "freeInfo": "In Free mode you only see Weather/Forecast + Catch report. Pro unlocks Rivers and other pages.",
-  "proInfo": "🔒 Pro version: Catch history, Summary and Statistics. Unlock Pro with a test code or purchase.",
-  "activeTitle": "✅ PRO active",
-  "alreadyPro": "PRO access is already active on this account.",
-  "activeSource": "({{source}})",
-  "backToFree": "Back to Free",
-  "invalidCode": "Invalid test code.",
-  "loggedIn": "Signed in",
-  "loggedOut": "Signed out",
-  "loginOk": "Signed in successfully",
-  "unlocked": "PRO unlocked on this device.",
-  "backToFreeMsg": "Returned to Free mode.",
-  "buyBtn": "Buy PRO",
-  "buying": "Redirecting...",
-  "redirectingToCheckout": "Redirecting to checkout…",
-  "buyFailed": "Failed to start payment.",
-  "unlockFailed": "Unlock failed.",
-  "loginRequired": "Sign in to start the 7-day trial.",
-  "lockedTitle": "🔒 PRO features locked",
-  "loginRequired": "Please sign in to continue.",
-  "buyFailed": "Failed to start the purchase.",
-  "buying": "Redirecting...",
-  "redirectingToCheckout": "Redirecting to checkout..."
-},
-
-"proBanner": {
-  "trialRunning": "PRO version active during the 7-day trial.",
-  "trialEnded": "PRO features locked. FREE version active.",
-  "unlock": "Unlock PRO",
-  "missingFeatures": "Without PRO you cannot access:",
-  "benefit": "⭐ PRO helps you find the best strike times"
-},
-
-"proPage": {
-  "badge": "KalasääApp PRO"
-},
-
-  "proSource": {
-    "manual_code": "test code",
-    "stripe": "purchase",
-    "firebase": "account",
-    "unknown": "unknown"
-  },
-  "moonPhaseTranslations": {
-    "waxing-crescent": "Waxing Crescent",
-    "first-quarter": "First Quarter",
-    "waning-gibbous": "Waning Gibbous",
-    "last-quarter": "Last Quarter",
-    "full-Moon": "Täysikuu",
-    "new-Moon": "Uusikuu",
-    "last-Quarter": "Viimeinen neljännes",
-    "waning-Crescent": "Vähenevä sirppi",
-    "waxing-Gibbous": "Kasvava kupera",
-    "newMoon": "Uusikuu",    
-    "waxingCrescent": "Kasvava sirppi",
-    "firstQuarter": "Ensimmäinen neljännes",
-    "waxingGibbous": "Kasvava kupera",
-    "fullMoon": "Täysikuu",    
-    "waningGibbous": "Vähenevä kupera",
-    "lastQuarter": "Viimeinen neljännes",   
-    "lastquarter": "Viimeinen neljännes"  
-  },
-
-  "moonPhaseNames": {
-  "new-moon": "New moon",
-  "waxing-crescent": "Waxing crescent",
-  "first-quarter": "First quarter",
-  "waxing-gibbous": "Waxing gibbous",
-  "full-moon": "Full moon",
-  "waning-gibbous": "Waning gibbous",
-  "last-quarter": "Last quarter",
-  "waning-crescent": "Waning crescent"
-},
-
+  "noCatchesYet": "No catch data yet.",
   "clear": "Clear",
-
-  "csvSummary": {
-    "species": "Species",
-    "count": "pcs",
-    "weightKg": "kg",
-    "hours": "h",
-    "kgPerHour": "kg/h",
-    "hourPerKg": "h/kg"
-  },
-  "rating": {
-    "1": "Weak",
-    "2": "Fair",
-    "3": "Good",
-    "4": "Excellent",
-    "label": "Rating",
-    "select": "Select",
-    "Heikko": "Weak",
-    "Kohtalainen": "Moderate",
-    "Hyvä": "Good",
-    "Kiitettävä": "Very Good",
-    "Erinomainen": "Excellent",
-    "Tyydyttävä": "Tyydyttävä"
-  },
   "select": "Select",
   "threeDayForecast": "3-Day Weather Forecast",
   "species": "Species",
@@ -172,7 +18,7 @@
   "to": "To",
   "rows": "rows",
   "weightKg": "Weight (kg)",
-  "fishingHours": "Fishing hours",
+  "fishingHours": "Fishing time (h)",
   "pressureLabel": "Pressure (hPa)",
   "interestLabel": "Fishing interest (1–8)",
   "debugContextLake": "Source lake/sea OH",
@@ -183,15 +29,9 @@
   "speciesStrikeTitleShort": "{{species}} strike forecast now",
   "summaryBlock": "Summary",
   "openSehavniva": "Open SeHavniva tide page",
-  "fishingHours": "Fishing time (h)",
-  "cancel": "Cancel",
   "start": "Start",
   "speciesStrikeSuffix": "strike forecast now",
   "speciesForecastTitle": "{{species}} strike forecast now",
-  "water": {
-    "lakeSea": "Lake / sea",
-    "river": "River"
-  },
   "baseOhNow": "Base OH now",
   "speciesAdjustedForecast": "Adjusted forecast",
   "ohForecastTitle": "Strike interest forecast",
@@ -206,8 +46,8 @@
   "debugBaseOh": "Base OH (clamped)",
   "debugFactor": "Factor (realized / forecast)",
   "debugAdjustedNow": "Adjusted species forecast now",
-  "showSpeciesForecast": " Show species strike forecast",
-  "hideSpeciesForecast": " Hide species strike forecast",
+  "showSpeciesForecast": "Show species strike forecast",
+  "hideSpeciesForecast": "Hide species strike forecast",
   "summaryInfo": "The summary combines all saved catch entries by species (pcs, C&R and weight).",
   "riverSummaryInfo": "The river summary combines all saved river catch entries by species.",
   "top5Info": "Lists the five heaviest recorded catches for each species (kg, length, date, and location if available).",
@@ -304,11 +144,6 @@
   "catchRating": "Catch Rating",
   "gearUnits": "Gear units",
   "fishingTime": "Fishing Time",
-  "fishingMethod": {
-    "label": "Fishing method",
-    "active": "Active",
-    "passive": "Passive"
-  },
   "passive": "Passive",
   "active": "Active",
   "fishingForecastTitle": "Fishing Weather Forecast",
@@ -318,22 +153,245 @@
   "saveSuccess": "Catch saved!",
   "noCatchData": "No catch data available.",
   "switchToVirtavesi": "Switch to River Mode",
+  "exportCSV": "Export CSV",
+  "dateFilter": "Date filter",
+  "count": "Count",
+  "previewCSV": "Preview CSV row",
+  "saved": "Saved!",
+  "averageStrikeInterest": "Avg. strike interest",
+  "unknown": "Unknown",
+  "time": "Time",
+  "temperature": "Temperature",
+  "feelsLike": "Feels like",
+  "windSpeed": "Wind speed",
+  "contextLakeSea": "Context Lake/Sea OH",
+  "contextRiver": "Context River OH",
+  "continueCatch": "✍️ Continue catch report",
+  "riverSummaryTab": "River summary",
+  "exportCSVRiver": "Export CSV (rivers)",
+  "effortHours": "Fishing hours",
+  "kgPerHour": "kg / h",
+  "hoursPerKg": "h / kg",
+  "fishingTimeStart": "Fishing start time",
+  "fishingTimeEnd": "Fishing end time",
+  "saveToHistory": "Save row to history",
+  "downloadAllCsv": "Download history as CSV",
+  "historyCount": "Rows",
+  "confirmClearHistory": "Clear history?",
+  "noHistory": "No saved catches with selected filters.",
+  "search": "Search",
+  "searchPlaceholder": "Search location...",
+  "searchButton": "Search",
+  "myLocation": "MY LOCATION",
+  "clearPath": "Clear path",
+  "distanceFromMouth": "Distance from river mouth",
+  "tidePeak": "Tide peak",
+  "strikeTime": "Strike time",
+  "fishingInterestShort": "Strike interest",
+  "adjustTide": "Adjust tide",
+  "yourLocation": "Your location",
+  "searchedLocation": "Searched location",
+  "noResult": "Location not found",
+  "searchFailed": "Search failed",
+  "statsLabel": "Statistics",
+
+  "validation": {
+    "selectSpecies": "Select species.",
+    "enterWeight": "Please enter weight (kg)."
+  },
+
+  "pro": {
+    "lockedTabs": "🔒 Pro version: Catch history, Summary and Stats. Unlock Pro with a test code or by purchasing.",
+    "backToFree": "Switched back to Free mode.",
+    "freeInfo": "Free version shows only Weather/Forecast and Catch form. Pro unlocks rivers and other pages.",
+    "proInfo": "Pro version: History, Summary and Stats. Unlock with code or purchase.",
+    "unlockedDevice": "PRO unlocked on this device.",
+    "returnedFree": "Returned to Free mode.",
+    "lockedInfo": "🔒 Pro version includes: Catch history, Summary and Statistics. Unlock Pro with a test code or purchase."
+  },
+
+  "payment": {
+    "brand": "KalasääApp",
+    "title": "KalasääApp PRO",
+    "badge": "7-day trial first",
+    "price": "One-time payment €9.90",
+    "buyButton": "Buy PRO access",
+    "cancel": "Cancel",
+    "description": "The PRO version unlocks all advanced KalasääApp features, including extended statistics, fish activity analysis and improved forecasts based on your recorded fishing sessions.",
+    "heroText": "A professional view for active users who want to get more out of their fishing data.",
+    "featuresTitle": "What PRO includes",
+    "feature1": "Extended statistics from fishing sessions",
+    "feature2": "More accurate fish activity predictions as data grows",
+    "feature3": "Advanced views for active fishing",
+    "feature4": "Paid access linked to the same verified email",
+    "trialTitle": "Try it first",
+    "trialText": "Use the application freely during the 7-day trial. Once you confirm the app works as expected, you can unlock PRO with a one-time payment.",
+    "dataTitle": "Self-learning prediction",
+    "dataText": "The application improves prediction accuracy as more fishing session data is stored.",
+    "emailTitle": "Access stays with you",
+    "emailText": "Your paid access is linked to a verified email so the PRO rights can be restored even if the user ID changes.",
+    "infoText": "We recommend purchasing PRO access after the 7-day trial period. This allows you to explore the application and confirm everything works correctly. KalasääApp is a self-learning system that improves fish activity predictions as more fishing data is recorded.",
+    "secure": "Payment is processed securely via Stripe."
+  },
+
+  "auth": {
+    "loginGoogle": "Sign in (Google)",
+    "logout": "Sign out",
+    "proLocked": "PRO features locked",
+    "enterCode": "Enter test code",
+    "unlockPro": "Unlock PRO",
+    "proActive": "PRO active",
+    "backToFree": "Back to Free"
+  },
+
+  "proBanner": {
+    "trialRunning": "🔓 PRO version active (7-day trial).",
+    "trialEnded": "PRO features locked. FREE version active.",
+    "unlock": "Unlock PRO",
+    "missingFeatures": "Without PRO you cannot access:",
+    "benefit": "⭐ PRO helps you find the best strike times."
+  },
+
+  "proUnlock": {
+    "lockedTitle": "🔒 PRO features locked",
+    "codePlaceholder": "Enter test code",
+    "unlockBtn": "Unlock PRO",
+    "lockedFeatures": "🔒 In Pro: {{features}}. Unlock Pro with a test code or by purchasing.",
+    "freeInfo": "In Free mode you only see Weather/Forecast + Catch report. Pro unlocks Rivers and other pages.",
+    "proInfo": "🔒 Pro version: Catch history, Summary and Statistics. Unlock Pro with a test code or purchase.",
+    "activeTitle": "✅ PRO active",
+    "alreadyPro": "PRO access is already active on this account.",
+    "activeSource": "({{source}})",
+    "backToFree": "Back to Free",
+    "invalidCode": "Invalid test code.",
+    "loggedIn": "Signed in",
+    "loggedOut": "Signed out",
+    "loginOk": "Signed in successfully",
+    "unlocked": "PRO unlocked on this device.",
+    "backToFreeMsg": "Returned to Free mode.",
+    "buyBtn": "Buy PRO",
+    "buying": "Redirecting...",
+    "redirectingToCheckout": "Redirecting to checkout…",
+    "buyFailed": "Failed to start the purchase.",
+    "unlockFailed": "Unlock failed.",
+    "loginRequired": "Please sign in to continue."
+  },
+
+  "proPage": {
+    "badge": "KalasääApp PRO",
+    "title": "Fish at the right time.",
+    "lead": "KalasääApp PRO combines weather data, air pressure, moon phase, and wind direction into a fish activity forecast.",
+    "trialTitle": "7-day full trial",
+    "trialText": "Try all PRO features for 7 days. After the trial, you can continue with the FREE version or unlock PRO.",
+    "proHeading": "PRO includes",
+    "freeHeading": "FREE includes",
+    "valueTitle": "Who is PRO for?",
+    "valueText": "PRO is for active anglers who want to use weather, location data, and catch history to plan their fishing more effectively.",
+    "buyButton": "Unlock PRO",
+    "buyLoading": "Redirecting to checkout...",
+    "continueFreeButton": "Continue with FREE",
+    "proFeatures": [
+      "More precise fish activity forecast",
+      "Stats and analysis from catch history",
+      "Moon phase impact on fishing",
+      "Wind direction and air pressure effects",
+      "Dedicated PRO features for rivers",
+      "Expanded forecast and history usage"
+    ],
+    "freeFeatures": [
+      "Daily fishing forecast",
+      "Catch logging",
+      "Basic catch history",
+      "Location-based weather"
+    ]
+  },
+
+  "proSource": {
+    "manual_code": "test code",
+    "stripe": "purchase",
+    "firebase": "account",
+    "unknown": "unknown"
+  },
+
+  "moonPhaseTranslations": {
+    "new-moon": "New moon",
+    "waxing-crescent": "Waxing crescent",
+    "first-quarter": "First quarter",
+    "waxing-gibbous": "Waxing gibbous",
+    "full-moon": "Full moon",
+    "waning-gibbous": "Waning gibbous",
+    "last-quarter": "Last quarter",
+    "waning-crescent": "Waning crescent",
+    "new-Moon": "New moon",
+    "full-Moon": "Full moon",
+    "last-Quarter": "Last quarter",
+    "waning-Crescent": "Waning crescent",
+    "waxing-Gibbous": "Waxing gibbous",
+    "newMoon": "New moon",
+    "waxingCrescent": "Waxing crescent",
+    "firstQuarter": "First quarter",
+    "waxingGibbous": "Waxing gibbous",
+    "fullMoon": "Full moon",
+    "waningGibbous": "Waning gibbous",
+    "lastQuarter": "Last quarter",
+    "lastquarter": "Last quarter"
+  },
+
+  "moonPhaseNames": {
+    "new-moon": "New moon",
+    "waxing-crescent": "Waxing crescent",
+    "first-quarter": "First quarter",
+    "waxing-gibbous": "Waxing gibbous",
+    "full-moon": "Full moon",
+    "waning-gibbous": "Waning gibbous",
+    "last-quarter": "Last quarter",
+    "waning-crescent": "Waning crescent"
+  },
+
+  "csvSummary": {
+    "species": "Species",
+    "count": "pcs",
+    "weightKg": "kg",
+    "hours": "h",
+    "kgPerHour": "kg/h",
+    "hourPerKg": "h/kg"
+  },
+
+  "rating": {
+    "1": "Weak",
+    "2": "Fair",
+    "3": "Good",
+    "4": "Excellent",
+    "label": "Rating",
+    "select": "Select",
+    "Heikko": "Weak",
+    "Kohtalainen": "Moderate",
+    "Hyvä": "Good",
+    "Kiitettävä": "Very Good",
+    "Erinomainen": "Excellent",
+    "Tyydyttävä": "Fair"
+  },
+
+  "water": {
+    "lakeSea": "Lake / sea",
+    "river": "River"
+  },
+
   "virtavesi": {
     "title": "River Fishing View"
   },
 
-  "clear": "Clear",
-"clearDialog": {
-  "title": "Clear data",
-  "exportCsv": "Export CSV before clearing",
-  "clearHistory": "Clear history",
-  "clearSummary": "Clear summary",
-  "clearLearning": "Clear learning data",
-  "avoid": "Don't show again",
-  "execute": "Run",
-  "cancel": "Cancel",
-  "learningConfirm": "Are you sure you want to clear learning data? This will weaken the forecast learning."
-},
+  "clearDialog": {
+    "title": "Clear data",
+    "exportCsv": "Export CSV before clearing",
+    "clearHistory": "Clear history",
+    "clearSummary": "Clear summary",
+    "clearLearning": "Clear learning data",
+    "avoid": "Don't show again",
+    "execute": "Run",
+    "cancel": "Cancel",
+    "learningConfirm": "Are you sure you want to clear learning data? This will weaken the forecast learning."
+  },
 
   "csv": {
     "date": "Date",
@@ -351,22 +409,24 @@
     "realizedOH": "Realized OH",
     "realizedVsForecast": "Realized / forecast",
     "source": "Source",
-    "fishingHours": "Fisketid (h)",
-    "previewRow": "Esikatsele CSV-rivi",
-    "pieces": "kpl",
-    "oh": "Ottihalukkuus",
-    "Saved": "Tallennettu",
-    "previewCSV": "CSV-esikatselu",
-    "download": "Last ned CSV",
-    "previewHint": "Tarkista tiedot ennen tallennusta."
+    "fishingHours": "Fishing time (h)",
+    "previewRow": "Preview CSV row",
+    "pieces": "pcs",
+    "oh": "Strike interest",
+    "Saved": "Saved",
+    "previewCSV": "CSV preview",
+    "download": "Download CSV",
+    "previewHint": "Check the data before saving."
   },
+
   "source": {
     "river": "Rivers",
     "lake": "Lake/Sea",
-    "sea": "Meri",
-    "lakeSea": "Järvi/Meri",
+    "sea": "Sea",
+    "lakeSea": "Lake/Sea",
     "unknown": "-"
   },
+
   "windDirections": {
     "N": "North",
     "NE": "Northeast",
@@ -377,41 +437,7 @@
     "W": "West",
     "NW": "Northwest"
   },
-  "search": "Search",
-  "searchPlaceholder": "Search location...",
-  "searchButton": "Search",
-  "myLocation": "MY LOCATION",
-  "clearPath": "Clear path",
-  "distanceFromMouth": "Distance from river mouth",
-  "tidePeak": "Tide peak",
-  "strikeTime": "Strike time",
-  "fishingInterestShort": "Strike interest",
-  "adjustTide": "Adjust tide",
-  "yourLocation": "Your location",
-  "searchedLocation": "Searched location",
-  "noResult": "Location not found",
-  "searchFailed": "Search failed",
-  "moonPhaseNames": {
-    "new-moon": "New Moon",
-    "waxing-crescent": "Waxing Crescent",
-    "first-quarter": "First Quarter",
-    "waxing-gibbous": "Waxing Gibbous",
-    "full-moon": "Full Moon",
-    "waning-gibbous": "Waning Gibbous",
-    "last-quarter": "Last Quarter",
-    "waning-crescent": "Waning Crescent"
-  },
-  "exportCSV": "Export CSV",
-  "dateFilter": "Date filter",
-  "count": "Count",
-  "previewCSV": "Preview CSV row",
-  "saved": "Saved!",
-  "averageStrikeInterest": "Avg. strike interest",
-  "unknown": "Unknown",
-  "time": "Time",
-  "temperature": "Temperature",
-  "feelsLike": "Feels like",
-  "windSpeed": "Wind speed",
+
   "fish": {
     "Hauki": "Pike",
     "Made": "Burbot",
@@ -441,58 +467,50 @@
     "whitefish": "Whitefish",
     "pink_salmon": "Pink salmon",
     "saimaa_char": "Saimaa char (protected)",
-    "vendace": "Muikku",
-    "bream": "Lahna"
-  },
-
-"moonPhaseNames": {
-    "new-moon": "Nymåne",
-    "waxing-crescent": "Tilltagande skära",
-    "first-quarter": "Första kvarteret",
-    "waxing-gibbous": "Tilltagande måne",
-    "full-moon": "Fullmåne",
-    "waning-gibbous": "Avtagande måne",
-    "last-quarter": "Sista kvarteret",
-    "waning-crescent": "Avtagande skära"
+    "vendace": "Vendace",
+    "bream": "Bream"
   },
 
   "tabs": {
-  "history": "Catch History",
-  "summary": "Summary",
-  "stats": "Statistics"
-},
+    "history": "Catch History",
+    "summary": "Summary",
+    "stats": "Statistics"
+  },
 
   "labels": {
     "realizedOH": "Realized OH",
     "pressure": "Air pressure"
   },
+
   "buttons": {
     "openSehavniva": "Open SeHavniva tide page",
     "showSpeciesForecast": "Show species strike forecast",
     "downloadSummaryCSV": "Download summary CSV"
   },
+
   "pages": {
     "statistics": {
       "title": "Statistics",
       "subtitle": "Statistics charts for river and lake/sea catches."
     },
     "tide": {
-      "openSehavniva": "🌊 Avaa SeHavniva-vuorovesisivu"
+      "openSehavniva": "🌊 Open SeHavniva tide page"
     },
     "forecast": {
-      "strikeTitle": "‍🎣 Ottihalukkuusennuste:"
+      "strikeTitle": "🎣 Strike interest forecast:"
     },
     "gear": {
-      "units": "Pyydysyksiköt:"
+      "units": "Gear units:"
     },
     "fishing": {
-      "timeHours": "Pyyntiaika (h)",
-      "method": "⚙️ Pyyntitapa"
+      "timeHours": "Fishing time (h)",
+      "method": "⚙️ Fishing method"
     },
     "history": {
-      "riverTitle": "Saalishistoria (virtavedet)"
+      "riverTitle": "Catch history (rivers)"
     }
   },
+
   "history": {
     "missingRealized": "(missing)",
     "total": "Total",
@@ -505,12 +523,14 @@
     "avgError": "Mean error",
     "avgRatio": "Realized/forecast"
   },
+
   "langDefault": {
     "title": "Default language",
     "question": "Set this as default?",
     "ok": "OK",
     "cancel": "Not now"
   },
+
   "pressureCard": {
     "riverTitle": "🌡️ Air pressure & fishing interest — river catches",
     "loading": "Loading stats…",
@@ -527,35 +547,39 @@
     "timesShort": "times",
     "explanationRiver": "This card shows which air pressures you’ve caught fish in rivers and where fishing interest (OH) has been best on average. The stats are based on your own catch history, not directly on the weather forecast."
   },
+
   "pressureRanges": {
     "low": "Low",
     "normal": "Normal",
     "high": "High"
   },
+
   "oh": {
     "realizedActiveBase": "🎣 Realized OH (active fishing): {{realized}}/8",
     "realizedActiveFactor": "– compared to forecast: {{factor}}×",
     "realizedLine": "Realized OH",
     "realized": "Realized OH",
-    "timesEffortTitle": "OH x effort time",
+    "timesEffortTitle": "OH × effort time",
     "realizedLong": "Realized fishing interest",
     "ohTimesEffort": "OH × effort",
     "sessionDuration": "Fishing time (session)",
     "realizedMissing": "OH result: -"
   },
+
   "origin": {
     "river": "River",
     "lake": "Lake/Sea",
     "lakeSea": "Lake / sea",
     "description": "Charts for river and lake/sea catches."
   },
+
   "toast": {
     "catchSaved": "Catch saved!",
     "missingCatchKgAndCount": "Select a fish species and enter both count and weight before saving.",
     "csvSaved": "CSV saved!",
-    "saveError": "Tallennus epäonnistui."
+    "saveError": "Saving failed."
   },
-  "statsLabel": "Statistics",
+
   "stats": {
     "noStatsData": "The chart can’t be drawn yet — add more catch data.",
     "chartTitle": "Air pressure and fishing interest",
@@ -581,9 +605,15 @@
     "outliersGoodLabel": "Exceptionally good (≥2.0x)",
     "outliersBadLabel": "Exceptionally weak (≤0.6x)",
     "samplesTotalLabel": "Total samples",
+    "insightTemplate": "You perform best with {{duration}} sessions in {{wind}} wind (avg {{avg}}×, n={{n}}).",
+    "excellent": "Excellent",
+    "statsLabel": "Statistics",
+    "speciesShareChart": "Species share of catch",
+    "noData": "As more catch data accumulates, I will suggest the best duration–wind combinations for you.",
+    "bestCombo": "You perform best with {{bucket}} sessions in {{wind}} wind (average {{avg}}×, n={{n}}).",
     "insight": {
       "noData": "As more catch data accumulates, I will suggest the best duration–wind combinations for you.",
-      "bestCombo": "You perform best with {{bucket}} sessions in {{wind}} wind (average {{avg}}x, n={{n}}).",
+      "bestCombo": "You perform best with {{bucket}} sessions in {{wind}} wind (average {{avg}}×, n={{n}}).",
       "selectTitle": "🎯 Select target species",
       "selectPlaceholder": "Select",
       "lockHint": "The target species is locked in the species selector until you save a catch or press “No target catch”.",
@@ -607,14 +637,9 @@
       "trend": "Trend (bin avg)",
       "effortHours": "Effort (h)",
       "insight": "🧠 Insight"
-    },
-    "insightTemplate": "You perform best with {{duration}} sessions in {{wind}} wind (avg {{avg}}×, n={{n}}).",
-    "excellent": "Excellent",
-    "statsLabel": "Tilastot",
-    "speciesShareChart": "Lajien osuus saaliista",
-    "noData": "Kun saalisdataa kertyy lisää, ehdotan sinulle parhaat kesto–tuuli-yhdistelmät.",
-    "bestCombo": "Sinulla toimii parhaiten {{bucket}} sessiot {{wind}}-tuulella (keskiarvo {{avg}}x, n={{n}})."
+    }
   },
+
   "session": {
     "fishingTime": "Fishing time",
     "duration": "Fishing session time",
@@ -639,56 +664,55 @@
     "cancel": "Cancel",
     "start": "Start",
     "menuTitle": "Session",
-    "menuClose": "Close",    
+    "menuClose": "Close",
     "targetSavedContinue": "Target catch saved — you can save other catches.",
     "targetNoneSaved": "No target catch logged — you can save other catches.",
-    "exit": "🚪 Poistu",
-    "close": "⚙️ Sulje",
-    "debugBlock": "Debug-tiedot",
-    "realizedOH": "Toteutunut ottihalukkuus",
-    "strikePredictionTitle": "Iskuennuste",
-    "strikePredictionTooltip": "Perustuu saalishistoriaan ja säädataan.",
-    "currentPressure": "Nykyinen ilmanpaine",
-    "predictionSpeciesLabel": "Ennustettava laji",
-    "noSpeciesFilter": "Ei lajisuodatusta",
-    "noHistoryForPrediction": "Ei riittävästi historiaa ennusteeseen.",
-    "lakeSea": "Järvi / Meri",
-    "river": "Virtavesi",
-    "noLakeData": "Ei järvi-/meridataa.",
-    "noRiverData": "Ei virtavesidataa.",
-    "basedOnN": "Perustuu {{n}} havaintoon",
-    "selectedSpeciesPrediction": "Valitun lajin ennuste",
-    "noSpeciesData": "Ei lajikohtaista dataa.",
-    "strikePredictionNote": "Ennuste on suuntaa antava.",
-    "confirmClear": "Haluatko varmasti tyhjentää?",
-    "top5ByWeight": "Top 5 painon mukaan",
-    "protected": "Suojeltu",
-    "unknownFish": "Tuntematon kala",
-    "target": "Tavoite",
-    "point": "Piste",
-    "noCoords": "Koordinaatteja ei saatavilla.",
-    "pleaseUseLocation": "Käytä sijaintia.",
-    "tideSet": "Vuorovesi asetettu",
-    "notFound": "Ei löytynyt",
-    "stop": "Lopeta sessio",
-    "noTargetSelected": "Tavoitekalaa ei valittu.",
-    "noSessionTime": "Sessioaikaa ei asetettu.",
-    "targetMismatch": "Saalis ei vastannut tavoitekalaa."
+    "exit": "🚪 Exit",
+    "close": "⚙️ Close",
+    "debugBlock": "Debug info",
+    "realizedOH": "Realized strike interest",
+    "strikePredictionTitle": "Strike prediction",
+    "strikePredictionTooltip": "Based on catch history and weather data.",
+    "currentPressure": "Current air pressure",
+    "predictionSpeciesLabel": "Predicted species",
+    "noSpeciesFilter": "No species filter",
+    "noHistoryForPrediction": "Not enough history for prediction.",
+    "lakeSea": "Lake / Sea",
+    "river": "River",
+    "noLakeData": "No lake/sea data.",
+    "noRiverData": "No river data.",
+    "basedOnN": "Based on {{n}} observations",
+    "selectedSpeciesPrediction": "Prediction for selected species",
+    "noSpeciesData": "No species-specific data.",
+    "strikePredictionNote": "The prediction is indicative.",
+    "confirmClear": "Are you sure you want to clear?",
+    "top5ByWeight": "Top 5 by weight",
+    "protected": "Protected",
+    "unknownFish": "Unknown fish",
+    "target": "Target",
+    "point": "Point",
+    "noCoords": "Coordinates not available.",
+    "pleaseUseLocation": "Use location.",
+    "tideSet": "Tide set",
+    "notFound": "Not found",
+    "stop": "Stop session",
+    "noTargetSelected": "No target species selected.",
+    "noSessionTime": "No session time set.",
+    "targetMismatch": "Catch did not match target species."
   },
+
   "common": {
     "select": "Select",
     "cancel": "Cancel",
     "start": "Start",
-    "missing": "Puuttuu"
+    "missing": "Missing"
   },
-  "validation": {
-    "selectSpecies": "Select species.",
-    "enterWeight": "Please enter weight (kg)."
-  },
+
   "omakala": {
     "tooltipTitle": "Omakala",
     "tooltip": "From this site you can view Finland’s threatened fish species, the threatened species that require reporting when caught, and other catch reporting information. You can also find depth charts for waters in Finland here!"
   },
+
   "charts": {
     "pressureOh": {
       "title": "Correlation between air pressure and fishing interest",
@@ -697,15 +721,7 @@
       "explanation": "The chart shows how air pressure and fishing interest have occurred in lake/sea (🌅) and rivers (🌊). As more catch data accumulates, it reveals the pressure ranges that are typical for your fishing."
     }
   },
-  "contextLakeSea": "Konteksti Järvi-/merivesi OH",
-  "contextRiver": "Konteksti Virtavesi OH",
-  "continueCatch": "✍️ Continue catch report",
-  "weightKg": "Paino (kg)",
-  "riverSummaryTab": "Virtavesiyhteenveto",
-  "exportCSVRiver": "Vie CSV (virtavedet)",
-  "effortHours": "Kalastustunnit",
-  "kgPerHour": "kg / h",
-  "hoursPerKg": "h / kg",
+
   "moonPhaseEmoji": {
     "new-moon": "🌑",
     "waxing-crescent": "🌒",
@@ -725,8 +741,11 @@
     "waningCrescent": "🌘"
   },
 
-  "fishingTimeStart": "Pyyntiajan alku",
-  "fishingTimeEnd": "Pyyntiajan loppu",
+  "fishingMethod": {
+  "label": "Fishing method",
+  "active": "Active",
+  "passive": "Passive"
+},
 
   "direction": {
     "N": "N",
@@ -737,43 +756,5 @@
     "SW": "SW",
     "W": "W",
     "NW": "NW"
-  },
-  "saveToHistory": "Tallenna rivi historiaan",
-  "downloadAllCsv": "Lataa historia CSV:nä",
-  "historyCount": "Rivejä",
-  "confirmClearHistory": "Tyhjennetäänkö historia?",
-  "noHistory": "No saved catches with selected filters.",
-  "noCatchesYet": "Ei saalistietoja.",
-  "validation": {
-  "selectSpecies": "Valitse kalalaji."
-},
-"proPage": {
-  "badge": "KalasääApp PRO",
-  "title": "Fish at the right time.",
-  "lead": "KalasääApp PRO combines weather data, air pressure, moon phase, and wind direction into a fish activity forecast.",
-  "trialTitle": "7-day full trial",
-  "trialText": "Try all PRO features for 7 days. After the trial, you can continue with the FREE version or unlock PRO.",
-  "proHeading": "PRO includes",
-  "freeHeading": "FREE includes",
-  "valueTitle": "Who is PRO for?",
-  "valueText": "PRO is for active anglers who want to use weather, location data, and catch history to plan their fishing more effectively.",
-  "buyButton": "Unlock PRO",
-  "buyLoading": "Redirecting to checkout...",
-  "continueFreeButton": "Continue with FREE",
-  "proFeatures": [
-    "More precise fish activity forecast",
-    "Stats and analysis from catch history",
-    "Moon phase impact on fishing",
-    "Wind direction and air pressure effects",
-    "Dedicated PRO features for rivers",
-    "Expanded forecast and history usage"
-  ],
-  "freeFeatures": [
-    "Daily fishing forecast",
-    "Catch logging",
-    "Basic catch history",
-    "Location-based weather"
-  ]
+  }
 }
-}
-
