@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 import { useTranslation } from "react-i18next";
+import AdminProGrantPanel from "./AdminProGrantPanel";
 
 export default function AuthBar() {
   const [user, setUser] = useState(null);
@@ -87,36 +88,45 @@ export default function AuthBar() {
   return (
     <div
       style={{
-        display: "flex",
+        display: "grid",
         gap: 10,
-        alignItems: "center",
-        flexWrap: "wrap",
       }}
     >
-      <span style={{ fontSize: 12, opacity: 0.8 }}>
-        ✅ {user.displayName || user.email}
-      </span>
-
-      <button
-        type="button"
-        onClick={logout}
-        disabled={busy}
+      <div
         style={{
-          padding: "6px 10px",
-          borderRadius: 8,
-          border: "1px solid #ddd",
-          cursor: busy ? "default" : "pointer",
-          background: "#fff",
+          display: "flex",
+          gap: 10,
+          alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
-        {busy
-          ? t("auth.loggingOut", { defaultValue: "Kirjaudutaan ulos..." })
-          : t("auth.logout", { defaultValue: "Kirjaudu ulos" })}
-      </button>
+        <span style={{ fontSize: 12, opacity: 0.8 }}>
+          ✅ {user.displayName || user.email}
+        </span>
 
-      {err ? (
-        <span style={{ fontSize: 12, color: "#b00020" }}>{err}</span>
-      ) : null}
+        <button
+          type="button"
+          onClick={logout}
+          disabled={busy}
+          style={{
+            padding: "6px 10px",
+            borderRadius: 8,
+            border: "1px solid #ddd",
+            cursor: busy ? "default" : "pointer",
+            background: "#fff",
+          }}
+        >
+          {busy
+            ? t("auth.loggingOut", { defaultValue: "Kirjaudutaan ulos..." })
+            : t("auth.logout", { defaultValue: "Kirjaudu ulos" })}
+        </button>
+
+        {err ? (
+          <span style={{ fontSize: 12, color: "#b00020" }}>{err}</span>
+        ) : null}
+      </div>
+
+      <AdminProGrantPanel />
     </div>
   );
 }

@@ -1,15 +1,17 @@
 // src/components/Weather.jsx
 import "../i18n";
-import React, { useLayoutEffect, useState, useEffect, useMemo, useContext, useRef } from "react";
+import React, { useState, useEffect, useMemo, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AppContext } from "./AppContext";
 import { EMOJI_BY_KEY, normalizeMoonKey } from "../utils/moon";
 import {
-  collectFuturePressures,
+  getSunTimesForDate,
   collectPastPressures,
-} from "../utils/ohUnified";
+  collectFuturePressures,
+  computeOHBidirectionalWithTime,
+} from "../utils/fishingOH";
 import { buildHourlyWindow } from "../utils/hourWindow";
 import { fetchForecastData } from "./fetchForecast";
 import LakeSeaPressureStatsCard from "./LakeSeaPressureStatsCard";
@@ -287,7 +289,6 @@ export default function Weather() {
   updatePressure,
   updateWind,
   updateLakeSeaOH,
-  computeOH,
 } = useContext(AppContext);
 
 useEffect(() => {
@@ -339,12 +340,30 @@ useEffect(() => {
   const [selectedHour, setSelectedHour] = useState(null);
   const [showOmakalaTip, setShowOmakalaTip] = useState(false);
   const [isCoarsePointer, setIsCoarsePointer] = useState(false); 
+  const [selectedSpecies, setSelectedSpecies] = useState("hauki");
   const omakalaWrapRef = useRef(null);
   const closeTimerRef = useRef(null);
   const dayKeys =
     fcData && typeof fcData === "object" ? Object.keys(fcData) : [];
   const selDate = dayKeys[idx] || null;
   const dayObj = selDate && fcData?.[selDate] ? fcData[selDate] : null;
+
+  const sunTimes = useMemo(() => {
+  if (!selDate) {
+    return {
+      sunrise: "06:00",
+      sunset: "18:00",
+      sunriseHour: 6,
+      sunsetHour: 18,
+      source: "default-no-date",
+    };
+  }
+
+  return getSunTimesForDate(fcData, selDate, {
+    sunrise: "06:00",
+    sunset: "18:00",
+  });
+}, [fcData, selDate]);
 
   const clearCloseTimer = () => {
   if (closeTimerRef.current) {
@@ -622,46 +641,50 @@ const hourlyWindow = useMemo(
   } catch {
     // pidetään oletus-emoji
   }
-   // --- HARMONISOITU lake/sea OH: sama logiikka kuin Virtavesissä ---
-  const headerLakeSeaOH = useMemo(() => {
-    if (!selDate || !dayObj || typeof computeOH !== "function") return null;
+  // --- HARMONISOITU lake/sea OH: sama logiikka kuin Virtavesissä ---
+const headerLakeSeaOH = useMemo(() => {
+  if (!selDate || !dayObj) return null;
 
-    const targetHour = pickTargetHour(dayObj, isToday);
-    if (targetHour == null) return null;
+  const targetHour = pickTargetHour(dayObj, isToday);
+  if (targetHour == null) return null;
 
-    const slot = dayObj[String(targetHour)];
-    if (!slot) return null;
+  const slot = dayObj[String(targetHour)];
+  if (!slot) return null;
 
-    const pastPressures = collectPastPressures(fcData, selDate, targetHour, 6);
-    const futurePressures = collectFuturePressures(
-      fcData,
-      selDate,
-      targetHour,
-      6
-    );
+  const pastPressures = collectPastPressures(
+    fcData,
+    selDate,
+    targetHour,
+    6
+  );
 
-    const rawOh =
-      Number.isFinite(slot?.Pressure) && Number.isFinite(slot?.WindDirection)
-        ? computeOH({
-            pressure: Number(slot.Pressure),
-            windDirection: Number(slot.WindDirection),
-            moonPhaseKey: effectiveMoonKey,
-            pastPressures,
-            futurePressures,
-          })
-        : null;
+  const futurePressures = collectFuturePressures(
+    fcData,
+    selDate,
+    targetHour,
+    6
+  );
 
-    const clipped = clampOh(rawOh);
-    return Number.isFinite(clipped) ? clipped : null;
-  }, [selDate, dayObj, fcData, isToday, computeOH, effectiveMoonKey]);
+  const rawOh =
+    Number.isFinite(slot?.Pressure) && Number.isFinite(slot?.WindDirection)
+      ? computeOHBidirectionalWithTime({
+          pressure: Number(slot.Pressure),
+          windDirection: Number(slot.WindDirection),
+          moonPhaseKey: effectiveMoonKey,
+          pastPressures,
+          futurePressures,
+          species: selectedSpecies,
+          waterType: "lake",
+          hour: targetHour,
+          sunrise: sunTimes.sunriseHour,
+          sunset: sunTimes.sunsetHour,
+          timeMode: "medium",
+        })
+      : null;
 
-  // Pusketaan headerin lake/sea OH myös AppContextiin,
-  // jotta LakeSeaCatchForm ym. voivat käyttää samaa arvoa
-  useEffect(() => {
-    if (Number.isFinite(headerLakeSeaOH)) {
-      updateLakeSeaOH(headerLakeSeaOH, "Weather:lakeSeaHeader");
-    }
-  }, [headerLakeSeaOH, updateLakeSeaOH]);
+  const clipped = clampOh(rawOh);
+  return Number.isFinite(clipped) ? clipped : null;
+}, [selDate, dayObj, fcData, isToday, effectiveMoonKey, sunTimes, selectedSpecies]);
 
 
   // 💧 Ylärivin sade-/pilvi-ikoni ja teksti (käytetään samaa logiikkaa kuin tuntiriveillä)
@@ -681,7 +704,6 @@ const hourlyWindow = useMemo(
     return <p style={{ padding: "1rem" }}>{t("loadingForecast", { defaultValue: "Ladataan ennustetta..." })}</p>;
   }
 
-
   return (
     <div style={{ padding: "1em" }}>
       {/* Haku + Oma paikka */}
@@ -699,6 +721,26 @@ const hourlyWindow = useMemo(
     ? locationName
     : "GPS"}
 </p>
+
+<div style={{ margin: "0.5em 0" }}>
+  <label>
+    🎯 {t("targetFish", { defaultValue: "Tavoitekala" })}:{" "}
+    <select
+	  value={selectedSpecies}
+	  onChange={(e) => setSelectedSpecies(e.target.value)}
+	>
+	  <option value="hauki">{t("fishSpecies.hauki", { defaultValue: "Hauki" })}</option>
+	  <option value="ahven">{t("fishSpecies.ahven", { defaultValue: "Ahven" })}</option>
+	  <option value="kuha">{t("fishSpecies.kuha", { defaultValue: "Kuha" })}</option>
+	  <option value="made">{t("fishSpecies.made", { defaultValue: "Made" })}</option>
+	  <option value="lohi">{t("fishSpecies.lohi", { defaultValue: "Lohi" })}</option>
+	  <option value="taimen">{t("fishSpecies.taimen", { defaultValue: "Taimen" })}</option>
+	  <option value="siika">{t("fishSpecies.siika", { defaultValue: "Siika" })}</option>
+	  <option value="harjus">{t("fishSpecies.harjus", { defaultValue: "Harjus" })}</option>
+	  <option value="nieriä">{t("fishSpecies.nieriä", { defaultValue: "Nieriä" })}</option>
+	</select>
+	  </label>
+	</div>
 
       <p>
         📈 {t("pressure")}:{" "}
@@ -789,16 +831,22 @@ const hourlyWindow = useMemo(
                 );
 
                 const rawOh =
-                  Number.isFinite(d?.Pressure) &&
-                  Number.isFinite(d?.WindDirection)
-                    ? computeOH({
-                        pressure: Number(d.Pressure),
-                        windDirection: Number(d.WindDirection),
-                        moonPhaseKey: effectiveMoonKey,
-                        pastPressures,
-                        futurePressures,
-                      })
-                    : null;
+		  Number.isFinite(d?.Pressure) &&
+		  Number.isFinite(d?.WindDirection)
+		    ? computeOHBidirectionalWithTime({
+		        pressure: Number(d.Pressure),
+		        windDirection: Number(d.WindDirection),
+		        moonPhaseKey: effectiveMoonKey,
+		        pastPressures,
+		        futurePressures,
+		        species: selectedSpecies,   // vaihda myöhemmin valittuun lajiin
+		        waterType: "lake",
+		        hour,
+		        sunrise: sunTimes.sunriseHour,
+		        sunset: sunTimes.sunsetHour,
+		        timeMode: "medium",
+		      })
+		    : null;
 
                 const ohHour = clampOh(rawOh) ?? 1;
 
@@ -902,16 +950,21 @@ const hourlyWindow = useMemo(
               );
 
               const rawOh =
-                Number.isFinite(d?.Pressure) &&
-                Number.isFinite(d?.WindDirection)
-                  ? computeOH({
-                      pressure: Number(d.Pressure),
-                      windDirection: Number(d.WindDirection),
-                      moonPhaseKey: effectiveMoonKey,
-                      pastPressures,
-                      futurePressures,
-                    })
-                  : null;
+  Number.isFinite(d?.Pressure) && Number.isFinite(d?.WindDirection)
+    ? computeOHBidirectionalWithTime({
+        pressure: Number(d.Pressure),
+        windDirection: Number(d.WindDirection),
+        moonPhaseKey: effectiveMoonKey,
+        pastPressures,
+        futurePressures,
+        species: selectedSpecies,
+        waterType: "lake",
+        hour: hourNum,
+        sunrise: sunTimes.sunriseHour,
+        sunset: sunTimes.sunsetHour,
+        timeMode: "medium",
+      })
+    : null;
 
               const ohHour = clampOh(rawOh) ?? 1;
 
@@ -1069,7 +1122,7 @@ const hourlyWindow = useMemo(
               <div
                 style={{
                   display: "flex",
-                  alignItems: "start",
+                  alignItems: "flex-start",
                   justifyContent: "space-between",
                   gap: "0.75rem",
                   marginBottom: 6,

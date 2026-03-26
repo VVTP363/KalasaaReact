@@ -362,7 +362,7 @@ const trFish = (raw) => {
           display: "flex",
           flexWrap: "wrap",
           gap: "0.5em",
-          alignItems: "left",
+          alignItems: "flex-start",
           justifyContent: "left",
           marginBottom: "1em",
         }}
@@ -741,12 +741,9 @@ const trFish = (raw) => {
                   const missingTxt = t("common.missing", { defaultValue: "missing" });
 
                   const factorTxt =
-                    ohMatch != null
-                      ? ` (${t("oh.vsForecastFactor", {
-                          factor: ohMatch.toFixed(2),
-                          defaultValue: "{{factor}}x",
-                        })})`
-                      : "";
+			  ohMatch != null
+		    ? ` (${ohMatch.toFixed(2)}×)`
+		    : "";
 
                   if (ohRealized != null) {
                     ohPart += ` | ${realizedLabel} ${Math.round(

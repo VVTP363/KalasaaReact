@@ -562,7 +562,6 @@ const sessionTimeText = useMemo(() => {
   }
 };
 
-
   return (
     <div>
       <h4>
@@ -579,7 +578,7 @@ const sessionTimeText = useMemo(() => {
         }}
       >
         <label>
-	  {t("fishSpecies")}:
+	  {t("fishSpeciesLabel", { defaultValue: "Kalalaji" })}:
 	  <select
 	    name="species"
 	    value={form.species}

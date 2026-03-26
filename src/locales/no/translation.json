@@ -82,7 +82,9 @@
     "enterCode": "Skriv inn testkode",
     "unlockPro": "Lås opp PRO",
     "proActive": "PRO aktiv",
-    "backToFree": "Tilbake til Free"
+    "backToFree": "Tilbake til Free",
+    "loggingIn": "Logger inn...",
+    "loggingOut": "Logger ut..."
   },
 
   "clear": "Tøm",
@@ -144,7 +146,8 @@
     "trialEnded": "🔒 PRO-funksjoner låst.",
     "missingFeatures": "Uten PRO får du ikke tilgang til:",
     "unlock": "Lås opp PRO",
-    "benefit": "⭐ PRO hjelper deg å finne de beste bittperiodene."
+    "benefit": "⭐ PRO hjelper deg å finne de beste bittperiodene.",
+    "missingFeatures": "Noen PRO-funksjoner er ennå ikke tilgjengelige på denne siden."
   },
 
   "proPage": {
@@ -222,12 +225,14 @@
   "hideHourlyForecast": "Skjul timevarsel",
   "ohForecastTitle": "Biteprognose",
   "selectSpecies": "Velg art:",
+  "targetFish": "Målfisk",
   "speciesStrikeSuffix": "biteprognose nå",
   "speciesForecastTitle": "{{species}} biteprognose nå",
   "debugBaseOh": "Basis-OH (klammet)",
   "openSehavniva": "Åpne SeHavniva tidevannsside",
   "speciesAdjustedForecast": "Artsjustert prognose",
   "summaryBlock": "Oppsummering",
+  "realizedVsForecastFactor": "Resultat vs prognose-faktor",
 
   "langDefault": {
     "title": "Standardspråk",
@@ -461,6 +466,21 @@
     "vendace": "Muikku",
     "bream": "Lahna"
   },
+
+"targetFish": "Målfisk",
+"fishSpeciesLabel": "Fiskeslag",
+  "fishSpeciesLabel": "Fiskeslag",
+ "fishSpecies": {
+  "hauki": "Gjedde",
+  "ahven": "Abbor",
+  "kuha": "Gjørs",
+  "made": "Lake",
+  "lohi": "Laks",
+  "taimen": "Ørret",
+  "siika": "Sik",
+  "harjus": "Harr",
+  "nieriä": "Røye"
+},
 
   "exportCSV": "Eksporter CSV",
   "location": "Sted",

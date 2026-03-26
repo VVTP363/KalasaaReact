@@ -17,21 +17,18 @@ import ProUnlockBar from "./components/ProUnlockBar";
 import { Toaster } from "sonner";
 import ProSuccess from "./components/ProSuccess";
 import ProInfoPage from "./components/ProInfoPage";
-console.log("[APP] render");
-
-
+import AdminGrantProButton from "./components/AdminGrantProButton";
 
 // ✅ Lazy-load isot näkymät
 const WeatherTabs = lazy(() => import("./components/WeatherTabs"));
 const VirtavesiView = lazy(() => import("./components/VirtavesiView"));
 
-// 🔹 AUTOMAATTINEN GEOPAIKANNUSTUS KERRAN SOVELLUKSEN KÄYNNISTYESSÄ
+// 🔹 AUTOMAATTINEN GEOPAIKANNUSTUS
 function BootstrapGeolocation() {
   const { setLocationCoords } = useContext(AppContext);
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      console.warn("[Bootstrap] Selaimesi ei tue geopaikannusta.");
       setLocationCoords({ lat: 60.1699, lon: 24.9384 });
       return;
     }
@@ -39,11 +36,9 @@ function BootstrapGeolocation() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        console.log("[Bootstrap] GPS OK:", latitude, longitude);
         setLocationCoords({ lat: latitude, lon: longitude });
       },
-      (err) => {
-        console.error("[Bootstrap] GPS VIRHE:", err);
+      () => {
         setLocationCoords({ lat: 60.1699, lon: 24.9384 });
       },
       { enableHighAccuracy: true, timeout: 15000 }
@@ -57,7 +52,7 @@ function RouteFallback() {
   return <div style={{ padding: 12 }}>Ladataan…</div>;
 }
 
-// ✅ Stripe-paluu: synkkaa PRO-oikeus heti maksun jälkeen
+// ✅ Stripe-paluu: synkkaa PRO-oikeus
 function CheckoutSync() {
   const { forceSyncEntitlement } = useEntitlement();
 
@@ -75,9 +70,7 @@ function CheckoutSync() {
           clearInterval(t);
           window.history.replaceState({}, "", window.location.pathname);
         }
-      } catch (e) {
-        console.error("[CHECKOUT SYNC] failed:", e);
-
+      } catch {
         if (++tries > 6) {
           clearInterval(t);
           window.history.replaceState({}, "", window.location.pathname);
@@ -93,42 +86,28 @@ function CheckoutSync() {
 
 export default function App() {
   useEffect(() => {
-    console.log("[AUTH] useEffect mounted");
-    console.log("[APP] loaded", new Date().toISOString());
-
-    const timer = setTimeout(() => {
-      console.log("[APP] timeout tick");
-    }, 1000);
-
     const unsub = onAuthStateChanged(auth, async (user) => {
-      console.log("[AUTH] state changed:", user ? user.email : "no user");
-
       if (!user) return;
-
       try {
-        console.log("[ACCESS] reading config...");
-        const access = await computeAccess({ user });
-        console.log("[ACCESS] result:", access);
-      } catch (e) {
-        console.error("[ACCESS] failed:", e);
+        await computeAccess({ user });
+      } catch {
+        // hiljainen fail productionissa
       }
     });
 
-    return () => {
-      clearTimeout(timer);
-      unsub();
-    };
+    return () => unsub();
   }, []);
 
   return (
     <AppProvider>
       <EntitlementProvider>
         <CheckoutSync />
-  
+
         <div className="app-container">
           <LanguageSelector />
           <AuthBar />
           <ProUnlockBar />
+          <AdminGrantProButton />
           <Toaster />
           <BootstrapGeolocation />
           <PwaUpdateToast />

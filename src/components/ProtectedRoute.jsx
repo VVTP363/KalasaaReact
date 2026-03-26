@@ -4,7 +4,15 @@ import { Navigate } from "react-router-dom";
 import { useEntitlement } from "./EntitlementContext";
 
 export default function ProtectedRoute({ children }) {
-  const { isPro } = useEntitlement();
-  if (!isPro) return <Navigate to="/" replace />;
+  const state = useEntitlement();
+  console.log("[ProtectedRoute] entitlement state:", state);
+
+  const { loading, access, pro, isAdmin } = state;
+
+  if (loading) return <div style={{ padding: 12 }}>Ladataan…</div>;
+
+  const allowed = !!access?.pro || !!pro || !!isAdmin;
+
+  if (!allowed) return <Navigate to="/" replace />;
   return children;
 }

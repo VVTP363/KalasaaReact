@@ -546,6 +546,7 @@ export default function VirtavesiView() {
   const [selectedTideMinute, setSelectedTideMinute] = useState(0);
   const [tideTimeConfirmed, setTideTimeConfirmed] = useState(false);
   const [showHourly, setShowHourly] = useState(false);
+  const [selectedRiverSpecies, setSelectedRiverSpecies] = useState("lohi");
 
   // pieni apuri: hyväksyy {lat,lon} tai [lat,lon]
   function normalizeCoords(c) {
@@ -704,21 +705,30 @@ export default function VirtavesiView() {
 
   // 🔁 Virtavesi-headerin OH – sama OH-logiikka (trendit mukaan) kuin järvi/meri-puolella
   const headerOH = useMemo(() => {
-    const p = Number(selectedHourData?.Pressure);
-    const w = Number(selectedHourData?.WindDirection);
-    if (!Number.isFinite(p) || !Number.isFinite(w)) return null;
+  const p = Number(selectedHourData?.Pressure);
+  const w = Number(selectedHourData?.WindDirection);
+  if (!Number.isFinite(p) || !Number.isFinite(w)) return null;
 
-    const val = computeOH({
-      pressure: p,
-      windDirection: w,
-      moonPhaseKey: moonCamel,        // käytetään samaa kuun avainta kuin listassa
-      pastPressures: pastPressHeader,
-      futurePressures: futurePressHeader,
-    });
+  const val = computeOH({
+    pressure: p,
+    windDirection: w,
+    moonPhaseKey: moonCamel,
+    pastPressures: pastPressHeader,
+    futurePressures: futurePressHeader,
+    species: selectedRiverSpecies,
+    waterType: "river",
+  });
 
-    if (!Number.isFinite(val)) return null;
-    return Math.max(1, Math.min(8, Math.round(val)));
-  }, [selectedHourData, pastPressHeader, futurePressHeader, computeOH, moonCamel]);
+  if (!Number.isFinite(val)) return null;
+  return Math.max(1, Math.min(8, Math.round(val)));
+}, [
+  selectedHourData,
+  pastPressHeader,
+  futurePressHeader,
+  computeOH,
+  moonCamel,
+  selectedRiverSpecies,
+]);
 
   const clampedHeaderOH = Number.isFinite(headerOH)
   ? Math.max(1, Math.min(8, Math.round(headerOH)))
@@ -747,12 +757,12 @@ export default function VirtavesiView() {
   const getPressureBasedSpeed = (pressure) => {
     if (pressure <= 980) return 5.1;
     if (pressure <= 990) return 4.7;
-    if (pressure <= 995) return 4.1;
-    if (pressure <= 1000) return 3.6;
-    if (pressure <= 1010) return 3.1;
-    if (pressure <= 1015) return 2.9;
-    if (pressure <= 1020) return 2.7;
-    return 2.5;
+    if (pressure <= 995) return 4.6;
+    if (pressure <= 1000) return 4.5;
+    if (pressure <= 1010) return 4.4;
+    if (pressure <= 1015) return 4.3;
+    if (pressure <= 1020) return 4.2;
+    return 4.0;
   };
 
   const estimatedSpeed = getPressureBasedSpeed(
@@ -1058,6 +1068,32 @@ export default function VirtavesiView() {
         {locationName || "Tuntematon sijainti"}
       </h2>
 
+            <div style={{ margin: "0.5em 0 0.75em" }}>
+        <label>
+          🎯 {t("targetFish", { defaultValue: "Tavoitekala" })}:{" "}
+          <select
+            value={selectedRiverSpecies}
+            onChange={(e) => setSelectedRiverSpecies(e.target.value)}
+          >
+            <option value="lohi">
+              {t("fishSpecies.lohi", { defaultValue: "Lohi" })}
+            </option>
+            <option value="taimen">
+              {t("fishSpecies.taimen", { defaultValue: "Taimen" })}
+            </option>
+            <option value="harjus">
+              {t("fishSpecies.harjus", { defaultValue: "Harjus" })}
+            </option>
+            <option value="siika">
+              {t("fishSpecies.siika", { defaultValue: "Siika" })}
+            </option>
+            <option value="nieriä">
+              {t("fishSpecies.nieriä", { defaultValue: "Rautu" })}
+            </option>
+          </select>
+        </label>
+      </div>
+
       {!activeCoords && (
         <div
           style={{
@@ -1202,16 +1238,18 @@ export default function VirtavesiView() {
             );
 
             const ohHour =
-              Number.isFinite(d?.Pressure) &&
-              Number.isFinite(d?.WindDirection)
-                ? computeOH({
-                    pressure: Number(d.Pressure),
-                    windDirection: Number(d.WindDirection),
-                    moonPhaseKey: moonCamel,
-                    pastPressures,
-                    futurePressures,
-                  })
-                : null;
+		  Number.isFinite(d?.Pressure) &&
+		  Number.isFinite(d?.WindDirection)
+		    ? computeOH({
+		        pressure: Number(d.Pressure),
+		        windDirection: Number(d.WindDirection),
+		        moonPhaseKey: moonCamel,
+		        pastPressures,
+		        futurePressures,
+		        species: selectedRiverSpecies,
+		        waterType: "river",
+		      })
+		    : null;
 
             const ohShown =
               Number.isFinite(ohHour) && ohHour > 0
@@ -1441,8 +1479,9 @@ export default function VirtavesiView() {
       {/* 📂 Tabs: Saalisilmoitus / Historia / Yhteenveto / Tilastot */}
       <div style={{ marginTop: "0.75rem" }}>
         <VirtavesiTabs
-  forecastOH={headerOH}
-  pressure={selectedHourData?.Pressure}
+	  forecastOH={headerOH}
+	  pressure={selectedHourData?.Pressure}
+          selectedSpecies={selectedRiverSpecies}
 />
       </div>
     </div>

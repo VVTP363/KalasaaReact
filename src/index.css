@@ -10,7 +10,9 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* poista tämä, Firefox varoittaa siitä:
   -moz-osx-font-smoothing: grayscale;
+  */
 }
 
 a {
@@ -30,7 +32,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100%;
-  display: block;              /* ✅ EI keskitetä koko appia */
+  display: block;
+  text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -40,13 +43,11 @@ body {
   overflow-x: hidden;
 }
 
-/* yleinen “app container” */
 .app-container {
   width: min(920px, 100%);
   margin: 0 auto;
   padding: 10px;
 }
-
 
 h1 {
   font-size: 3.2em;
@@ -69,7 +70,8 @@ button:hover {
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid #646cff;
+  outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: light) {
@@ -84,7 +86,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-/* ===== Recharts legend: poista pallurat (•) ===== */
+
 .recharts-default-legend {
   list-style: none !important;
   padding: 0 !important;
@@ -100,7 +102,6 @@ button:focus-visible {
   padding: 0 !important;
 }
 
-/* iOS zoom fix + parempi kosketus */
 input, select, textarea, button {
   font-size: 16px;
 }
@@ -109,7 +110,6 @@ button {
   min-height: 40px;
 }
 
-/* Yleinen flex-row joka muuttuu pinoksi mobiilissa */
 .row {
   display: flex;
   gap: 10px;
@@ -127,5 +127,3 @@ button {
     width: 100%;
   }
 }
-
-

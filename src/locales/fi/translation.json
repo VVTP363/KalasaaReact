@@ -13,7 +13,19 @@
     "lastQuarter": "Viimeinen neljännes",
     "waningCrescent": "Vähenevä sirppi"
   },
-
+  "targetFish": "Tavoitekala",
+  "fishSpeciesLabel": "Kalalaji",
+  "fishSpecies": {
+  "hauki": "Hauki",
+  "ahven": "Ahven",
+  "kuha": "Kuha",
+  "made": "Made",
+  "lohi": "Lohi",
+  "taimen": "Taimen",
+  "siika": "Siika",
+  "harjus": "Harjus",
+  "nieriä": "Nieriä"
+},
   "moonPhaseNames": {
     "new-moon": "Uusikuu",
     "waxing-crescent": "Kasvava sirppi",
@@ -100,7 +112,9 @@
     "enterCode": "Syötä testikoodi",
     "unlockPro": "Avaa PRO",
     "proActive": "PRO käytössä",
-    "backToFree": "Palauta Free"
+    "backToFree": "Palauta Free",
+    "loggingIn": "Kirjaudutaan...",
+    "loggingOut": "Kirjaudutaan ulos..."
   },
 
   "proUnlock": {
@@ -134,7 +148,8 @@
     "trialRunning": "PRO-versio käytössä 7 päivän kokeiluna.",
     "trialEnded": "PRO-ominaisuudet lukittu. FREE-versio käytössä.",
     "unlock": "Avaa PRO",
-    "benefit": "⭐ PRO auttaa löytämään parhaat ottiajat."
+    "benefit": "⭐ PRO auttaa löytämään parhaat ottiajat.",
+    "missingFeatures": "Osa PRO-ominaisuuksista ei ole vielä käytettävissä tällä sivulla."
   },
 
   "proPage": {
@@ -188,7 +203,7 @@
   "summaryInfo": "Yhteenveto laskee saalislomakkeelta talletetut tiedot lajeittain yhteen (kpl, C&R ja paino).",
   "riverSummaryInfo": "Virtavesien yhteenveto laskee virtavesien saalislomakkeelta tallennetut lajit yhteen.",
   "top5Info": "Listaa jokaiselle lajille viisi painavinta talletettua saalista (kg, pituus, päivä ja paikka jos saatavilla).",
-
+  "targetFish": "Tavoitekala",
   "speciesForecastTitle": "Lajikohtainen ottiennuste",
   "speciesForecastTitleNow": "{{species}} ottiennuste nyt",
   "speciesForecastBaseOh": "Perusennuste (OH):",
@@ -264,7 +279,6 @@
   "openOskariNote": "Isot vedet",
   "openKarttaselain": "Karttaselain",
   "openKarttaselainNote": "Pienvedet",
-
   "catchReportTitle": "Saalisilmoitus",
   "fishSpecies": "Kalalaji",
   "lengthClass": "Pituusluokka",
@@ -599,6 +613,7 @@
     "realizedLine": "Toteutunut OH",
     "realizedActiveLine": "Toteutunut OH (aktiivipyynti)",
     "vsForecastFactor": "Toteuma vs ennuste -kerroin",
+    "realizedVsForecastFactor": "Toteuma vs ennuste -kerroin",
     "realized": "OH-toteuma",
     "realizedLong": "Toteutunut OH",
     "timesEffortTitle": "OH x pyyntiaika",

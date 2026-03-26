@@ -85,7 +85,9 @@
     "enterCode": "Ange testkod",
     "unlockPro": "Lås upp PRO",
     "proActive": "PRO aktiv",
-    "backToFree": "Tillbaka till Free"
+    "backToFree": "Tillbaka till Free",
+    "loggingIn": "Loggar in...",
+    "loggingOut": "Loggar ut..."
   },
 
   "validation": {
@@ -108,7 +110,9 @@
     "trialEnded": "PRO-funktioner låsta. FREE-version används.",
     "missingFeatures": "Utan PRO ser du inte:",
     "benefit": "⭐ PRO hjälper dig hitta de bästa huggperioderna.",
-    "unlock": "Lås upp PRO"
+    "unlock": "Lås upp PRO",
+    "missingFeatures": "Vissa PRO-funktioner är ännu inte tillgängliga på denna sida."
+   
   },
 
   "proUnlock": {
@@ -218,6 +222,7 @@
   "length": "Längd",
   "all": "Alla",
   "today": "Idag",
+  "targetFish": "Målfisk",
   "ohForecastTitle": "Nappintresseprognos",
   "pressureLabel": "Lufttryck (hPa)",
   "interestLabel": "Hugg (1–8)",
@@ -231,6 +236,7 @@
   "summaryBlock": "Sammanställning",
   "debugSpecies": "Art",
   "openSehavniva": "Öppna SeHavniva-sidan för tidvatten",
+  "realizedVsForecastFactor": "Utfall vs prognos-faktor",
 
   "langDefault": {
     "title": "Standardspråk",
@@ -499,6 +505,20 @@
     "vendace": "Muikku",
     "bream": "Lahna"
   },
+
+"targetFish": "Målfisk",
+"fishSpeciesLabel": "Fiskart",
+"fishSpecies": {
+  "hauki": "Gädda",
+  "ahven": "Abborre",
+  "kuha": "Gös",
+  "made": "Lake",
+  "lohi": "Lax",
+  "taimen": "Öring",
+  "siika": "Sik",
+  "harjus": "Harr",
+  "nieriä": "Röding"
+},
 
   "averageStrikeInterest": "Genomsnittlig huggvilja",
   "unknown": "okänd",

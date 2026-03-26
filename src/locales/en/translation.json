@@ -30,6 +30,7 @@
   "summaryBlock": "Summary",
   "openSehavniva": "Open SeHavniva tide page",
   "start": "Start",
+  "targetFish": "Target fish",
   "speciesStrikeSuffix": "strike forecast now",
   "speciesForecastTitle": "{{species}} strike forecast now",
   "baseOhNow": "Base OH now",
@@ -44,6 +45,7 @@
   "debugForecastAvgPairs": "Forecast OH average (paired)",
   "debugRealizedAvgPairs": "Realized OH average (paired)",
   "debugBaseOh": "Base OH (clamped)",
+  "realizedVsForecastFactor": "Actual vs forecast factor",
   "debugFactor": "Factor (realized / forecast)",
   "debugAdjustedNow": "Adjusted species forecast now",
   "showSpeciesForecast": "Show species strike forecast",
@@ -195,6 +197,20 @@
   "searchFailed": "Search failed",
   "statsLabel": "Statistics",
 
+  "targetFish": "Target fish",
+  "fishSpeciesLabel": "Fish species",
+"fishSpecies": {
+  "hauki": "Pike",
+  "ahven": "Perch",
+  "kuha": "Zander",
+  "made": "Burbot",
+  "lohi": "Salmon",
+  "taimen": "Trout",
+  "siika": "Whitefish",
+  "harjus": "Grayling",
+  "nieriä": "Arctic char"
+},
+
   "validation": {
     "selectSpecies": "Select species.",
     "enterWeight": "Please enter weight (kg)."
@@ -241,7 +257,9 @@
     "enterCode": "Enter test code",
     "unlockPro": "Unlock PRO",
     "proActive": "PRO active",
-    "backToFree": "Back to Free"
+    "backToFree": "Back to Free",
+    "loggingIn": "Signing in...",
+    "loggingOut": "Signing out..."
   },
 
   "proBanner": {
@@ -249,7 +267,8 @@
     "trialEnded": "PRO features locked. FREE version active.",
     "unlock": "Unlock PRO",
     "missingFeatures": "Without PRO you cannot access:",
-    "benefit": "⭐ PRO helps you find the best strike times."
+    "benefit": "⭐ PRO helps you find the best strike times.",
+    "missingFeatures": "Some PRO features are not yet available on this page."
   },
 
   "proUnlock": {

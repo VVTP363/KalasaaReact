@@ -50,10 +50,14 @@ export async function fetchEntitlement(uid) {
 }
 
 export async function computeAccess({ user }) {
-  const [cfg, ent] = await Promise.all([
+  const [cfg, ent, tokenResult] = await Promise.all([
     fetchAccessConfig(),
     user?.uid ? fetchEntitlement(user.uid) : Promise.resolve(null),
+    user ? user.getIdTokenResult(true) : Promise.resolve(null),
   ]);
+
+  const claims = tokenResult?.claims || {};
+  const isAdmin = claims.admin === true;
 
   const host = window.location.hostname;
   const email = toLowerTrim(user?.email);
@@ -75,9 +79,17 @@ export async function computeAccess({ user }) {
   const expired = isExpiredMs(expiresAtMs);
   const entitlementPro = isProTier(tier) && !expired;
 
+  const pro =
+    isAdmin ||
+    entitlementPro ||
+    (domainOk && emailOk) ||
+    trialEnabled;
+
   return {
     cfg,
     ent,
+    claims,
+    isAdmin,
     host,
     email,
     domainOk,
@@ -86,6 +98,6 @@ export async function computeAccess({ user }) {
     entitlementTier: tier,
     entitlementExpired: expired,
     entitlementPro,
-    pro: entitlementPro || ((domainOk && emailOk) || trialEnabled),
+    pro,
   };
 }

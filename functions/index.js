@@ -29,6 +29,10 @@ function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
 
+function isAdminRequest(request) {
+  return !!(request.auth && request.auth.token && request.auth.token.admin === true);
+}
+
 function isValidEmail(email) {
   return Boolean(email && email.includes("@"));
 }
@@ -213,13 +217,15 @@ exports.unlockWithTestCode = onCall({}, async (request) => {
     throw new HttpsError("permission-denied", "Invalid code");
   }
 
+  const expiresAtMs = Date.now() + TRIAL_DAYS * 24 * 3600 * 1000;
+
   await db.doc(`entitlements/${uid}`).set(
     {
       ok: true,
-      tier: "pro_permanent",
+      tier: "pro_trial",
       source: "manual_code",
       email: email || null,
-      expiresAt: null,
+      expiresAt: Timestamp.fromMillis(expiresAtMs),
       unlockedAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
       meta: {
@@ -233,9 +239,9 @@ exports.unlockWithTestCode = onCall({}, async (request) => {
     await db.doc(`entitlement_email/${email}`).set(
       {
         email,
-        tier: "pro_permanent",
+        tier: "pro_trial",
         source: "manual_code",
-        expiresAt: null,
+        expiresAt: Timestamp.fromMillis(expiresAtMs),
         trialUsed: true,
         lastUid: uid,
         unlockedAt: FieldValue.serverTimestamp(),
@@ -247,8 +253,191 @@ exports.unlockWithTestCode = onCall({}, async (request) => {
 
   return {
     ok: true,
-    tier: "pro_permanent",
+    tier: "pro_trial",
     source: "manual_code",
+    expiresAtMs,
+  };
+});
+
+// ---------- bootstrap admin claim (TEMPORARY) ----------
+exports.bootstrapAdminClaim = onCall({}, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Login required");
+  }
+
+  const callerUid = request.auth.uid;
+  const callerEmail = normalizeEmail(request.auth.token.email || "");
+  const emailVerified = request.auth.token.email_verified === true;
+
+  const allowedEmail = "veli.pelli@gmail.com";
+
+  if (!emailVerified) {
+    throw new HttpsError("failed-precondition", "Verified email required");
+  }
+
+  if (callerEmail !== allowedEmail) {
+    throw new HttpsError("permission-denied", "Not allowed");
+  }
+
+  const userRecord = await admin.auth().getUser(callerUid);
+  const existingClaims = userRecord.customClaims || {};
+
+  await admin.auth().setCustomUserClaims(callerUid, {
+    ...existingClaims,
+    admin: true,
+  });
+
+  logger.info("[bootstrapAdminClaim] admin claim granted", {
+    uid: callerUid,
+    email: callerEmail,
+  });
+
+  return {
+    ok: true,
+    uid: callerUid,
+    email: callerEmail,
+    admin: true,
+    message: "Admin claim granted. Please sign out and sign in again."
+  };
+});
+
+// ---------- admin: grant PRO by email ----------
+exports.grantProByEmail = onCall({}, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Login required");
+  }
+
+  if (!isAdminRequest(request)) {
+    throw new HttpsError("permission-denied", "Admin only");
+  }
+
+  const email = normalizeEmail(request.data?.email || "");
+
+  if (!isValidEmail(email)) {
+    throw new HttpsError("invalid-argument", "Valid email is required");
+  }
+
+  let userRecord;
+  try {
+    userRecord = await admin.auth().getUserByEmail(email);
+  } catch (err) {
+    throw new HttpsError("not-found", "User not found");
+  }
+
+  const uid = userRecord.uid;
+
+  await db.doc(`entitlements/${uid}`).set(
+    {
+      ok: true,
+      tier: "pro_permanent",
+      source: "admin",
+      email,
+      expiresAt: null,
+      unlockedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      meta: {
+        grantedByUid: request.auth.uid,
+        grantedByEmail: normalizeEmail(request.auth.token.email || ""),
+      },
+    },
+    { merge: true }
+  );
+
+  await db.doc(`entitlement_email/${email}`).set(
+    {
+      email,
+      tier: "pro_permanent",
+      source: "admin",
+      expiresAt: null,
+      trialUsed: true,
+      lastUid: uid,
+      unlockedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  logger.info("[grantProByEmail] PRO granted", {
+    adminUid: request.auth.uid,
+    targetUid: uid,
+    email,
+  });
+
+  return {
+    ok: true,
+    uid,
+    email,
+    tier: "pro_permanent",
+    source: "admin",
+    expiresAtMs: null,
+  };
+});
+
+// ---------- admin: revoke PRO by email ----------
+exports.revokeProByEmail = onCall({}, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Login required");
+  }
+
+  if (!isAdminRequest(request)) {
+    throw new HttpsError("permission-denied", "Admin only");
+  }
+
+  const email = normalizeEmail(request.data?.email || "");
+
+  if (!isValidEmail(email)) {
+    throw new HttpsError("invalid-argument", "Valid email is required");
+  }
+
+  let userRecord;
+  try {
+    userRecord = await admin.auth().getUserByEmail(email);
+  } catch (err) {
+    throw new HttpsError("not-found", "User not found");
+  }
+
+  const uid = userRecord.uid;
+
+  await db.doc(`entitlements/${uid}`).set(
+    {
+      ok: true,
+      tier: "free",
+      source: "admin_revoke",
+      email,
+      expiresAt: null,
+      updatedAt: FieldValue.serverTimestamp(),
+      meta: {
+        revokedByUid: request.auth.uid,
+        revokedByEmail: normalizeEmail(request.auth.token.email || ""),
+      },
+    },
+    { merge: true }
+  );
+
+  await db.doc(`entitlement_email/${email}`).set(
+    {
+      email,
+      tier: "free",
+      source: "admin_revoke",
+      expiresAt: null,
+      lastUid: uid,
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  logger.info("[revokeProByEmail] PRO revoked", {
+    adminUid: request.auth.uid,
+    targetUid: uid,
+    email,
+  });
+
+  return {
+    ok: true,
+    uid,
+    email,
+    tier: "free",
+    source: "admin_revoke",
     expiresAtMs: null,
   };
 });

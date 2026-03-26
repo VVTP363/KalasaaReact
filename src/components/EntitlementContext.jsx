@@ -9,7 +9,7 @@ import React, {
   useState,
 } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { auth, db, functions } from "../firebase";
 import { computeAccess } from "../utils/accessConfig";
@@ -59,11 +59,7 @@ function isExpiredMs(expiresAtMs) {
 
 function normalizeEntitlement(raw, fallbackSource = "local") {
   const tier = String(raw?.tier || "free").toLowerCase();
-  const expiresAtMs =
-    raw?.expiresAtMs ??
-    tsToMs(raw?.expiresAt) ??
-    null;
-
+  const expiresAtMs = raw?.expiresAtMs ?? tsToMs(raw?.expiresAt) ?? null;
   const expired = isExpiredMs(expiresAtMs);
 
   return {
@@ -109,63 +105,76 @@ function clearLocalEntitlement() {
   }
 }
 
+function freeEntitlement(source = "local") {
+  return {
+    ok: true,
+    tier: "free",
+    source,
+    expiresAtMs: null,
+    expired: false,
+    unlockedAt: Date.now(),
+    updatedAtMs: Date.now(),
+    meta: {},
+  };
+}
+
 export function EntitlementProvider({ children }) {
   const [deviceId] = useState(() => getDeviceId());
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
   const [entitlementLoading, setEntitlementLoading] = useState(true);
+
   const [ent, setEnt] = useState(() => {
-    return (
-      loadLocalEntitlement() || {
-        ok: true,
-        tier: "free",
-        source: "local",
-        expiresAtMs: null,
-        expired: false,
-        unlockedAt: Date.now(),
-        updatedAtMs: Date.now(),
-        meta: {},
-      }
-    );
+    return loadLocalEntitlement() || freeEntitlement("local");
+  });
+
+  const [access, setAccess] = useState({
+    pro: false,
+    isAdmin: false,
+    claims: {},
+    ent: null,
   });
 
   const lastSyncedUidRef = useRef(null);
   const syncInFlightRef = useRef(false);
 
   const isPro = useMemo(() => {
-    return isProTier(ent?.tier) && !ent?.expired;
-  }, [ent]);
+    const entitlementPro = isProTier(ent?.tier) && !ent?.expired;
+    return !!access?.pro || entitlementPro;
+  }, [ent, access]);
 
   const refreshFromFirestore = useCallback(async (currentUser) => {
     if (!currentUser?.uid) {
-      const localEnt =
-        loadLocalEntitlement() || {
-          ok: true,
-          tier: "free",
-          source: "local",
-          expiresAtMs: null,
-          expired: false,
-          unlockedAt: Date.now(),
-          updatedAtMs: Date.now(),
-          meta: {},
-        };
+      const localEnt = loadLocalEntitlement() || freeEntitlement("local");
       setEnt(localEnt);
+      setAccess({
+        pro: false,
+        isAdmin: false,
+        claims: {},
+        ent: null,
+      });
       setEntitlementLoading(false);
-      return { ok: true, entitlement: localEnt };
+      return {
+        ok: true,
+        entitlement: localEnt,
+        access: { pro: false, isAdmin: false, claims: {}, ent: null },
+      };
     }
 
     try {
       setEntitlementLoading(true);
 
-      const access = await computeAccess({ user: currentUser });
-      const rawEnt = access?.ent || null;
+      const nextAccess = await computeAccess({ user: currentUser });
+      setAccess(nextAccess || { pro: false, isAdmin: false, claims: {}, ent: null });
+
+      const rawEnt = nextAccess?.ent || null;
 
       if (rawEnt) {
         const normalized = normalizeEntitlement(rawEnt, "firebase");
         setEnt(normalized);
         saveLocalEntitlement(normalized);
         lastSyncedUidRef.current = currentUser.uid;
-        return { ok: true, entitlement: normalized, access };
+        return { ok: true, entitlement: normalized, access: nextAccess };
       }
 
       const freeEnt = normalizeEntitlement(
@@ -175,23 +184,18 @@ export function EntitlementProvider({ children }) {
       setEnt(freeEnt);
       saveLocalEntitlement(freeEnt);
       lastSyncedUidRef.current = currentUser.uid;
-      return { ok: true, entitlement: freeEnt, access };
+      return { ok: true, entitlement: freeEnt, access: nextAccess };
     } catch (err) {
       console.error("[EntitlementContext] refreshFromFirestore failed", err);
 
-      const fallback =
-        loadLocalEntitlement() || {
-          ok: true,
-          tier: "free",
-          source: "local",
-          expiresAtMs: null,
-          expired: false,
-          unlockedAt: Date.now(),
-          updatedAtMs: Date.now(),
-          meta: {},
-        };
-
+      const fallback = loadLocalEntitlement() || freeEntitlement("local");
       setEnt(fallback);
+      setAccess({
+        pro: false,
+        isAdmin: false,
+        claims: {},
+        ent: null,
+      });
       return { ok: false, error: err, entitlement: fallback };
     } finally {
       setEntitlementLoading(false);
@@ -209,19 +213,14 @@ export function EntitlementProvider({ children }) {
         if (unsubEnt) unsubEnt();
         unsubEnt = null;
 
-        const localEnt =
-          loadLocalEntitlement() || {
-            ok: true,
-            tier: "free",
-            source: "local",
-            expiresAtMs: null,
-            expired: false,
-            unlockedAt: Date.now(),
-            updatedAtMs: Date.now(),
-            meta: {},
-          };
-
+        const localEnt = loadLocalEntitlement() || freeEntitlement("local");
         setEnt(localEnt);
+        setAccess({
+          pro: false,
+          isAdmin: false,
+          claims: {},
+          ent: null,
+        });
         setEntitlementLoading(false);
         return;
       }
@@ -232,28 +231,36 @@ export function EntitlementProvider({ children }) {
       if (unsubEnt) unsubEnt();
 
       unsubEnt = onSnapshot(
-  ref,
-  (snap) => {
-    if (!snap.exists()) {
-      const freeEnt = normalizeEntitlement(
-        { tier: "free", source: "firebase", expiresAtMs: null },
-        "firebase"
-      );
-      console.log("[ENT] snapshot -> no doc, using free");
-      setEnt(freeEnt);
-      saveLocalEntitlement(freeEnt);
-      return;
-    }
+        ref,
+        async (snap) => {
+          try {
+            const nextAccess = await computeAccess({ user: nextUser });
+            setAccess(nextAccess || { pro: false, isAdmin: false, claims: {}, ent: null });
 
-    const raw = snap.data() || {};
-    const normalized = normalizeEntitlement(raw, "firebase");
+            if (!snap.exists()) {
+              const freeEnt = normalizeEntitlement(
+                { tier: "free", source: "firebase", expiresAtMs: null },
+                "firebase"
+              );
+              console.log("[ENT] snapshot -> no doc, using free entitlement but access may still be pro/admin");
+              setEnt(freeEnt);
+              saveLocalEntitlement(freeEnt);
+              return;
+            }
 
-    console.log("[ENT] snapshot raw:", raw);
-    console.log("[ENT] snapshot normalized:", normalized);
+            const raw = snap.data() || {};
+            const normalized = normalizeEntitlement(raw, "firebase");
 
-    setEnt(normalized);
-    saveLocalEntitlement(normalized);
-  },
+            console.log("[ENT] snapshot raw:", raw);
+            console.log("[ENT] snapshot normalized:", normalized);
+            console.log("[ENT] snapshot access:", nextAccess);
+
+            setEnt(normalized);
+            saveLocalEntitlement(normalized);
+          } catch (err) {
+            console.error("[EntitlementContext] snapshot access refresh failed", err);
+          }
+        },
         (err) => {
           console.error("[EntitlementContext] entitlement snapshot failed", err);
         }
@@ -281,11 +288,14 @@ export function EntitlementProvider({ children }) {
         setEnt(normalized);
         saveLocalEntitlement(normalized);
         lastSyncedUidRef.current = user.uid;
-        return { ok: true, entitlement: normalized };
+
+        const nextAccess = await computeAccess({ user });
+        setAccess(nextAccess || { pro: false, isAdmin: false, claims: {}, ent: null });
+
+        return { ok: true, entitlement: normalized, access: nextAccess };
       }
 
-      await refreshFromFirestore(user);
-      return { ok: false, reason: "sync_failed", data: res?.data || null };
+      return await refreshFromFirestore(user);
     } catch (err) {
       console.error("[EntitlementContext] forceSyncEntitlement failed", err);
       return { ok: false, reason: "sync_failed", error: err };
@@ -307,6 +317,9 @@ export function EntitlementProvider({ children }) {
       const normalized = normalizeEntitlement(res?.data || {}, "manual_code");
       setEnt(normalized);
       saveLocalEntitlement(normalized);
+
+      const nextAccess = await computeAccess({ user });
+      setAccess(nextAccess || { pro: false, isAdmin: false, claims: {}, ent: null });
 
       return { ok: true, data: res?.data || null };
     } catch (err) {
@@ -341,43 +354,51 @@ export function EntitlementProvider({ children }) {
     const normalized = normalizeEntitlement(localPayload, "local");
     saveLocalEntitlement(normalized);
     setEnt(normalized);
+    setAccess({
+      pro: true,
+      isAdmin: false,
+      claims: {},
+      ent: normalized,
+    });
     return { ok: true };
   }
 
- async function lockToFree() {
-  const source = String(ent?.source || "").toLowerCase();
+  async function lockToFree() {
+    const source = String(ent?.source || "").toLowerCase();
 
-  const canDowngradeLocally =
-    source === "manual_code" || source === "local";
+    const canDowngradeLocally =
+      source === "manual_code" || source === "local";
 
-  if (!canDowngradeLocally) {
-    return { ok: false, reason: "not_allowed" };
+    if (!canDowngradeLocally) {
+      return { ok: false, reason: "not_allowed" };
+    }
+
+    const freeEnt = freeEntitlement("local");
+
+    saveLocalEntitlement(freeEnt);
+    setEnt(freeEnt);
+
+    const nextAccess = user
+      ? await computeAccess({ user })
+      : { pro: false, isAdmin: false, claims: {}, ent: null };
+
+    setAccess(nextAccess);
+
+    return { ok: true };
   }
-
-  const freeEnt = {
-    ok: true,
-    tier: "free",
-    source: "local",
-    expiresAtMs: null,
-    expired: false,
-    unlockedAt: Date.now(),
-    updatedAtMs: Date.now(),
-    meta: {},
-  };
-
-  saveLocalEntitlement(freeEnt);
-  setEnt(freeEnt);
-  return { ok: true };
-}
 
   const value = useMemo(
     () => ({
       deviceId,
       user,
       entitlement: ent,
+      access,
       isPro,
+      pro: !!isPro,
+      isAdmin: !!access?.isAdmin,
       authReady,
       entitlementLoading,
+      loading: !authReady || entitlementLoading,
       forceSyncEntitlement,
       unlockWithCode,
       grantPro,
@@ -389,6 +410,7 @@ export function EntitlementProvider({ children }) {
       deviceId,
       user,
       ent,
+      access,
       isPro,
       authReady,
       entitlementLoading,

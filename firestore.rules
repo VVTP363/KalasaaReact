@@ -2,6 +2,23 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userEmail() {
+      return request.auth.token.email;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          "masa.mainio@vilunki.com"       
+        ];
+    }
+
     match /_meta/{docId} {
       allow read: if true;
       allow write: if request.auth != null;
@@ -14,7 +31,7 @@ service cloud.firestore {
 
     match /entitlements/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
-      allow write: if false;
+      allow write: if isAdmin();
     }
 
     match /entitlement_email/{docId} {
@@ -22,7 +39,14 @@ service cloud.firestore {
     }
 
     match /pro_allowlist/{docId} {
-      allow read, write: if false;
+      allow read: if isAdmin()
+        || (
+          isSignedIn()
+          && request.auth.token.email != null
+          && lower(request.auth.token.email) == lower(docId)
+        );
+
+      allow create, update, delete: if isAdmin();
     }
 
     match /pro_domain_allowlist/{docId} {
